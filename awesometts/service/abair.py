@@ -98,6 +98,10 @@ class Abair(Service):
                 ),
             ),
             method='POST',
+            # the Requests library does not automatically add content-type,
+            # but this header is necessary for the request to work with the Abair server
+            # (tested 1/9/2019)
+            custom_headers={'Content-type': 'application/x-www-form-urlencoded'}
         ).decode()
 
         match = RE_FILENAME.search(payload)

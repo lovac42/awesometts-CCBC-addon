@@ -148,9 +148,12 @@ class ISpeech(Service):
                 add_padding=True,
             )
         except ValueError as error:
+            from urllib.parse import parse_qs
             try:
-                from urllib.parse import parse_qs
-                error = ValueError(parse_qs(error.payload)['message'][0])
+                # sometimes net_download() throws a ValueError exception
+                # with a property called "payload" manually set
+                if hasattr(error, 'payload'):
+                    error = ValueError(parse_qs(error.payload)['message'][0])
             except Exception:
                 pass
             raise error

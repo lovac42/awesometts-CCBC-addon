@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# This file has been modified by lovac42 and may not be the same as the original.
+
 """
 Service classes for AwesomeTTS
 """
@@ -24,13 +26,17 @@ from .common import Trait
 
 from .abair import Abair
 from .baidu import Baidu
+from .bing import Bing
+from .cambridge import Cambridge
 from .collins import Collins
 from .duden import Duden
 from .ekho import Ekho
 from .espeak import ESpeak
 from .festival import Festival
 from .fluencynl import FluencyNl
+from .forvo import Forvo
 from .google import Google
+from .googletts import GoogleTTS
 from .howjsay import Howjsay
 from .imtranslator import ImTranslator
 from .ispeech import ISpeech
@@ -45,6 +51,7 @@ from .sapi5js import SAPI5JS
 from .say import Say
 from .spanishdict import SpanishDict
 from .voicetext import VoiceText
+from .watsontts import WatsonTTS
 from .wiktionary import Wiktionary
 from .yandex import Yandex
 from .youdao import Youdao
@@ -56,13 +63,17 @@ __all__ = [
     # services
     'Abair',
     'Baidu',
+    'Bing',
+    'Cambridge',
     'Collins',
     'Duden',
     'Ekho',
     'ESpeak',
     'Festival',
     'FluencyNl',
+    'Forvo',
     'Google',
+    'GoogleTTS',
     'Howjsay',
     'ImTranslator',
     'ISpeech',
@@ -77,6 +88,7 @@ __all__ = [
     'Say',
     'SpanishDict',
     'VoiceText',
+    'WatsonTTS',
     'Wiktionary',
     'Yandex',
     'Youdao',

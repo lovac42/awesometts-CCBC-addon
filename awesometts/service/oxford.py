@@ -1,20 +1,8 @@
 # -*- coding: utf-8 -*-
-
-# AwesomeTTS text-to-speech add-on for Anki
-# Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Copyright (C) 2019 Lovac42
+# Copyright (C) 2010-2018 Anki AwesomeTTS Development Team
+# Support: https://github.com/lovac42/AddonManager21
+# License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
 
 """
 Service implementation for Oxford Dictionary
@@ -70,7 +58,7 @@ class Oxford(Service):
         Returns a short, static description.
         """
 
-        return "Oxford Dictionary (British and American English); " \
+        return "Lexico Dictionary (British only now, get over it) " \
             "dictionary words only, with (optional) fuzzy matching"
 
     def options(self):
@@ -79,11 +67,6 @@ class Oxford(Service):
         """
 
         voice_lookup = dict([
-            # aliases for English, American
-            (self.normalize(alias), 'en-US')
-            for alias in ['American', 'American English', 'English, American',
-                          'US']
-        ] + [
             # aliases for English, British ("default" for the OED)
             (self.normalize(alias), 'en-GB')
             for alias in ['British', 'British English', 'English, British',
@@ -101,8 +84,7 @@ class Oxford(Service):
             dict(
                 key='voice',
                 label="Voice",
-                values=[('en-US', "English, American (en-US)"),
-                        ('en-GB', "English, British (en-GB)")],
+                values=[('en-GB', "English, British (en-GB)")],
                 default='en-GB',
                 transform=transform_voice,
             ),
@@ -135,8 +117,8 @@ class Oxford(Service):
             raise IOError("Input text is too long for the Oxford Dictionary")
 
         from urllib.parse import quote
-        dict_url = 'https://en.oxforddictionaries.com/definition/%s%s' % (
-            'us/' if options['voice'] == 'en-US' else '',
+        dict_url = 'https://www.lexico.com/%s/definition/%s' % (
+            'en' if options['voice'] == 'en-GB' else '',
             quote(text.encode('utf-8'))
         )
 
@@ -171,7 +153,7 @@ class Oxford(Service):
             self.net_download(
                 path,
                 sound_url,
-                require=dict(mime='binary/octet-stream', size=1024),
+                require=dict(mime='audio/mpeg', size=1024),
             )
         else:
             raise IOError(

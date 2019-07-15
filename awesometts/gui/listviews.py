@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -23,8 +24,13 @@ This module currently exposes a SubListView for manipulating lists of
 substitution rules.
 """
 
+
+try:
+    from PyQt4 import QtCore, QtGui as QtWidgets
+except:
+    from PyQt5 import QtCore, QtWidgets
+
 import re
-from PyQt5 import QtCore, QtWidgets
 from .common import Checkbox, HTML
 
 __all__ = ['GroupListView', 'SubListView']
@@ -191,6 +197,7 @@ class _SubRuleDelegate(_Delegate):
 
         for layout in [edits, checkboxes, layout]:
             layout.setContentsMargins(0, 0, 0, 0)
+                               
             layout.setSpacing(0)
 
         for widget in [panel] + panel.findChildren(QtWidgets.QWidget):

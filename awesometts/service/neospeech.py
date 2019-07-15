@@ -1,20 +1,8 @@
 # -*- coding: utf-8 -*-
-
-# AwesomeTTS text-to-speech add-on for Anki
-# Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Copyright (C) 2019 Lovac42
+# Copyright (C) 2010-2018 Anki AwesomeTTS Development Team
+# Support: https://github.com/lovac42/AddonManager21
+# License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
 
 """
 Service implementation for NeoSpeech's text-to-speech demo engine
@@ -29,36 +17,87 @@ from .common import Trait
 __all__ = ['NeoSpeech']
 
 
-VOICES = [('en-GB', 'male', "Hugh", 33), ('en-GB', 'female', "Bridget", 4),
-          ('en-US', 'male', "James", 10), ('en-US', 'male', "Paul", 1),
-          ('en-US', 'female', "Ashley", 14), ('en-US', 'female', "Beth", 35), ('en-US', 'female', "Julie", 3), ('en-US', 'female', "Kate", 2), 
-		  ('de', 'male', "Tim", 44), ('de', 'female', "Lena", 43),											#Tim 44, Lena 43
-		  ('fr-EU', 'male', "Louis", 50), ('fr-EU', 'female', "Roxane", 49),								#Louis 50, Roxane 49
-		  ('fr-CA', 'female', "Chloe", 13), ('fr-CA', 'male', "Leo", 34), 									#Leo 34
-		  ('es-EU', 'male', "Manuel", 46), ('es-EU', 'female', "Lola", 45),									#Manuel 46, Lola 45
-		  ('es-MX', 'male', "Francisco", 31), ('es-MX', 'female', "Gloria", 32), ('es-MX', 'female', "Violeta", 5),
-		  ('it', 'male', "Roberto", 48), ('it', 'female', "Elisa", 47),										#Roberto 48, Elisa 47
-          ('pt-BR', 'male', "Rafael", 42), ('pt-BR', 'female', "Helena", 41),								#Rafael 42, Helena 41
-		  ('ja', 'male', "Ryo", 28), ('ja', 'male', "Show", 8), ('ja', 'male', "Takeru", 30),
-          ('ja', 'female', "Haruka", 26), ('ja', 'female', "Hikari", 29),
-          ('ja', 'female', "Misaki", 9), ('ja', 'female', "Sayaka", 27),
-          ('ko', 'male', "Jihun", 21), ('ko', 'male', "Junwoo", 6),
-          ('ko', 'female', "Dayoung", 17), ('ko', 'female', "Hyeryun", 18),
-          ('ko', 'female', "Hyuna", 19), ('ko', 'female', "Jimin", 20),
-          ('ko', 'female', "Sena", 22), ('ko', 'female', "Yumi", 7),
-          ('ko', 'female', "Yura", 23), ('zh', 'male', "Liang", 12),
-          ('zh', 'male', "Qiang", 25), ('zh', 'female', "Hong", 24), ('zh', 'female', "Hui", 11),
-		  ('zh-TW', 'female', "Yafang", 36),																#Yafang 36
-		  ('zh-CA', 'male', "Kano", 37), ('zh-CA', 'female', "Kayan", 38),									#Kano 37, Kayan 38
-		  ('th', 'male', "Sarawut", 39), ('th', 'female', "Somsi", 40),										#Sarawut 39, Somsi 40
-		  ('aa', 'female', "Test51", 51), ('aa', 'male', "Test52", 52)]
+VOICES = [
+    ("Arabic - male","Arabic - male"),
+    ("Arabic - female","Arabic - female"),
+    ("Basque - female","Basque - female"),
+    ("Catalan - male","Catalan - male"),
+    ("Chinese (Cantonese) - male","Chinese (Cantonese) - male"),
+    ("Chinese (Cantonese) - female","Chinese (Cantonese) - female"),
+    ("Chinese (Mandarin) - male","Chinese (Mandarin) - male"),
+    ("Chinese (Mandarin) - female","Chinese (Mandarin) - female"),
+    ("Chinese (Mandarin-Taiwan) - female","Chinese (Mandarin-Taiwan) - female"),
+    ("Croatian - female","Croatian - female"),
+    ("Czech - female","Czech - female"),
+    ("Danish - female","Danish - female"),
+    ("Dutch - male","Dutch - male"),
+    ("Dutch - female","Dutch - female"),
+    ("English (American) - male","English (American) - male"),
+    ("English (American) - female","English (American) - female"),
+    ("English (Australian) - male","English (Australian) - male"),
+    ("English (British) - male","English (British) - male"),
+    ("English (British) - female","English (British) - female"),
+    ("English (Indian) - female","English (Indian) - female"),
+    ("English (Scottish) - female","English (Scottish) - female"),
+    ("English (South African) - female","English (South African) - female"),
+    ("Faroese - male","Faroese - male"),
+    ("Faroese - female","Faroese - female"),
+    ("Farsi - male","Farsi - male"),
+    ("Farsi - female","Farsi - female"),
+    ("Finnish - female","Finnish - female"),
+    ("Flemish - female","Flemish - female"),
+    ("French - male","French - male"),
+    ("French - female","French - female"),
+    ("French (Belgian) - female","French (Belgian) - female"),
+    ("French (Canadian) - male","French (Canadian) - male"),
+    ("French (Canadian) - female","French (Canadian) - female"),
+    ("Frisian - male","Frisian - male"),
+    ("Galician - female","Galician - female"),
+    ("German - male","German - male"),
+    ("German - female","German - female"),
+    ("Greek - female","Greek - female"),
+    ("Hebrew - female","Hebrew - female"),
+    ("Hindi - female","Hindi - female"),
+    ("Hungarian - female","Hungarian - female"),
+    ("Icelandic - male","Icelandic - male"),
+    ("Indonesian - female","Indonesian - female"),
+    ("Italian - male","Italian - male"),
+    ("Italian - female","Italian - female"),
+    ("Japanese - male","Japanese - male"),
+    ("Japanese - female","Japanese - female"),
+    ("Korean - male","Korean - male"),
+    ("Korean - female","Korean - female"),
+    ("Northern Sami - male","Northern Sami - male"),
+    ("Northern Sami - female","Northern Sami - female"),
+    ("Norwegian (Bokmål) - male","Norwegian (Bokmål) - male"),
+    ("Norwegian (Bokmål) - female","Norwegian (Bokmål) - female"),
+    ("Polish - male","Polish - male"),
+    ("Polish - female","Polish - female"),
+    ("Portuguese - male","Portuguese - male"),
+    ("Portuguese - female","Portuguese - female"),
+    ("Portuguese (Brazilian) - female","Portuguese (Brazilian) - female"),
+    ("Romanian - female","Romanian - female"),
+    ("Russian - female","Russian - female"),
+    ("Slovak - female","Slovak - female"),
+    ("Spanish - male","Spanish - male"),
+    ("Spanish - female","Spanish - female"),
+    ("Spanish (American) - male","Spanish (American) - male"),
+    ("Spanish (American) - female","Spanish (American) - female"),
+    ("Spanish (Mexican) - male","Spanish (Mexican) - male"),
+    ("Spanish (Mexican) - female","Spanish (Mexican) - female"),
+    ("Swedish - female","Swedish - female"),
+    ("Swedish (Finland) - male","Swedish (Finland) - male"),
+    ("Thai - female","Thai - female"),
+    ("Turkish - male","Turkish - male"),
+    ("Turkish - female","Turkish - female"),
+    ("Valencian - female","Valencian - female"),
+    ("Welsh - male","Welsh - male"),
+    ("Welsh - female","Welsh - female")
+]
 
-MAP = {name: api_id for language, gender, name, api_id in VOICES}
+BASE_URL = 'https://demo.readspeaker.com'
 
-
-BASE_URL = 'http://neospeech.com'
-
-DEMO_URL = BASE_URL + '/service/demo'
+DEMO_URL = BASE_URL + '/proxy.php'
 
 REQUIRE_MP3 = dict(mime='audio/mpeg', size=256)
 
@@ -88,47 +127,35 @@ class NeoSpeech(Service):
 
     def desc(self):
         """Returns name with a voice count."""
-
-        return "NeoSpeech Demo (%d voices)" % len(VOICES)
+        return "NeoSpeech Demo (%d voices)" % (
+            len(set(map(lambda x: x[0][:5], VOICES))))
 
     def options(self):
         """Provides access to voice only."""
-
-        voice_lookup = {self.normalize(name): name
-                        for language, gender, name, api_id in VOICES}
-
-        def transform_voice(value):
-            """Fixes whitespace and casing errors only."""
-            normal = self.normalize(value)
-            return voice_lookup[normal] if normal in voice_lookup else value
-
-        return [dict(key='voice',
-                     label="Voice",
-                     values=[(name, "%s (%s %s)" % (name, gender, language))
-                             for language, gender, name, _ in VOICES],
-                     transform=transform_voice)]
+        return [dict(
+                    key='voice',
+                    label="Voice",
+                    values=VOICES,
+                    transform=lambda value: value,
+                    default='English (American) - male',
+            )]
 
     def run(self, text, options, path):
         """Requests MP3 URLs and then downloads them."""
 
         with self._lock:
-            if not self._cookies:
-                headers = self.net_headers(BASE_URL)
-                self._cookies = ';'.join(
-                    cookie.split(';')[0]
-                    for cookie in headers['Set-Cookie'].split(',')
-                )
-                self._logger.debug("NeoSpeech cookies are %s", self._cookies)
-            headers = {'Cookie': self._cookies}
-
-            voice_id = MAP[options['voice']]
-
             def fetch_piece(subtext, subpath):
                 """Fetch given phrase from the API to the given path."""
 
-                payload = self.net_stream((DEMO_URL, dict(content=subtext,
-                                                          voiceId=voice_id)),
-                                          custom_headers=headers)
+                payload = self.net_stream((DEMO_URL, 
+                                            dict(
+                                                l="tts-software", 
+                                                t=subtext, 
+                                                v=options['voice'],
+                                                f="mp3"
+                                            )),
+                                            method='POST',
+                                            )
 
                 try:
                     data = json.loads(payload)
@@ -137,17 +164,15 @@ class NeoSpeech(Service):
                                      "the NeoSpeech service")
 
                 try:
-                    url = data['audioUrl']
+                    url = data['links']['mp3']
                 except KeyError:
                     raise KeyError("Cannot find the audio URL in the response "
                                    "from the NeoSpeech service")
-                assert isinstance(url, str) and len(url) > 2 and \
-                    url[0] == '/' and url[1].isalnum(), \
+                assert isinstance(url, str) and len(url) > 2, \
                     "The audio URL from NeoSpeech does not seem to be valid"
 
-                mp3_stream = self.net_stream(BASE_URL + url,
-                                             require=REQUIRE_MP3,
-                                             custom_headers=headers)
+                mp3_stream = self.net_stream(url)
+
                 if self._last_phrase != subtext and \
                         self._last_stream == mp3_stream:
                     raise IOError("NeoSpeech seems to be returning the same "

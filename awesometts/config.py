@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -205,11 +206,11 @@ class Config(object):
                 # attempt to retrieve value; if it fails, use the default
                 try:
                     self._cache[name] = col[3](row[col[0]])
-                except ValueError:
+                except (ValueError, TypeError):
                     self._cache[name] = col[2]
 
         else:
-            all_cols = list(self._cols.values())
+            all_cols = self._cols.values()
 
             self._logger.info("Creating new configuration table")
 
@@ -241,7 +242,7 @@ class Config(object):
 
         # since this is the initial load, notify all registered event handlers
         unique_callbacks = set()
-        for callbacks in list(self._events.values()):
+        for callbacks in self._events.values():
             unique_callbacks.update(callbacks)
         for callback in unique_callbacks:
             callback(self)

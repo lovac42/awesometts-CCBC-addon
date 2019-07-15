@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -23,7 +24,11 @@ Helpful type conversions
 import json
 import re
 
-from PyQt5.QtCore import Qt
+try:
+    from PyQt4.QtCore import Qt
+except:
+    from PyQt5.QtCore import Qt
+
 
 __all__ = ['compact_json', 'deserialized_dict', 'lax_bool',
            'normalized_ascii', 'nullable_key', 'nullable_int',
@@ -49,7 +54,7 @@ def deserialized_dict(json_str):
 
     try:
         obj = json.loads(json_str)
-    except Exception:
+    except StandardError:
         return {}
 
     return obj if isinstance(obj, dict) else {}
@@ -82,10 +87,9 @@ def normalized_ascii(value):
                    for char in value
                    if char.isalpha() or char.isdigit())
 
-
 def nullable_key(value):
     """
-    Returns an instance of PyQt5.QtCore.Qt.Key for the given value, if
+    Returns an instance of PyQt4.QtCore.Qt.Key for the given value, if
     possible. If the incoming value cannot be represented as a key,
     returns None.
     """
@@ -107,6 +111,7 @@ def nullable_int(value):
         return int(value)
     except Exception:
         return None
+
 
 
 def substitution_compiled(rule):
@@ -139,12 +144,10 @@ def substitution_json(rules):
 
     return (
         compact_json([
-            {
-                key: value
-                for key, value
-                in item.items()
-                if key != 'compiled'
-            }
+            dict((key, value)
+                 for key, value
+                 in item.items()
+                 if key != 'compiled')
             for item in rules
         ])
         if rules and isinstance(rules, list)
@@ -163,7 +166,7 @@ def substitution_list(json_str):
         if not isinstance(candidates, list):
             raise ValueError
 
-    except Exception:
+    except StandardError:
         return []
 
     rules = []

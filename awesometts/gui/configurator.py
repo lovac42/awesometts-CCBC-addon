@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -23,7 +24,10 @@ import os
 import os.path
 from sys import platform
 
-from PyQt5 import QtCore, QtWidgets, QtGui
+try:
+    from PyQt4 import QtCore, QtGui, QtGui as QtWidgets
+except:
+    from PyQt5 import QtCore, QtWidgets, QtGui
 
 from ..paths import ICONS
 from .base import Dialog
@@ -486,7 +490,6 @@ class Configurator(Dialog):
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self._ui_tabs_advanced_presets())
-        layout.addWidget(self._ui_tabs_advanced_update())
         layout.addWidget(self._ui_tabs_advanced_cache())
         layout.addStretch()
 
@@ -517,29 +520,6 @@ class Configurator(Dialog):
         group.setLayout(vert)
         return group
 
-    def _ui_tabs_advanced_update(self):
-        """Returns the "Updates" input group."""
-
-        button = QtWidgets.QPushButton(QtGui.QIcon(f'{ICONS}/find.png'), "Check Now")
-        button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        button.setObjectName('updates_button')
-        button.clicked.connect(self._on_update_request)
-
-        state = Note()
-        state.setObjectName('updates_state')
-
-        hor = QtWidgets.QHBoxLayout()
-        hor.addWidget(button)
-        hor.addWidget(state)
-
-        vert = QtWidgets.QVBoxLayout()
-        vert.addWidget(Checkbox("automatically check for AwesomeTTS updates "
-                                "at start-up", 'updates_enabled'))
-        vert.addLayout(hor)
-
-        group = QtWidgets.QGroupBox("Updates")
-        group.setLayout(vert)
-        return group
 
     def _ui_tabs_advanced_cache(self):
         """Returns the "Caching" input group."""
@@ -760,38 +740,7 @@ class Configurator(Dialog):
 
     def _on_update_request(self):
         """Attempts update request w/ add-on updates interface."""
-
-        button = self.findChild(QtWidgets.QPushButton, 'updates_button')
-        button.setEnabled(False)
-        state = self.findChild(Note, 'updates_state')
-        state.setText("Querying update server...")
-
-        from .updater import Updater
-        self._addon.updates.check(
-            callbacks=dict(
-                done=lambda: button.setEnabled(True),
-                fail=lambda exception: state.setText("Check failed: %s" % (
-                    (
-                        exception.message if hasattr(exception, 'message')
-                        else str(exception)
-                    ) or
-                    "Nothing further known"
-                )),
-                good=lambda: state.setText("No update needed at this time."),
-                need=lambda version, info: (
-                    state.setText(f"Update to {version} is available"),
-                    [updater.show()
-                     for updater in [Updater(
-                         version=version,
-                         info=info,
-                         is_manual=True,
-                         addon=self._addon,
-                         parent=(self if self.isVisible()
-                                 else self.parentWidget()),
-                     )]],
-                ),
-            ),
-        )
+        return
 
     def _on_cache_clear(self, button):
         """Attempts clear known files from cache."""

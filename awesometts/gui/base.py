@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -25,9 +26,12 @@ use with AwesomeTTS.
 
 import inspect
 
-from PyQt5 import QtCore, QtWidgets, QtGui
+try:
+    from PyQt4 import QtCore, QtGui as QtWidgets, QtGui
+except:
+    from PyQt5 import QtCore, QtWidgets, QtGui
 
-from ..paths import ICONS
+from ..paths import ICONS          
 from .common import Label, Note, ICON
 
 __all__ = ['Dialog', 'ServiceDialog']
@@ -217,6 +221,7 @@ class ServiceDialog(Dialog):
 
     _INPUT_WIDGETS = _OPTIONS_WIDGETS + (QtWidgets.QAbstractButton,
                                          QtWidgets.QLineEdit, QtWidgets.QTextEdit)
+
 
     __slots__ = [
         '_alerts',       # API to display error messages
@@ -539,6 +544,7 @@ class ServiceDialog(Dialog):
                     QtWidgets.QDoubleSpinBox
                     if isinstance(start, float) or isinstance(end, float)
                     else QtWidgets.QSpinBox
+
                 )()
 
                 vinput.setRange(start, end)
@@ -912,4 +918,5 @@ class ServiceDialog(Dialog):
                 **self._addon.config['last_options'],
                 **{svc_id: values}
             },
+
         } if values else dict(last_service=svc_id)

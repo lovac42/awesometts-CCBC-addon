@@ -478,12 +478,18 @@ class Service(object, metaclass=abc.ABCMeta):
         import atexit
         atexit.register(service.terminate)
 
-    def net_headers(self, url):
+    def net_headers(self, url, headers=None):
         """Returns the headers for a URL."""
 
         self._logger.debug("GET %s for headers", url)
         self._netops += 1
         from urllib.request import urlopen, Request
+        if headers:
+            from anki.sync import AnkiRequestsClient
+            client = AnkiRequestsClient()
+            response = client.get(url, headers=headers)
+            return response.headers
+
         return urlopen(
             Request(url=url, headers={'User-Agent': DEFAULT_UA}),
             timeout=DEFAULT_TIMEOUT,

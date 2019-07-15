@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -20,7 +21,10 @@
 Sound tag-stripper dialog
 """
 
-from PyQt5 import QtCore, QtWidgets
+try:
+    from PyQt4 import QtCore, QtGui as QtWidgets
+except:
+    from PyQt5 import QtCore, QtWidgets
 
 from .base import Dialog
 from .common import Checkbox, Label, Note

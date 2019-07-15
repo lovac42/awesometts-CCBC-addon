@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -163,18 +164,18 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         )
 
     _rule_clozes_braced.wrapper = lambda match: (
-        '... %s ...' % match.group(4).strip('.') if (match.group(4) and
-                                                     match.group(4).strip('.'))
+        '... %s ...' % match.group(3).strip('.') if (match.group(3) and
+                                                     match.group(3).strip('.'))
         else '...'
     )
 
     _rule_clozes_braced.deleter = lambda match: (
-        match.group(2) if match.group(2)
+        match.group(1) if match.group(1)
         else '...'
     )
 
     _rule_clozes_braced.ankier = lambda match: (
-        match.group(4) if match.group(4)
+        match.group(3) if match.group(3)
         else '...'
     )
 
@@ -207,7 +208,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         contents of that span.
         """
 
-        revealed_tags = BeautifulSoup(text)('span', attrs={'class': 'cloze'})
+        revealed_tags = BeautifulSoup(text, 'html.parser')('span', attrs={'class': 'cloze'})
 
         return ' ... '.join(
             ''.join(
@@ -280,7 +281,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         Removes hint content from the use of a {{hint:xxx}} field.
         """
 
-        soup = BeautifulSoup(text)
+        soup = BeautifulSoup(text, 'html.parser')
         hints = soup.findAll('div', attrs={'class': 'hint'})
         while hints:
             hints.pop().extract()

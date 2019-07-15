@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -21,7 +22,10 @@ File generation dialogs
 """
 
 from re import compile as re
-from PyQt5 import QtCore, QtWidgets
+try:
+    from PyQt4 import QtCore, QtGui as QtWidgets
+except:
+    from PyQt5 import QtCore, QtWidgets
 
 from .base import Dialog, ServiceDialog
 from .common import Checkbox, Label, Note
@@ -355,7 +359,7 @@ class BrowserGenerator(ServiceDialog):
 
             proc['counts']['fail'] += 1
 
-            message = exception.message
+            message = exception.message if hasattr(exception, 'message') else str(exception)
             if isinstance(message, str):
                 message = self._RE_WHITESPACE.sub(' ', message).strip()
 

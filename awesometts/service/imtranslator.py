@@ -164,7 +164,10 @@ class ImTranslator(Service):
                                   speed=options['speed'], FA=1)),
                             require=dict(mime='text/html', size=256),
                             method='POST',
-                            custom_headers={'Referer': URL}
+                            custom_headers={
+                                'Referer': URL,
+                                'Content-type': 'application/x-www-form-urlencoded',
+                                'Host': 'imtranslator.net'}
                         ).decode()
 
                         result = self._RE_SWF.search(result)

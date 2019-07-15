@@ -1,5 +1,4 @@
-# AwesomeTTS Anki add-on
-[![Build Status](https://travis-ci.org/AwesomeTTS/awesometts-anki-addon.svg?branch=master)](https://travis-ci.org/AwesomeTTS/awesometts-anki-addon)
+## AwesomeTTS for Anki2.1 & CCBC
 
 AwesomeTTS makes it easy for language-learners and other students to add
 speech to their personal [Anki](https://apps.ankiweb.net) card decks.
@@ -11,3 +10,32 @@ enables both on-demand playback and recording functionality.
 
 AwesomeTTS is free and open-source software. The add-on code that runs within
 Anki is released under the [GNU GPL v3](LICENSE.txt).
+
+
+## Changes from current official v1.12.0:
+Fixed Naver issue (used eescueta's version)  
+Fixed Neospeech (has demo tag on mp3)  
+Fixed Oxford (Only British en-GB available)  
+Added Bing TTS  
+Added Watson TTS  
+Added Google Cloud TTS service by Nickolay (kelciour)  
+Added Cambridge Dictionary by m-rtin  
+Added Forvo service by Dador  
+
+
+
+## Needs to fix:
+baidu  
+duden  
+fluency.nl  
+wikitionary  
+yandex
+
+
+
+## Bing API Instructions:
+
+<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bingapi.png?raw=true" />  
+
+<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bearerkey.png?raw=true" />  
+

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -27,7 +28,11 @@ alert windows. It also may have more visual components in the future.
 import re
 
 from bs4 import BeautifulSoup
-from PyQt5.QtCore import Qt
+
+try:
+    from PyQt4.QtCore import Qt
+except:
+    from PyQt5.QtCore import Qt
 
 from .common import key_event_combo
 

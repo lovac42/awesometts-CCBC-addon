@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -25,8 +26,15 @@ As everything done from the add-on code has to do with AwesomeTTS, these
 all carry a speaker icon (if supported by the desktop environment).
 """
 
-from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtCore import Qt
+
+try:
+    from PyQt4 import QtCore, QtGui, QtGui as QtWidgets
+    from PyQt4.QtCore import Qt
+    QT5=False
+except:
+    QT5=True
+    from PyQt5 import QtCore, QtWidgets, QtGui
+    from PyQt5.QtCore import Qt
 
 from ..paths import ICONS
 
@@ -111,6 +119,8 @@ class _Connector:  # used like a mixin, pylint:disable=R0903
         self._target = target
         self._instance = None
 
+                                  
+
     def _show(self, *args, **kwargs):
         """
         If the target has not yet been constructed, do so now, and then
@@ -138,6 +148,7 @@ class _QtConnector(_Connector):
 
         signal = getattr(self, signal_name)
         signal.connect(self._show)
+
 
 
 class _HTMLConnector(_Connector):
@@ -204,7 +215,11 @@ class Action(QtWidgets.QAction, _QtConnector):
         # pass only signal name and use getattr in _Connector. For now the latter
         # is used (more elegant, but less flexible).
         # Maybe composition would be more predictable here?
-        super().__init__(ICON, text, parent, signal_name='triggered', target=target)
+        if QT5:
+            super().__init__(ICON, text, parent, signal_name='triggered', target=target)
+        else:
+            QtWidgets.QAction.__init__(self, ICON, text, parent)
+            _QtConnector.__init__(self, target=target, signal_name='triggered')
 
         self.setShortcut(sequence)
         self._sequence = sequence
@@ -234,7 +249,11 @@ class Button(QtWidgets.QPushButton, _QtConnector, AbstractButton):
         Note that buttons that have text get one set of styling
         different from ones without text.
         """
-        super().__init__(ICON, text, signal_name='clicked', target=target)
+        if QT5:
+            super().__init__(ICON, text, signal_name='clicked', target=target)
+        else:
+            QtWidgets.QPushButton.__init__(self, ICON, text)
+            _QtConnector.__init__(self, target=target, signal_name='clicked')
 
         if text:
             self.setIconSize(QtCore.QSize(15, 15))
@@ -246,6 +265,7 @@ class Button(QtWidgets.QPushButton, _QtConnector, AbstractButton):
 
         self.setShortcut(sequence)
         self.setToolTip(self.tooltip_text(tooltip, sequence))
+                                                 
 
         if style:
             self.setStyle(style)

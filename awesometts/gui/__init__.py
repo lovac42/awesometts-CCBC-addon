@@ -39,7 +39,7 @@ from .stripper import BrowserStripper
 
 from .templater import Templater
 
-from .updater import Updater
+# from .updater import Updater
 
 from .reviewer import Reviewer
 
@@ -57,7 +57,6 @@ __all__ = [
     'EditorGenerator',
     'BrowserStripper',
     'Templater',
-    'Updater',
 
     # headless
     'Reviewer',

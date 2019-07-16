@@ -33,7 +33,12 @@ __all__ = ['RE_CLOZE_BRACED', 'RE_CLOZE_RENDERED', 'RE_ELLIPSES',
            'RE_WHITESPACE', 'STRIP_HTML', 'Sanitizer']
 
 
-RE_CLOZE_BRACED = re.compile(anki.template.template.clozeReg % r'\d+')
+try: #rm anki dependency for stand-alone apps
+    clozeReg=anki.template.template.clozeReg
+except:
+    clozeReg=r"(?si)\{\{(c)%s::(.*?)(::(.*?))?\}\}"
+
+RE_CLOZE_BRACED = re.compile(clozeReg % r'\d+')
 RE_CLOZE_RENDERED = re.compile(
     # see anki.template.template.clozeText; n.b. the presence of the brackets
     # in the pattern means that this will only match and replace on the

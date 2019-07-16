@@ -44,6 +44,7 @@ from .naver import Naver
 from .neospeech import NeoSpeech
 from .oddcast import Oddcast
 from .oxford import Oxford
+from .oxford_lrn import OxfordLrn
 from .pico2wave import Pico2Wave
 from .rhvoice import RHVoice
 from .sapi5com import SAPI5COM
@@ -81,6 +82,7 @@ __all__ = [
     'NeoSpeech',
     'Oddcast',
     'Oxford',
+    'OxfordLrn',
     'Pico2Wave',
     'RHVoice',
     'SAPI5COM',

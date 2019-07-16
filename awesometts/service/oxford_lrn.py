@@ -1,20 +1,33 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2019 Lovac42
-# Copyright (C) 2010-2018 Anki AwesomeTTS Development Team
-# Support: https://github.com/lovac42/AddonManager21
-# License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
+
+# AwesomeTTS text-to-speech add-on for Anki
+# Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Service implementation for Oxford Dictionary
+Service implementation for Oxford Learners Dictionary
 """
 
 import re
 from html.parser import HTMLParser
+from urllib.parse import quote
 
 from .base import Service
 from .common import Trait
 
-__all__ = ['Oxford']
+__all__ = ['OxfordLrn']
 
 
 RE_WHITESPACE = re.compile(r'[-\0\s_]+', re.UNICODE)
@@ -24,6 +37,8 @@ RE_WHITESPACE = re.compile(r'[-\0\s_]+', re.UNICODE)
 # important so that accented characters are not filtered out.
 RE_DISCARD = re.compile(r'[^-.\s\w]+', re.UNICODE)
 
+RE_AUD_CLASS = re.compile(r'pron-u[sk]') #search for pron
+
 
 class OxfordLister(HTMLParser):
     """Accumulate all found MP3s into `sounds` member."""
@@ -31,25 +46,25 @@ class OxfordLister(HTMLParser):
     def reset(self):
         HTMLParser.reset(self)
         self.sounds = []
-        self.prev_tag = ""
 
     def handle_starttag(self, tag, attrs):
-        if tag == "audio" and self.prev_tag == "a":
-            snd = [v for k, v in attrs if k == "src"]
-            if snd:
-                self.sounds.extend(snd)
-        if tag == "a" and ("class", "speaker") in attrs:
-            self.prev_tag = tag
+        if tag == "div":
+            txt=self.get_starttag_text()
+            if RE_AUD_CLASS.search(txt):
+                snd = [v for k, v in attrs if k == "data-src-mp3"]
+                if snd:
+                    self.sounds.extend(snd)
 
 
-class Oxford(Service):
+
+class OxfordLrn(Service):
     """
     Provides a Service-compliant implementation for Oxford Dictionary.
     """
 
     __slots__ = []
 
-    NAME = "Oxford Dictionary (Lexico)"
+    NAME = "Oxford Learners Dictionary"
 
     TRAITS = [Trait.INTERNET, Trait.DICTIONARY]
 
@@ -58,7 +73,7 @@ class Oxford(Service):
         Returns a short, static description.
         """
 
-        return "Lexico Dictionary (British only now, get over it); " \
+        return "Oxford Learners Dictionary (British and American English); " \
             "dictionary words only, with (optional) fuzzy matching"
 
     def options(self):
@@ -67,6 +82,11 @@ class Oxford(Service):
         """
 
         voice_lookup = dict([
+            # aliases for English, American
+            (self.normalize(alias), 'en-US')
+            for alias in ['American', 'American English', 'English, American',
+                          'US']
+        ] + [
             # aliases for English, British ("default" for the OED)
             (self.normalize(alias), 'en-GB')
             for alias in ['British', 'British English', 'English, British',
@@ -84,8 +104,9 @@ class Oxford(Service):
             dict(
                 key='voice',
                 label="Voice",
-                values=[('en-GB', "English, British (en-GB)")],
-                default='en-GB',
+                values=[('en-US', "English, American (en-US)"),
+                        ('en-GB', "English, British (en-GB)")],
+                default='en-US',
                 transform=transform_voice,
             ),
             dict(
@@ -116,10 +137,9 @@ class Oxford(Service):
         if len(text) > 100:
             raise IOError("Input text is too long for the Oxford Dictionary")
 
-        from urllib.parse import quote
-        dict_url = 'https://www.lexico.com/%s/definition/%s' % (
-            'en' if options['voice'] == 'en-GB' else '',
-            quote(text.encode('utf-8'))
+        dict_url = 'https://www.oxfordlearnersdictionaries.com/us/definition/%s/%s' % (
+            'american_english' if options['voice'] == 'en-US' else 'english',
+            quote(text.replace(' ','-').encode('utf-8'))
         )
 
         try:
@@ -149,7 +169,6 @@ class Oxford(Service):
 
         if len(parser.sounds) > 0:
             sound_url = parser.sounds[0]
-
             self.net_download(
                 path,
                 sound_url,

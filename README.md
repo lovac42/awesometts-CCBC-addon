@@ -15,8 +15,9 @@ Anki is released under the [GNU GPL v3](LICENSE.txt).
 ## Changes from current official v1.12.0:
 Fixed Naver issue (used eescueta's version)  
 Fixed Neospeech (has demo tag on mp3)  
-Fixed Oxford (Only British en-GB available)  
-Added Bing TTS  
+Fixed Oxford (Now Lexico.com and only British en-GB is available)  
+Added Oxford Learner's Dictionary  
+Added Bing Translator  
 Added Watson TTS  
 Added Google Cloud TTS service by Nickolay (kelciour)  
 Added Cambridge Dictionary by m-rtin  

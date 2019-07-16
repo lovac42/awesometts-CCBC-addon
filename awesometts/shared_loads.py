@@ -206,6 +206,7 @@ router = Router(
             ('neospeech', service.NeoSpeech),
             ('oddcast', service.Oddcast),
             ('oxford', service.Oxford),
+            ('oxford_lrn', service.OxfordLrn),
             ('pico2wave', service.Pico2Wave),
             ('rhvoice', service.RHVoice),
             ('sapi5com', service.SAPI5COM),

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2019 Lovac42
 # Copyright (C) 2010-2018 Anki AwesomeTTS Development Team
-# Support: https://github.com/lovac42/AddonManager21
+# Support: https://github.com/lovac42/awesometts-CCBC-addon
 # License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
+
 
 """
 Service implementation for Watson Text-to-Speech API

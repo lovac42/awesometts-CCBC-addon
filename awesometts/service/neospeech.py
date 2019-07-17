@@ -151,7 +151,7 @@ class NeoSpeech(Service):
                 payload = self.net_stream((DEMO_URL, 
                                             dict(
                                                 l="tts-software", 
-                                                t=subtext, 
+                                                t=subtext.replace(' ','-'), #get around single word limits
                                                 v=options['voice'],
                                                 f="mp3"
                                             )),

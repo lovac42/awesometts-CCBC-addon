@@ -3,7 +3,7 @@
 ## AWESOM-O (Application)
 Awesomo is a wrapper that launches AwesomeTTS without the need for Anki. This allows the program to be used independent of Anki allowing more creative applications such as a screen reader or clipboard text reader.
 
-Supermemo users may find this userful as there isn't a need to download 150mb of useless files just to use AwesomeTTS.
+Supermemo users may find this useful as there isn't a need to download 150mb of useless files just to use AwesomeTTS.
 
 
 ## AwesomeTTS (Library)

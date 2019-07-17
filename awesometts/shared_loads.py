@@ -38,7 +38,7 @@ from .router import Router
 from .text import Sanitizer
 
 
-VERSION = '1.14.0'
+VERSION = '1.15.0'
 
 
 WEB = 'https://ankiatts.appspot.com'

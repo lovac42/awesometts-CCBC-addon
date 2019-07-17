@@ -44,23 +44,30 @@ if __name__ == "__main__":
 # from . import awesometts  # noqa, pylint:disable=wrong-import-position
 
 from anki import version
-CCBC = version.endswith("ccbc")
-if CCBC:
-    from . import ccbc_loader as awesometts
-else:
-    from . import anki21_loader as awesometts
+
+def launch_addon():
+    CCBC = version.endswith("ccbc")
+    if CCBC:
+        from . import ccbc_loader as awesometts
+    else:
+        from . import anki21_loader as awesometts
+
+    # If a specific component of AwesomeTTS that you do not need is causing a
+    # problem (e.g. conflicting with another add-on), you can disable it here by
+    # prefixing it with a hash (#) sign and restarting Anki.
+
+    awesometts.browser_menus()     # mass generator and MP3 stripper
+    awesometts.cache_control()     # automatically clear the media cache regularly
+    awesometts.cards_button()      # on-the-fly templater helper in card view
+    awesometts.config_menu()       # provides access to configuration dialog
+    awesometts.editor_button()     # single audio clip generator button
+    awesometts.reviewer_hooks()    # on-the-fly playback/shortcuts, context menus
+    awesometts.sound_tag_delays()  # delayed playing of stored [sound]s in review
+    awesometts.temp_files()        # remove temporary files upon session exit
+    awesometts.window_shortcuts()  # enable/update shortcuts for add-on windows
 
 
-# If a specific component of AwesomeTTS that you do not need is causing a
-# problem (e.g. conflicting with another add-on), you can disable it here by
-# prefixing it with a hash (#) sign and restarting Anki.
+if version!="AWESOM-O 4000":
+    launch_addon()
+#else: used as a library
 
-awesometts.browser_menus()     # mass generator and MP3 stripper
-awesometts.cache_control()     # automatically clear the media cache regularly
-awesometts.cards_button()      # on-the-fly templater helper in card view
-awesometts.config_menu()       # provides access to configuration dialog
-awesometts.editor_button()     # single audio clip generator button
-awesometts.reviewer_hooks()    # on-the-fly playback/shortcuts, context menus
-awesometts.sound_tag_delays()  # delayed playing of stored [sound]s in review
-awesometts.temp_files()        # remove temporary files upon session exit
-awesometts.window_shortcuts()  # enable/update shortcuts for add-on windows

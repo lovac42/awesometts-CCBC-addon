@@ -1,18 +1,20 @@
-## AwesomeTTS for Anki2.1 & CCBC
+# Awesomo and AwesomeTTS
 
+## AWESOM-O (Application)
+Awesomo is a wrapper that launches AwesomeTTS without the need for Anki. This allows the program to be used independent of Anki allowing more creative applications such as a screen reader or clipboard text reader.
+
+Supermemo users may find this userful as there isn't a need to download 150mb of useless files just to use AwesomeTTS.
+
+
+## AwesomeTTS (Library)
 AwesomeTTS makes it easy for language-learners and other students to add
 speech to their personal [Anki](https://apps.ankiweb.net) card decks.
 
 Once loaded into the Anki `addons` directory, the AwesomeTTS add-on code
 enables both on-demand playback and recording functionality.
 
-## License
 
-AwesomeTTS is free and open-source software. The add-on code that runs within
-Anki is released under the [GNU GPL v3](LICENSE.txt).
-
-
-## Changes from current official v1.12.0:
+### Changes from current official v1.12.0:
 Fixed Naver issue (used eescueta's version)  
 Fixed Neospeech (has demo tag on mp3)  
 Fixed Oxford (Now Lexico.com and only British en-GB is available)  
@@ -25,7 +27,7 @@ Added Forvo service by Dador
 
 
 
-## Needs to fix:
+### Needs to fix:
 baidu  
 duden  
 fluency.nl  

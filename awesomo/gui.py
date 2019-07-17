@@ -16,8 +16,6 @@ from awesometts.gui.generator import EditorGenerator
 from awesometts.shared_loads import addon
 
 
-TITLE="AWESOM-O"
-
 ICON_FILE = ICONS+"/awesomo.png"
 ICON = QtGui.QIcon(ICON_FILE)
 
@@ -36,7 +34,7 @@ class AppGenerator(EditorGenerator):
         self._editor = FakeEditor()
 
         super(EditorGenerator, self).__init__(
-            title=TITLE+' 4000',
+            title="A.W.E.S.O.M.-O 4000",
             addon=addon,
             alerts=aqt.utils.showWarning,
             ask=aqt.utils.getText,
@@ -45,7 +43,7 @@ class AppGenerator(EditorGenerator):
         )
 
         self.setWindowIcon(ICON)
-        self.setWindowTitle(TITLE)
+        self.setWindowTitle("AWESOM-O")
 
 
     # UI Construction ########################################################

@@ -204,7 +204,10 @@ class Templater(ServiceDialog):
         from cgi import escape
 
         now = self._get_all()
-        tform = self._card_layout.tab['tform']
+        try:
+            tform = self._card_layout.tab['tform'] #2.0, ccbc
+        except AttributeError:
+            tform = self._card_layout.tform #2.1
         target = getattr(tform, now['templater_target'])
         presets = self.findChild(QtWidgets.QComboBox, 'presets_dropdown')
 

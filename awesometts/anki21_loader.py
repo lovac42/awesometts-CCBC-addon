@@ -379,9 +379,8 @@ def reviewer_hooks():
                 else:
                     needs_separator = True
 
-                def preset_glue(xxx_todo_changeme):
+                def preset_glue(name, preset):
                     """Closure for callback handler to access `preset`."""
-                    (name, preset) = xxx_todo_changeme
                     submenu.addAction(
                         'Say "%s" w/ %s' % (say_display, name),
                         lambda: reviewer.selection_handler(say_text,
@@ -390,7 +389,7 @@ def reviewer_hooks():
                     )
                 for item in sorted(config['presets'].items(),
                                    key=lambda item: item[0].lower()):
-                    preset_glue(item)
+                    preset_glue(item[0],item[1])
 
             if config['groups']:
                 if needs_separator:
@@ -398,9 +397,8 @@ def reviewer_hooks():
                 else:
                     needs_separator = True
 
-                def group_glue(xxx_todo_changeme1):
+                def group_glue(name, group):
                     """Closure for callback handler to access `group`."""
-                    (name, group) = xxx_todo_changeme1
                     submenu.addAction(
                         'Say "%s" w/ %s' % (say_display, name),
                         lambda: reviewer.selection_handler_group(say_text,
@@ -409,7 +407,7 @@ def reviewer_hooks():
                     )
                 for item in sorted(config['groups'].items(),
                                    key=lambda item: item[0].lower()):
-                    group_glue(item)
+                    group_glue(item[0],item[1])
 
         if tts_question or tts_answer:
             if needs_separator:

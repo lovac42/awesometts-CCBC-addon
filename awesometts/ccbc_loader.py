@@ -376,7 +376,7 @@ def reviewer_hooks():
                     )
                 for item in sorted(config['presets'].items(),
                                    key=lambda item: item[0].lower()):
-                    preset_glue(item)
+                    preset_glue(item[0],item[1])
 
             if config['groups']:
                 if needs_separator:
@@ -394,7 +394,7 @@ def reviewer_hooks():
                     )
                 for item in sorted(config['groups'].items(),
                                    key=lambda item: item[0].lower()):
-                    group_glue(item)
+                    group_glue(item[0],item[1])
 
         if tts_question or tts_answer:
             if needs_separator:

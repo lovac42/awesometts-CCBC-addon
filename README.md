@@ -14,6 +14,9 @@ Once loaded into the Anki `addons` directory, the AwesomeTTS add-on code
 enables both on-demand playback and recording functionality.
 
 
+### Changes for cloze:
+Cloze patterns are now converted to ```[...]``` instead of ```...```. This is to prevent conflicts with texts with actual ellipses.
+
 ### Changes from current official v1.12.0:
 Fixed Naver issue (used eescueta's version)  
 Fixed Neospeech (has demo tag on mp3)  

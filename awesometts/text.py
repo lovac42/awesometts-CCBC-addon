@@ -143,7 +143,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         """Ellipsizes given chars from the text."""
 
         return ''.join(
-            ('...' if char in chars else char)
+            ('[...]' if char in chars else char)
             for char in text
         )
 
@@ -159,7 +159,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         """
 
         return RE_CLOZE_BRACED.sub(
-            '...' if mode == 'ellipsize'
+            '[...]' if mode == 'ellipsize'
             else '' if mode == 'remove'
             else self._rule_clozes_braced.wrapper if mode == 'wrap'
             else self._rule_clozes_braced.deleter if mode == 'deleted'
@@ -171,17 +171,17 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
     _rule_clozes_braced.wrapper = lambda match: (
         '... %s ...' % match.group(3).strip('.') if (match.group(3) and
                                                      match.group(3).strip('.'))
-        else '...'
+        else '[...]'
     )
 
     _rule_clozes_braced.deleter = lambda match: (
         match.group(1) if match.group(1)
-        else '...'
+        else '[...]'
     )
 
     _rule_clozes_braced.ankier = lambda match: (
         match.group(3) if match.group(3)
-        else '...'
+        else '[...]'
     )
 
     def _rule_clozes_rendered(self, text, mode):
@@ -191,7 +191,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         """
 
         return RE_CLOZE_RENDERED.sub(
-            '...' if mode == 'ellipsize'
+            '[...]' if mode == 'ellipsize'
             else '' if mode == 'remove'
             else self._rule_clozes_rendered.wrapper if mode == 'wrap'
             else self._rule_clozes_rendered.ankier,  # mode == 'anki'
@@ -215,7 +215,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
 
         revealed_tags = BeautifulSoup(text, 'html.parser')('span', attrs={'class': 'cloze'})
 
-        return ' ... '.join(
+        return ' [...] '.join(
             ''.join(
                 str(content)
                 for content in tag.contents
@@ -238,8 +238,8 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
             text,
         )
 
-    _rule_counter.wrapper = lambda match: (' ... ' + str(len(match.group(0))) +
-                                           ' ... ')
+    _rule_counter.wrapper = lambda match: (' [...] ' + str(len(match.group(0))) +
+                                           ' [...] ')
 
     _rule_counter.spacer = lambda match: (' ' + str(len(match.group(0))) + ' ')
 
@@ -269,7 +269,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         Additionally, drop any leading or trailing ellipses entirely.
         """
 
-        text = RE_ELLIPSES.sub(' ... ', text)
+        text = RE_ELLIPSES.sub(' [...] ', text)
         text = RE_ELLIPSES_LEADING.sub(' ', text)
         text = RE_ELLIPSES_TRAILING.sub(' ', text)
         return text
@@ -314,7 +314,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         (e.g. paragraph tags, div containers) with an ellipsis.
         """
 
-        return RE_NEWLINEISH.sub(' ... ', text)
+        return RE_NEWLINEISH.sub(' [...] ', text)
 
     def _rule_sounds_ours(self, text):
         """

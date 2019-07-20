@@ -497,3 +497,27 @@ def window_shortcuts():
     on_sequence_change(config)  # set config menu if created before we ran
     config.bind(['launch_' + key for key in sequences.keys()],
                 on_sequence_change)
+
+
+
+
+def speak_text(text, type="presets", name=""): #or  type="groups"
+    played=False
+    if text and config[type]:
+        for key,preset in config[type].items():
+            if not name or key==name:
+                window=aqt.mw.reviewer.web.window()
+                reviewer=gui.Reviewer(addon=addon,
+                            alerts=aqt.utils.showWarning,
+                            mw=aqt.mw)
+                if type=="presets":
+                    reviewer.selection_handler(text,preset,window)
+                else: #groups
+                    reviewer.selection_handler_group(text,preset,window)
+                played=True
+                break
+        if not played:
+            aqt.utils.showWarning("No preset named %s."%name)
+
+anki.hooks.addHook('AwesomeTTS.speak', speak_text)
+

@@ -14,16 +14,14 @@ class Launcher(QtGui.QWidget):
 
     def setPaths(self, path):
         from awesometts import paths
-        EXEC=os.path.dirname(os.path.abspath(path))
-        paths.ADDON_IS_LINKED = os.path.islink(EXEC)
-        paths.CONFIG = os.path.join(EXEC, 'config.db')
-        paths.LOG = os.path.join(EXEC, 'awesometts.log')
-
-        CACHE=os.path.join(EXEC, '.cache')
+        EXEC_DIR=os.path.dirname(os.path.abspath(path))
+        paths.ADDON_IS_LINKED = os.path.islink(EXEC_DIR)
+        paths.CONFIG = os.path.join(EXEC_DIR, 'config.db')
+        CACHE=os.path.join(EXEC_DIR, '.cache')
         if not os.path.isdir(CACHE):
             os.mkdir(CACHE)
         paths.CACHE=CACHE
-        paths.ADDON=EXEC
+        paths.ADDON=EXEC_DIR
 
     def show(self):
         from awesomo import gui

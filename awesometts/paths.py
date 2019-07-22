@@ -28,9 +28,9 @@ import tempfile
 __all__ = [
     'ADDON',
     'ADDON_IS_LINKED',
+    'BLANK',
     'CACHE',
     'CONFIG',
-    'LOG',
     'TEMP',
     'ICONS'
 ]
@@ -52,8 +52,6 @@ if not os.path.isdir(CACHE):
 
 ICONS = os.path.join(ADDON, 'gui/icons')
 
-CONFIG = os.path.join(ADDON, 'config.db')
-
-LOG = os.path.join(ADDON, 'addon.log')
+CONFIG = os.path.join(ADDON, 'user_files/config.db')
 
 TEMP = tempfile.gettempdir()

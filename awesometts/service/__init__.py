@@ -51,6 +51,7 @@ from .sapi5com import SAPI5COM
 from .sapi5js import SAPI5JS
 from .say import Say
 from .spanishdict import SpanishDict
+from .textaloud import TextAloud
 from .voicetext import VoiceText
 from .watsontts import WatsonTTS
 from .wiktionary import Wiktionary
@@ -89,6 +90,7 @@ __all__ = [
     'SAPI5JS',
     'Say',
     'SpanishDict',
+    'TextAloud',
     'VoiceText',
     'WatsonTTS',
     'Wiktionary',

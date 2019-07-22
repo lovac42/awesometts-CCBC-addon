@@ -213,6 +213,7 @@ router = Router(
             ('sapi5js', service.SAPI5JS),
             ('say', service.Say),
             ('spanishdict', service.SpanishDict),
+            ('textaloud', service.TextAloud),
             ('voicetext', service.VoiceText),
             ('watsontts', service.WatsonTTS),
             # ('wiktionary', service.Wiktionary),

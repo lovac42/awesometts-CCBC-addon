@@ -27,6 +27,7 @@ Added Watson TTS
 Added Google Cloud TTS service by Nickolay (kelciour)  
 Added Cambridge Dictionary by m-rtin  
 Added Forvo service by Dador  
+Added TextAloud (Polly) service
 
 
 

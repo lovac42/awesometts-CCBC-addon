@@ -181,6 +181,7 @@ class SAPI5JS(Service):
                 label="Voice",
                 values=self._voice_list,
                 transform=transform_voice,
+                default=self._voice_list[0][0],
             ),
 
             dict(

@@ -133,6 +133,7 @@ class SAPI5COM(Service):
                 values=[(voice, get_voice_desc(voice))
                         for voice in sorted(self._voice_map.keys())],
                 transform=transform_voice,
+                default=next(iter(self._voice_map)),
             ),
 
             dict(

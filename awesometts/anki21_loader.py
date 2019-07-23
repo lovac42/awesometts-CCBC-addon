@@ -510,22 +510,22 @@ def window_shortcuts():
 
 
 
+
 def speak_text(text, type="presets", name=""): #or  type="groups"
-    played=False
-    if text and config[type]:
-        for key,preset in config[type].items():
-            if not name or key==name:
-                window=aqt.mw.reviewer.web.window()
-                reviewer=gui.Reviewer(addon=addon,
-                            alerts=aqt.utils.showWarning,
-                            mw=aqt.mw)
-                if type=="presets":
-                    reviewer.selection_handler(text,preset,window)
-                else: #groups
-                    reviewer.selection_handler_group(text,preset,window)
-                played=True
-                break
-        if not played:
-            aqt.utils.showWarning("No preset named %s."%name)
+    if not text: return
+
+    preset=config[type].get(name)
+    window=aqt.mw.reviewer.web.window()
+    if not preset or type=="presets":
+        reviewer.selection_handler(text,preset or DEFAULT_PRESET,window)
+    else: #groups
+        reviewer.selection_handler_group(text,preset,window)
 
 anki.hooks.addHook('AwesomeTTS.speak', speak_text)
+
+
+def speak_blank(secs):
+    # insert pause only when audio queue is empty
+    player._insert_blanks(secs,"runhook","")
+anki.hooks.addHook('AwesomeTTS.silence', speak_blank)
+

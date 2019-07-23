@@ -30,7 +30,7 @@ except:
     from PyQt5.QtCore import PYQT_VERSION_STR, Qt
     from PyQt5.QtGui import QKeySequence
 
-from . import conversion as to, gui, paths, service
+from . import conversion as to, gui, paths, service, utils
 from .bundle import Bundle
 from .config import Config
 from .player import Player
@@ -85,6 +85,10 @@ logger = Bundle(debug=lambda *a, **k: None, error=lambda *a, **k: None,
 # for logging output, replace `logger` with a real one, e.g.:
 # import logging as logger
 # logger.basicConfig(stream=sys.stdout, level=logger.DEBUG)
+
+
+
+DEFAULT_PRESET = utils.getDefaultPreset()
 
 sequences = {key: QKeySequence()
              for key in ['browser_generator', 'browser_stripper',
@@ -382,3 +386,7 @@ addon = Bundle(
 )
 # End core class initialization and dependency setup, pylint:enable=C0103
 
+
+reviewer=gui.Reviewer(addon=addon,
+                alerts=aqt.utils.showWarning,
+                mw=aqt.mw)

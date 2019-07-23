@@ -45,12 +45,22 @@ if __name__ == "__main__":
 
 from anki import version
 
+
+def onProfileLoaded():
+    # Used to trigger monitoring addons that depends on this addon.
+    # Ideally check 1 secs after profile loaded to prevent load order issues.
+    from anki.hooks import runHook
+    runHook('YetAnotherAwesomeTTS.configLoaded')
+
 def launch_addon():
     CCBC = version.endswith("ccbc")
     if CCBC:
         from . import ccbc_loader as awesometts
     else:
         from . import anki21_loader as awesometts
+
+    from anki.hooks import addHook
+    addHook("profileLoaded", onProfileLoaded)
 
     # If a specific component of AwesomeTTS that you do not need is causing a
     # problem (e.g. conflicting with another add-on), you can disable it here by

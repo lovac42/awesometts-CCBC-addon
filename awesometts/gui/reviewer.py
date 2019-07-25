@@ -35,6 +35,7 @@ except:
     from PyQt5.QtCore import Qt
 
 from .common import key_event_combo
+from ..utils import getDefaultPreset
 
 __all__ = ['Reviewer']
 
@@ -252,6 +253,10 @@ class Reviewer(object):
                              "the HTML cannot be parsed (is it valid?)")
             return
 
+        if not tags:
+            # Use default preset according to each OS
+            tags=BeautifulTTS('<tts default="default os preset">%s</tts>'%html)
+
         for tag in tags:
             self._play_html_tag(tag, from_template, playback_wrapper,
                                 parent, show_errors)
@@ -311,6 +316,19 @@ class Reviewer(object):
                 if show_errors:
                     self._alerts(
                         X_FOR_THIS_TAG_MSG % (attr['preset'], "preset",
+                                              tag.prettify()),
+                        parent,
+                    )
+                return
+
+        # Use default preset according to each OS
+        if 'default' in attr:
+            try:
+                attr = getDefaultPreset()
+            except KeyError:
+                if show_errors:
+                    self._alerts(
+                        X_FOR_THIS_TAG_MSG % (attr['default'], "preset",
                                               tag.prettify()),
                         parent,
                     )

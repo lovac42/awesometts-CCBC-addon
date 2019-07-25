@@ -184,6 +184,7 @@ class Google(Service):
                 label="Voice",
                 values=[(code, "%s (%s)" % (name, code))
                         for code, name in sorted(self._VOICE_CODES.items())],
+                default='en-US',
                 transform=transform_voice,
             ),
         ]

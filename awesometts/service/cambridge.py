@@ -96,7 +96,7 @@ class Cambridge(Service):
                 label="Voice",
                 values=[('en-US', "English, American (en-US)"),
                         ('en-GB', "English, British (en-GB)")],
-                default='en-GB',
+                default='en-US',
                 transform=transform_voice,
             ),
         ]

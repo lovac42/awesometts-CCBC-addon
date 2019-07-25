@@ -58,6 +58,7 @@ class Forvo(Service):
                 values=[(code, "%s (%s)" % (name, code))
                         for code, name
                         in sorted(VOICES.items(), key=lambda t: t[1])],
+                default='en',
                 transform=self.normalize,
             ),
         ]

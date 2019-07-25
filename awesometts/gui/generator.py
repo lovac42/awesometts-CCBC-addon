@@ -784,8 +784,7 @@ class EditorGenerator(ServiceDialog):
                 self._editor.addMedia(path),
             ),
             fail=lambda exception: (
-                self._alerts("Cannot record the input phrase with these "
-                             "settings.\n\n%s" % exception.message, self),
+                self._alerts("Cannot record the input phrase with these settings.\n\n%s" % exception.message if hasattr(exception, 'message') else str(exception), self),
                 text_input.setFocus(),
             ),
         )

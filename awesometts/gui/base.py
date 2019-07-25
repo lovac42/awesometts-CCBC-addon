@@ -824,7 +824,7 @@ class ServiceDialog(Dialog):
             okay=self._addon.player.preview,
             fail=lambda exception: self._alerts(
                 "Cannot preview the input phrase with these settings.\n\n%s" %
-                str(exception),
+                exception.message if hasattr(exception, 'message') else str(exception),
                 self,
             ),
             then=text_input.setFocus,

@@ -678,7 +678,7 @@ class Router(object):
                 except ValueError as exception:
                     problems.append(
                         "invalid value '%s' for '%s' attribute (%s)" %
-                        (options[key], key, exception.message)
+                        (options[key], key, exception.message if hasattr(exception, 'message') else str(exception))
                     )
 
                 except StopIteration:

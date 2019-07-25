@@ -25,7 +25,7 @@ from os.path import join
 import sys
 from time import time
 
-from PyQt4.QtGui import QKeySequence
+from PyQt4.QtGui import QKeySequence, QShortcut
 
 import anki
 import aqt
@@ -53,6 +53,9 @@ __all__ = ['browser_menus', 'cards_button', 'config_menu', 'editor_button',
 # These are all called manually from the AwesomeTTS.py loader so that if there
 # is some sort of breakage with a specific component, it could be possibly
 # disabled easily by users who are not utilizing that functionality.
+
+strip = Sanitizer([('newline_ellipsize', 'ellip_template_newlines')] +
+                STRIP_TEMPLATE_POSTHTML, config=config, logger=logger)
 
 
 def browser_menus():
@@ -301,9 +304,6 @@ def reviewer_hooks():
 
     # context menu playback
 
-    strip = Sanitizer([('newline_ellipsize', 'ellip_template_newlines')] +
-                      STRIP_TEMPLATE_POSTHTML, config=config, logger=logger)
-
     def on_context_menu(web_view, menu):
         """Populate context menu, given the context/configuration."""
 
@@ -501,22 +501,31 @@ def window_shortcuts():
 
 
 
+def speak_hooks():
 
-def speak_text(text, type="presets", name=""): #or  type="groups"
-    if not text: return
+    def speak_text(text, type="presets", name="", clean=True): #or  type="groups"
+        if not text: return
+        if clean:
+            text=strip(text)
+        preset=config[type].get(name)
+        window=aqt.mw.reviewer.web.window()
+        if not preset or type=="presets":
+            reviewer.selection_handler(text,preset or DEFAULT_PRESET,window)
+        else: #groups
+            reviewer.selection_handler_group(text,preset,window)
 
-    preset=config[type].get(name)
-    window=aqt.mw.reviewer.web.window()
-    if not preset or type=="presets":
-        reviewer.selection_handler(text,preset or DEFAULT_PRESET,window)
-    else: #groups
-        reviewer.selection_handler_group(text,preset,window)
+    anki.hooks.addHook('AwesomeTTS.speak', speak_text)
 
-anki.hooks.addHook('AwesomeTTS.speak', speak_text)
+    # special copy
+    QShortcut(sequences['read_text'].toString(), aqt.mw).activated.connect(
+        lambda: speak_text(
+            aqt.mw.reviewer.web.selectedText()
+            #TODO: add presets selection to config gui
+        )
+    )
 
-
-def speak_blank(secs):
-    # insert pause only when audio queue is empty
-    player._insert_blanks(secs,"runhook","")
-anki.hooks.addHook('AwesomeTTS.silence', speak_blank)
+    def speak_blank(secs):
+        # insert pause only when audio queue is empty
+        player._insert_blanks(secs,"runhook","")
+    anki.hooks.addHook('AwesomeTTS.silence', speak_blank)
 

@@ -91,7 +91,7 @@ logger = Bundle(debug=lambda *a, **k: None, error=lambda *a, **k: None,
 DEFAULT_PRESET = utils.getDefaultPreset()
 
 sequences = {key: QKeySequence()
-             for key in ['browser_generator', 'browser_stripper',
+             for key in ['browser_generator', 'browser_stripper', 'read_text',
                          'configurator', 'editor_generator', 'templater']}
 
 config = Config(
@@ -136,6 +136,8 @@ config = Config(
         ('launch_editor_generator', 'integer', Qt.ControlModifier | Qt.Key_T,
          to.nullable_key, to.nullable_int),
         ('launch_templater', 'integer', Qt.ControlModifier | Qt.Key_T,
+         to.nullable_key, to.nullable_int),
+        ('launch_read_text', 'integer', Qt.ControlModifier | Qt.ShiftModifier | Qt.Key_C,
          to.nullable_key, to.nullable_int),
         ('otf_only_revealed_cloze', 'integer', False, to.lax_bool, int),
         ('otf_remove_hints', 'integer', False, to.lax_bool, int),

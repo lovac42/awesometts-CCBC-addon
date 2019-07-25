@@ -511,21 +511,32 @@ def window_shortcuts():
 
 
 
-def speak_text(text, type="presets", name=""): #or  type="groups"
-    if not text: return
 
-    preset=config[type].get(name)
-    window=aqt.mw.reviewer.web.window()
-    if not preset or type=="presets":
-        reviewer.selection_handler(text,preset or DEFAULT_PRESET,window)
-    else: #groups
-        reviewer.selection_handler_group(text,preset,window)
+def speak_hooks():
 
-anki.hooks.addHook('AwesomeTTS.speak', speak_text)
+    def speak_text(text, type="presets", name="", clean=True): #or  type="groups"
+        if not text: return
+        if clean:
+            text=strip(text)
+        preset=config[type].get(name)
+        window=aqt.mw.reviewer.web.window()
+        if not preset or type=="presets":
+            reviewer.selection_handler(text,preset or DEFAULT_PRESET,window)
+        else: #groups
+            reviewer.selection_handler_group(text,preset,window)
 
+    anki.hooks.addHook('AwesomeTTS.speak', speak_text)
 
-def speak_blank(secs):
-    # insert pause only when audio queue is empty
-    player._insert_blanks(secs,"runhook","")
-anki.hooks.addHook('AwesomeTTS.silence', speak_blank)
+    # special copy
+    QShortcut(sequences['read_text'].toString(), aqt.mw).activated.connect(
+        lambda: speak_text(
+            aqt.mw.reviewer.web.selectedText()
+            #TODO: add presets selection to config gui
+        )
+    )
+
+    def speak_blank(secs):
+        # insert pause only when audio queue is empty
+        player._insert_blanks(secs,"runhook","")
+    anki.hooks.addHook('AwesomeTTS.silence', speak_blank)
 

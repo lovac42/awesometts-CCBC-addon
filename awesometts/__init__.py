@@ -75,6 +75,7 @@ def launch_addon():
     awesometts.sound_tag_delays()  # delayed playing of stored [sound]s in review
     awesometts.temp_files()        # remove temporary files upon session exit
     awesometts.window_shortcuts()  # enable/update shortcuts for add-on windows
+    awesometts.speak_hooks()
 
 
 if version!="AWESOM-O 4000":

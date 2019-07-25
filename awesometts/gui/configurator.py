@@ -53,7 +53,7 @@ class Configurator(Dialog):
         'delay_questions_stored_theirs', 'ellip_note_newlines',
         'ellip_template_newlines', 'filenames', 'filenames_human',
         'lame_flags', 'launch_browser_generator', 'launch_browser_stripper',
-        'launch_configurator', 'launch_editor_generator', 'launch_templater',
+        'launch_configurator', 'launch_editor_generator', 'launch_templater', 'launch_read_text',
         'otf_only_revealed_cloze', 'otf_remove_hints', 'spec_note_strip',
         'spec_note_ellipsize', 'spec_template_ellipsize', 'spec_note_count',
         'spec_note_count_wrap', 'spec_template_count',
@@ -453,7 +453,8 @@ class Configurator(Dialog):
                 ("insert <tts> tag in template editor", 'templater'),
                 ("mass generate MP3s in card browser", 'browser_generator'),
                 ("mass remove audio in card browser", 'browser_stripper'),
-                ("generate single MP3 in note editor*", 'editor_generator'),
+                ("read selected text in reviewer*", 'read_text'),
+                ("generate single MP3 in note editor**", 'editor_generator'),
         ]):
             grid.addWidget(Label("To " + desc + ", strike"), i, 0)
             grid.addWidget(self._factory_shortcut('launch_' + sub), i, 1)
@@ -464,8 +465,9 @@ class Configurator(Dialog):
 
         vert = QtWidgets.QVBoxLayout()
         vert.addWidget(group)
+        vert.addWidget(Note("* Requires restart"))
         vert.addWidget(Note(
-            "* By default, AwesomeTTS binds %(native)s for most actions. If "
+            "** By default, AwesomeTTS binds %(native)s for most actions. If "
             "you use math equations and LaTeX with Anki using the %(native)s "
             "E/M/T keystrokes, you may want to reassign or unbind the "
             "shortcut for generating in the note editor." %

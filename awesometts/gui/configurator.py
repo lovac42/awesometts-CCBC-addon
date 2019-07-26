@@ -415,14 +415,14 @@ class Configurator(Dialog):
 
         threshold = QtWidgets.QSpinBox()
         threshold.setObjectName('throttle_threshold')
-        threshold.setRange(5, 1000)
-        threshold.setSingleStep(5)
+        threshold.setRange(1, 30)
+        threshold.setSingleStep(1)
         threshold.setSuffix(" operations")
 
         sleep = QtWidgets.QSpinBox()
         sleep.setObjectName('throttle_sleep')
-        sleep.setRange(15, 10800)
-        sleep.setSingleStep(15)
+        sleep.setRange(10, 600)
+        sleep.setSingleStep(10)
         sleep.setSuffix(" seconds")
 
         hor = QtWidgets.QHBoxLayout()

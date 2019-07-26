@@ -541,3 +541,6 @@ def speak_hooks():
         player._insert_blanks(secs,"runhook","")
     anki.hooks.addHook('AwesomeTTS.silence', speak_blank)
 
+    def get_config(cb):
+        cb(config)
+    anki.hooks.addHook('AwesomeTTS.config', get_config)

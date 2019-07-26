@@ -46,3 +46,12 @@ yandex
 
 <img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bearerkey.png?raw=true" />  
 
+## Hooks:
+
+```
+runHook('AwesomeTTS.speak', "hello world") # say hello world with OS default voice (SAPI)
+
+runHook('AwesomeTTS.silence', 5) # adds 5 secs of silence
+
+runHook('AwesomeTTS.config', callback) # get the config settings
+```

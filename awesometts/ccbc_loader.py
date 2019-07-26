@@ -519,8 +519,9 @@ def speak_hooks():
     # special copy
     QShortcut(sequences['read_text'].toString(), aqt.mw).activated.connect(
         lambda: speak_text(
-            aqt.mw.reviewer.web.selectedText()
-            #TODO: add presets selection to config gui
+            text=aqt.mw.reviewer.web.selectedText(),
+            type=config['read_text_type'],
+            name=config['read_text_preset']
         )
     )
 

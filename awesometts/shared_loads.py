@@ -172,6 +172,8 @@ config = Config(
         ('updates_enabled', 'integer', True, to.lax_bool, int),
         ('updates_ignore', 'text', '', str, str),
         ('updates_postpone', 'integer', 0, int, lambda i: int(round(i))),
+        ('read_text_type', 'text', '', str, str),
+        ('read_text_preset', 'text', '', str, str),
     ],
     logger=logger,
     events=[

@@ -703,7 +703,7 @@ class Configurator(Dialog):
         preset=self.findChild(QtWidgets.QComboBox,'presets_dropdown').currentText()
         if not preset:
             preset=self.findChild(QtWidgets.QComboBox,'group_dropdown').currentText()
-            type="groups"
+            type="groups" if preset else ''
         self._addon.config['read_text_type']=type
         self._addon.config['read_text_preset']=preset
 

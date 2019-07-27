@@ -47,6 +47,7 @@ class Configurator(Dialog):
 
     _PROPERTY_KEYS = [
         'automatic_answers', 'automatic_answers_errors', 'automatic_questions',
+        'automatic_questions_auto_tag', 'automatic_answers_auto_tag',
         'automatic_questions_errors', 'cache_days', 'delay_answers_onthefly',
         'delay_answers_stored_ours', 'delay_answers_stored_theirs',
         'delay_questions_onthefly', 'delay_questions_stored_ours',
@@ -142,10 +143,13 @@ class Configurator(Dialog):
         """
 
         hor = QtWidgets.QHBoxLayout()
-        automatic = Checkbox("Automatically play on-the-fly <tts> tags",
-                             automatic_key)
+        automatic = Checkbox("Automatically play on-the-fly <tts> tags", automatic_key)
+        auto_tag = Checkbox("Auto Tag", automatic_key + '_auto_tag')
+        auto_tag.setToolTip("Auto add <tts> tag to card and use default voice if no tag is found.")
         errors = Checkbox("Show errors", automatic_key + '_errors')
+        errors.setToolTip("Report all download/network/service errors using showWarning")
         hor.addWidget(automatic)
+        hor.addWidget(auto_tag)
         hor.addWidget(errors)
         hor.addStretch()
 
@@ -172,8 +176,11 @@ class Configurator(Dialog):
 
         automatic.stateChanged.connect(lambda enabled: (
             errors.setEnabled(enabled),
+            auto_tag.setEnabled(enabled),
             wait_widgets['onthefly'].setEnabled(enabled),
         ))
+
+
 
         hor = QtWidgets.QHBoxLayout()
         hor.addWidget(Label("To manually play on-the-fly <tts> tags, strike"))

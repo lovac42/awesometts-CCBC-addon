@@ -101,8 +101,10 @@ config = Config(
     cols=[
         ('automaticAnswers', 'integer', True, to.lax_bool, int),
         ('automatic_answers_errors', 'integer', True, to.lax_bool, int),
+        ('automatic_answers_auto_tag', 'integer', False, to.lax_bool, int),
         ('automaticQuestions', 'integer', True, to.lax_bool, int),
         ('automatic_questions_errors', 'integer', True, to.lax_bool, int),
+        ('automatic_questions_auto_tag', 'integer', False, to.lax_bool, int),
         ('cache_days', 'integer', 365, int, int),
         ('delay_answers_onthefly', 'integer', 0, int, int),
         ('delay_answers_stored_ours', 'integer', 0, int, int),

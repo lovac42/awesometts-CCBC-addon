@@ -120,14 +120,16 @@ class Reviewer(object):
         config = self._addon.config
 
         if state == 'question' and config['automatic_questions']:
+            at=self._addon.config.get('automatic_questions_auto_tag',False)
             self._play_html('front', card.q(),
                             self._addon.player.otf_question, self._mw,
-                            show_errors=config['automatic_questions_errors'])
+                            show_errors=config['automatic_questions_errors'], autoTag=at)
 
         elif state == 'answer' and config['automatic_answers']:
+            at=self._addon.config.get('automatic_answers_auto_tag',False)
             self._play_html('back', self._get_answer(card),
                             self._addon.player.otf_answer, self._mw,
-                            show_errors=config['automatic_answers_errors'])
+                            show_errors=config['automatic_answers_errors'], autoTag=at)
 
     def key_handler(self, key_event, state, card, replay_audio):
         """
@@ -157,14 +159,16 @@ class Reviewer(object):
 
         question_combo = self._addon.config['tts_key_q']
         if question_combo and combo == question_combo:
+            at=self._addon.config.get('automatic_questions_auto_tag',False)
             self._play_html('front', card.q(),
-                            self._addon.player.otf_shortcut, self._mw)
+                            self._addon.player.otf_shortcut, self._mw, autoTag=at)
             handled = True
 
         answer_combo = self._addon.config['tts_key_a']
         if state == 'answer' and answer_combo and combo == answer_combo:
+            at=self._addon.config.get('automatic_answers_auto_tag',False)
             self._play_html('back', self._get_answer(card),
-                            self._addon.player.otf_shortcut, self._mw)
+                            self._addon.player.otf_shortcut, self._mw, autoTag=at)
             handled = True
 
         return handled
@@ -198,7 +202,7 @@ class Reviewer(object):
 
         return answer_html
 
-    def _play_html(self, side, html, playback, parent, show_errors=True):
+    def _play_html(self, side, html, playback, parent, show_errors=True, autoTag=False):
         """
         Read in the passed HTML, attempt to discover <tts> tags in it,
         and pass them to the router for processing.
@@ -253,9 +257,15 @@ class Reviewer(object):
                              "the HTML cannot be parsed (is it valid?)")
             return
 
-        if not tags:
+        if not tags and autoTag:
+            show_errors=False #unicodes tripping up sapi
             # Use default preset according to each OS
-            tags=BeautifulTTS('<tts default="default os preset">%s</tts>'%html)
+            type=self._addon.config['read_text_type'] or "default-"
+            tags=BeautifulTTS('<tts %s="%s">%s</tts>'%(
+                type[:-1],
+                self._addon.config['read_text_preset'] or "OS TTS Service",
+                html.replace('>Replay</svg>','></svg>') #Addon: Replay buttons on card, remove text to prevent noise.
+            ))('tts')
 
         for tag in tags:
             self._play_html_tag(tag, from_template, playback_wrapper,

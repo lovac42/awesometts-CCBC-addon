@@ -254,7 +254,7 @@ class Config(object):
         """
 
         name = self._db.normalize(name)
-        return self._cache[name] if name in self._cache else default
+        return self._cache.get(name, default)
 
     def __getattr__(self, name):
         """
@@ -273,7 +273,7 @@ class Config(object):
         raising a KeyError if the name does not exist.
         """
 
-        return self._cache[self._db.normalize(name)]
+        return self._cache.get(self._db.normalize(name))
 
     def update(self, *updates_dict, **kw_updates):
         """
@@ -299,7 +299,7 @@ class Config(object):
                 for unnormalized_name, value
                 in updates.items()
             ]
-            if value != self._cache[name]  # filter out unchanged values
+            if value != self._cache.get(name)  # filter out unchanged values
         ]
 
         # return if no updates

@@ -144,12 +144,9 @@ class Configurator(Dialog):
 
         hor = QtWidgets.QHBoxLayout()
         automatic = Checkbox("Automatically play on-the-fly <tts> tags", automatic_key)
-        auto_tag = Checkbox("Auto Tag", automatic_key + '_auto_tag')
-        auto_tag.setToolTip("Auto add <tts> tag to card and use default voice if no tag is found.")
         errors = Checkbox("Show errors", automatic_key + '_errors')
         errors.setToolTip("Report all download/network/service errors using showWarning")
         hor.addWidget(automatic)
-        hor.addWidget(auto_tag)
         hor.addWidget(errors)
         hor.addStretch()
 
@@ -176,7 +173,6 @@ class Configurator(Dialog):
 
         automatic.stateChanged.connect(lambda enabled: (
             errors.setEnabled(enabled),
-            auto_tag.setEnabled(enabled),
             wait_widgets['onthefly'].setEnabled(enabled),
         ))
 
@@ -185,7 +181,10 @@ class Configurator(Dialog):
         hor = QtWidgets.QHBoxLayout()
         hor.addWidget(Label("To manually play on-the-fly <tts> tags, strike"))
         hor.addWidget(self._factory_shortcut(shortcut_key))
-        hor.addStretch()
+        auto_tag = Checkbox("Auto Tag", automatic_key + '_auto_tag')
+        auto_tag.setToolTip("Auto add <tts> tag to card and use default voice if no tag is found.")
+        hor.addWidget(auto_tag)
+        # hor.addStretch()
         layout.addLayout(hor)
 
         group = QtWidgets.QGroupBox(label)

@@ -41,6 +41,8 @@ class Groups(Dialog):
         '_groups',         # deep copy from config['groups']
     ]
 
+    callback=None
+
     def __init__(self, ask, *args, **kwargs):
         super(Groups, self).__init__(title="Manage Preset Groups",
                                      *args, **kwargs)
@@ -246,6 +248,7 @@ class Groups(Dialog):
         }
         self._current_group = None
         super(Groups, self).accept()
+        self.callback()
 
     def reject(self):
         """Unset the current group."""
@@ -265,3 +268,6 @@ class Groups(Dialog):
             list_view.commitData(editor)  # if an editor is open, save it
 
         self._groups[name]['presets'] = list_view.model().raw_data
+
+    def setCallback(self, cb):
+        self.callback=cb

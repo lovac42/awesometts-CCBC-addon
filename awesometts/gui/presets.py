@@ -34,6 +34,8 @@ class Presets(ServiceDialog):
 
     __slots__ = []
 
+    callback=None
+
     def __init__(self, *args, **kwargs):
         super(Presets, self).__init__(title="Manage Service Presets",
                                       *args, **kwargs)
@@ -75,8 +77,12 @@ class Presets(ServiceDialog):
 
     # Events #################################################################
 
+    def setCallback(self, cb):
+        self.callback=cb
+
     def accept(self):
         """Remember the user's options if they hit "Okay"."""
 
         self._addon.config.update(self._get_all())
         super(Presets, self).accept()
+        self.callback()

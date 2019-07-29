@@ -578,41 +578,8 @@ class Configurator(Dialog):
 
     def _ui_tabs_advanced_copy(self):
         """Returns the "Presets" input group."""
-        type=self._addon.config['read_text_type']
-        name=self._addon.config['read_text_preset']
 
-        presets=self._addon.config['presets']
-        presets_dropdown=QtWidgets.QComboBox()
-        presets_dropdown.setObjectName('presets_dropdown')
-        presets_dropdown.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                       QtWidgets.QSizePolicy.Preferred)
-        presets_dropdown.activated.connect(self._on_preset_activated)
-
-        i=1
-        presets_dropdown.addItem("")
-        for k,v in presets.items():
-            presets_dropdown.addItem("")
-            presets_dropdown.setItemText(i,k)
-            if type=='presets' and k==name:
-                presets_dropdown.setCurrentIndex(i)
-            i+=1
-
-        group=self._addon.config['groups']
-        group_dropdown=QtWidgets.QComboBox()
-        group_dropdown.setObjectName('group_dropdown')
-        group_dropdown.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                     QtWidgets.QSizePolicy.Preferred)
-        group_dropdown.activated.connect(self._on_group_activated)
-
-        i=1
-        group_dropdown.addItem("")
-        for k,v in group.items():
-            group_dropdown.addItem("")
-            group_dropdown.setItemText(i,k)
-            if type=='groups' and k==name:
-                group_dropdown.setCurrentIndex(i)
-            i+=1
-
+        presets_dropdown, group_dropdown=self.on_update_preset()
         hor_presets=QtWidgets.QHBoxLayout()
         hor_presets.addWidget(Label("Preset:"))
         hor_presets.addWidget(presets_dropdown)
@@ -624,19 +591,10 @@ class Configurator(Dialog):
         vert.addWidget(Note("Select default preset/group to use for reading the selected text."))
         vert.addLayout(hor_presets)
         vert.addLayout(hor_groups)
-        vert.addWidget(Note("* May require restart for updated lists to show."))
 
         group_box = QtWidgets.QGroupBox("Read Selected Text: Presets and Groups")
         group_box.setLayout(vert)
         return group_box
-
-    def _on_preset_activated(self):
-        combo_box=self.findChild(QtWidgets.QComboBox,'group_dropdown')
-        combo_box.setCurrentIndex(0)
-
-    def _on_group_activated(self):
-        combo_box=self.findChild(QtWidgets.QComboBox,'presets_dropdown')
-        combo_box.setCurrentIndex(0)
 
     # Factories ##############################################################
 
@@ -681,6 +639,7 @@ class Configurator(Dialog):
             elif isinstance(widget, QtWidgets.QListView):
                 widget.setModel(value)
 
+
         widget = self.findChild(QtWidgets.QPushButton, 'on_cache')
         widget.atts_list = (
             [filename for filename in os.listdir(self._addon.paths.cache)]
@@ -703,6 +662,8 @@ class Configurator(Dialog):
         else:
             widget.setEnabled(False)
             widget.setText("Forget Failures")
+
+        self.on_update_preset()
 
         super(Configurator, self).show(*args, **kwargs)
 
@@ -808,6 +769,8 @@ class Configurator(Dialog):
                                           alerts=self._alerts,
                                           ask=self._ask,
                                           parent=self)
+
+            self._preset_editor.setCallback(self.on_update_preset)
         self._preset_editor.show()
 
     def _on_groups(self):
@@ -825,7 +788,63 @@ class Configurator(Dialog):
             self._group_editor = Groups(ask=self._ask, addon=self._addon,
                                         parent=self)
 
+            self._group_editor.setCallback(self.on_update_preset)
         self._group_editor.show()
+
+
+
+    def on_update_preset(self):
+        "Rebuild dropdown lists"
+
+        type=self._addon.config['read_text_type']
+        name=self._addon.config['read_text_preset']
+
+        presets_dropdown=self.findChild(QtWidgets.QComboBox, 'presets_dropdown')
+        if not presets_dropdown:
+            presets_dropdown=QtWidgets.QComboBox()
+            presets_dropdown.setObjectName('presets_dropdown')
+            presets_dropdown.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                           QtWidgets.QSizePolicy.Preferred)
+            presets_dropdown.activated.connect(self._on_preset_activated)
+
+        group_dropdown=self.findChild(QtWidgets.QComboBox, 'group_dropdown')
+        if not group_dropdown:
+            group_dropdown=QtWidgets.QComboBox()
+            group_dropdown.setObjectName('group_dropdown')
+            group_dropdown.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                         QtWidgets.QSizePolicy.Preferred)
+            group_dropdown.activated.connect(self._on_group_activated)
+
+        i=1
+        presets_dropdown.clear()
+        presets_dropdown.addItem("")
+        for k,v in self._addon.config['presets'].items():
+            presets_dropdown.addItem("")
+            presets_dropdown.setItemText(i,k)
+            if type=='presets' and k==name:
+                presets_dropdown.setCurrentIndex(i)
+            i+=1
+
+        i=1
+        group_dropdown.clear()
+        group_dropdown.addItem("")
+        for k,v in self._addon.config['groups'].items():
+            group_dropdown.addItem("")
+            group_dropdown.setItemText(i,k)
+            if type=='groups' and k==name:
+                group_dropdown.setCurrentIndex(i)
+            i+=1
+
+        return presets_dropdown, group_dropdown
+
+    def _on_preset_activated(self):
+        combo_box=self.findChild(QtWidgets.QComboBox,'group_dropdown')
+        combo_box.setCurrentIndex(0)
+
+    def _on_group_activated(self):
+        combo_box=self.findChild(QtWidgets.QComboBox,'presets_dropdown')
+        combo_box.setCurrentIndex(0)
+
 
     def _on_update_request(self):
         """Attempts update request w/ add-on updates interface."""

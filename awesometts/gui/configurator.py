@@ -46,9 +46,12 @@ class Configurator(Dialog):
     """Provides a dialog for configuring the add-on."""
 
     _PROPERTY_KEYS = [
-        'automatic_answers', 'automatic_answers_errors', 'automatic_questions',
+        'automatic_answers', 'automatic_questions',
+        'automatic_answers_errors', 'automatic_questions_errors',
+        'manual_answers_errors', 'manual_questions_errors',
         'automatic_questions_auto_tag', 'automatic_answers_auto_tag',
-        'automatic_questions_errors', 'cache_days', 'delay_answers_onthefly',
+        'manual_questions_auto_tag', 'manual_answers_auto_tag',
+        'cache_days', 'delay_answers_onthefly',
         'delay_answers_stored_ours', 'delay_answers_stored_theirs',
         'delay_questions_onthefly', 'delay_questions_stored_ours',
         'delay_questions_stored_theirs', 'ellip_note_newlines',
@@ -144,9 +147,12 @@ class Configurator(Dialog):
 
         hor = QtWidgets.QHBoxLayout()
         automatic = Checkbox("Automatically play on-the-fly <tts> tags", automatic_key)
+        auto_tag = Checkbox("Auto Tag", automatic_key + '_auto_tag')
+        auto_tag.setToolTip("Auto wrap <tts> tag to card and use default voice if no tag is found.")
         errors = Checkbox("Show errors", automatic_key + '_errors')
         errors.setToolTip("Report all download/network/service errors using showWarning")
         hor.addWidget(automatic)
+        hor.addWidget(auto_tag)
         hor.addWidget(errors)
         hor.addStretch()
 
@@ -172,19 +178,22 @@ class Configurator(Dialog):
             layout.addLayout(hor)
 
         automatic.stateChanged.connect(lambda enabled: (
+            auto_tag.setEnabled(enabled),
             errors.setEnabled(enabled),
             wait_widgets['onthefly'].setEnabled(enabled),
         ))
 
 
-
+        manual_key='manual'+automatic_key[9:]
         hor = QtWidgets.QHBoxLayout()
-        hor.addWidget(Label("To manually play on-the-fly <tts> tags, strike"))
+        hor.addWidget(Label("To manually play <tts> tags, strike"))
         hor.addWidget(self._factory_shortcut(shortcut_key))
-        auto_tag = Checkbox("Auto Tag", automatic_key + '_auto_tag')
-        auto_tag.setToolTip("Auto add <tts> tag to card and use default voice if no tag is found.")
-        hor.addWidget(auto_tag)
-        # hor.addStretch()
+        man_tag = Checkbox("Auto Tag", manual_key + '_auto_tag')
+        man_tag.setToolTip("Auto wrap <tts> tag to card and use default voice if no tag is found.")
+        man_errors = Checkbox("Show errors", manual_key + '_errors')
+        man_errors.setToolTip("Report all download/network/service errors using showWarning")
+        hor.addWidget(man_tag)
+        hor.addWidget(man_errors)
         layout.addLayout(hor)
 
         group = QtWidgets.QGroupBox(label)

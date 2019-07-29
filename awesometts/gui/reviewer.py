@@ -121,15 +121,17 @@ class Reviewer(object):
 
         if state == 'question' and config['automatic_questions']:
             at=self._addon.config.get('automatic_questions_auto_tag',False)
+            err=self._addon.config.get('automatic_questions_errors',True)
             self._play_html('front', card.q(),
                             self._addon.player.otf_question, self._mw,
-                            show_errors=config['automatic_questions_errors'], autoTag=at)
+                            show_errors=err, autoTag=at)
 
         elif state == 'answer' and config['automatic_answers']:
             at=self._addon.config.get('automatic_answers_auto_tag',False)
+            err=self._addon.config.get('automatic_questions_errors',True)
             self._play_html('back', self._get_answer(card),
                             self._addon.player.otf_answer, self._mw,
-                            show_errors=config['automatic_answers_errors'], autoTag=at)
+                            show_errors=err, autoTag=at)
 
     def key_handler(self, key_event, state, card, replay_audio):
         """
@@ -159,16 +161,20 @@ class Reviewer(object):
 
         question_combo = self._addon.config['tts_key_q']
         if question_combo and combo == question_combo:
-            at=self._addon.config.get('automatic_questions_auto_tag',False)
+            at=self._addon.config.get('manual_questions_auto_tag',True)
+            err=self._addon.config.get('manual_questions_errors',True)
             self._play_html('front', card.q(),
-                            self._addon.player.otf_shortcut, self._mw, autoTag=at)
+                            self._addon.player.otf_shortcut, self._mw,
+                            show_errors=err, autoTag=at)
             handled = True
 
         answer_combo = self._addon.config['tts_key_a']
         if state == 'answer' and answer_combo and combo == answer_combo:
-            at=self._addon.config.get('automatic_answers_auto_tag',False)
+            at=self._addon.config.get('manual_answers_auto_tag',True)
+            err=self._addon.config.get('manual_answers_errors',True)
             self._play_html('back', self._get_answer(card),
-                            self._addon.player.otf_shortcut, self._mw, autoTag=at)
+                            self._addon.player.otf_shortcut, self._mw,
+                            show_errors=err, autoTag=at)
             handled = True
 
         return handled

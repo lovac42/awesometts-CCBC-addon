@@ -99,6 +99,15 @@ class Reviewer(object):
         re.IGNORECASE,
     )
 
+    RE_TYPE_ANSWER_INPUT = re.compile(
+        r'\[\[type\:.+?\]\]',
+    )
+
+    #Addon: Replay buttons on card, remove text to prevent noise.
+    RE_REPLAY_MEDIA_BTN = re.compile(
+        r'\>Replay\<\/svg\>',
+    )
+
     __slots__ = [
         '_addon',
         '_alerts',
@@ -267,10 +276,11 @@ class Reviewer(object):
             show_errors=False #unicodes tripping up sapi
             # Use default preset according to each OS
             type=self._addon.config['read_text_type'] or "default-"
+            html=self.RE_TYPE_ANSWER_INPUT.sub('',html)
             tags=BeautifulTTS('<tts %s="%s">%s</tts>'%(
                 type[:-1],
                 self._addon.config['read_text_preset'] or "OS TTS Service",
-                html.replace('>Replay</svg>','></svg>') #Addon: Replay buttons on card, remove text to prevent noise.
+                self.RE_REPLAY_MEDIA_BTN.sub('></svg>',html),
             ))('tts')
 
         for tag in tags:

@@ -22,13 +22,14 @@ Fixed Naver issue (used eescueta's version)
 Fixed Neospeech (has demo tag on mp3)  
 Fixed Oxford (Now Lexico.com and only British en-GB is available)  
 Added Oxford Learner's Dictionary  
-Added Bing Translator  
 Added Watson TTS  
 Added Google Cloud TTS service by Nickolay (kelciour)  
 Added Cambridge Dictionary by m-rtin  
 Added Forvo service by Dador  
 Added TextAloud (Polly) service
 
+Added Bing Translator  
+<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bing.png?raw=true" />  
 
 
 ### Needs to fix:
@@ -38,13 +39,6 @@ fluency.nl
 wikitionary  
 yandex
 
-
-
-## Bing API Instructions:
-
-<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bingapi.png?raw=true" />  
-
-<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bearerkey.png?raw=true" />  
 
 ## Hooks:
 

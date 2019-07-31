@@ -9,10 +9,14 @@
 Bing Translate
 """
 
+import re
 import json
 import base64
 import requests
 from urllib.parse import quote
+from urllib.request import urlopen, Request
+from threading import Lock
+from aqt import mw
 
 from .base import Service
 from .common import Trait
@@ -82,33 +86,29 @@ class Bing(Service):
     Provides a Service-compliant implementation for Google Cloud Text-to-Speech.
     """
 
-    __slots__ = []
+    __slots__ = [
+        '_lock',
+        '_cookies',
+        '_token',
+        '_ig',
+    ]
 
     NAME = "Bing Translator"
 
     TRAITS = [Trait.INTERNET]
 
+    def __init__(self, *args, **kwargs):
+        self._lock = Lock()
+        self._cookies = None
+        self._token = None
+        self._ig = None
+        super(Bing, self).__init__(*args, **kwargs)
+
     def desc(self):
         """
         Returns a short, static description.
         """
-        return """Bing Translator (%d voices)
-
-Token expires every 10 mins,
-
-Go to: https://bing.com/translator
-
-Type in console: SpeechServiceHelper.authToken
-""" % len(VOICES)
-
-    def extras(self):
-        """
-            Grab the token from bing translate.
-            Look at the packet header "Authorization: Bearer ...",
-            expires every 10 mins.
-        """
-        return [dict(key='key', label="Bearer Token", required=True)]
-
+        return """Bing Translator (%d voices)""" % len(VOICES)
 
     def options(self):
         """
@@ -126,11 +126,11 @@ Type in console: SpeechServiceHelper.authToken
             )
         ]
 
-
     def run(self, text, options, path):
 
-        token =  options['key'] # Temp solution
-        # token = self.issueToken() #TODO:
+        if not self._token:
+            # token expires every 10 minutes
+            self._token=self.issueToken()
 
         lang="en-US"
         gender="Female"
@@ -148,35 +148,86 @@ Type in console: SpeechServiceHelper.authToken
         headers={
             'Charset': 'utf-8',
             'Content-type': 'application/ssml+xml',
-            'Origin': 'https://www.bing.com',
-            'Referer': 'https://www.bing.com/',
+            'Origin': 'http://www.bing.com',
+            'Referer': 'http://www.bing.com/translator',
             'x-microsoft-outputformat': 'audio-16khz-32kbitrate-mono-mp3',
             'Cache-control': 'no-cache',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + self._token
         }
 
         r=requests.post(DEMO_URL, data=xml.encode('utf-8'), headers=headers)
         if r.status_code==401:
-            print("Bing TTS: Bearer Token Expired")
-        r.raise_for_status()
+            # Bearer Token Expired, expires every 10 minutes
+            self._token=None
+            return self.run(text, options, path)
 
+        r.raise_for_status()
         audio_content = r.content
         with open(path, 'wb') as response_output:
             response_output.write(audio_content)
 
-
-
     def issueToken(self):
-        # TODO: API KEY options
+        """
+Set cookies, parse IG value from html, get token from url using IG value.
+        """
 
-        # Requires api key, which requires signing up
-        headers={
-            'Ocp-Apim-Subscription-Key': 'XXXXXXXXXXXX',
-            'Content-type': 'application/x-www-form-urlencoded',
-            'Host': ISSUEHOST
-            # 'Content-Length': "56",
-        }
-        r=requests.post(ISSUETOKEN, headers=headers)
+        with self._lock:
+            if not self._cookies:
+                self._netops += 1
+
+                res=urlopen(
+                    Request(
+                        url='http://www.bing.com/translator',
+                        headers={'User-Agent': 'Mozilla/5.0'}
+                    ),
+                    timeout=15,
+                )
+
+                if not res:
+                    raise IOError("No response form Bing")
+                elif res.getcode() != 200:
+                    value_error = ValueError(
+                        "Got %d status for %s" %
+                        (res.getcode(), "Bing")
+                    )
+                    try:
+                        value_error.payload = res.read()
+                        res.close()
+                    except Exception:
+                        pass
+                    raise value_error
+
+                self.setCookies(res.headers)
+                html = str(res.read())
+                res.close()
+
+                extract=re.search(r'\,IG\:\"([A-Z\d]+)\"\,EventID',html)
+                if extract:
+                    self._ig=extract.groups(1)[0]
+                    # print(self._ig)
+
+        if not self._ig:
+            raise AttributeError("No IG form Bing Translator")
+
+        # TODO: Not sure what IID=translator.xxx.x is, but it's in the html string.
+        # data-iid="translator.5026">
+        r=requests.post(
+            'http://www.bing.com/tfetspktok?isVertical=1&&IG=%s&IID=translator.5026.3'%(self._ig),
+            headers={
+                'Content-type': 'application/x-www-form-urlencoded',
+                'Host': 'www.bing.com',
+                'origin': 'http://www.bing.com',
+                'Referer': 'http://www.bing.com/translator',
+                'Cookie': self._cookies,
+            }
+        )
         r.raise_for_status()
-        # print(r.json())
-        return r.json()
+        # print(r.json()['token'])
+        return r.json()['token']
+
+
+    def setCookies(self, headers):
+        self._cookies=';'.join(cookie.split(';')[0]
+                    for cookie
+                    in headers['Set-Cookie'].split(','))
+        # print("Bing cookies are %s", self._cookies)

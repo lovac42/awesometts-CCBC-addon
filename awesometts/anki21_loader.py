@@ -25,6 +25,7 @@ import sys
 from time import time
 
 from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QShortcut
 
 import anki
 import aqt

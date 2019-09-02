@@ -28,6 +28,10 @@ Added Cambridge Dictionary by m-rtin
 Added Forvo service by Dador  
 Added TextAloud (Polly) service
 
+
+Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/1878363231)
+
+
 Added Bing Translator  
 <img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bing.png?raw=true" />  
 

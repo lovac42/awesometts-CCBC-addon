@@ -230,6 +230,7 @@ router = Router(
             ('textaloud', service.TextAloud),
             ('voicetext', service.VoiceText),
             ('watsontts', service.WatsonTTS),
+            ('webster', service.Webster),
             # ('wiktionary', service.Wiktionary),
             # ('yandex', service.Yandex),
             ('youdao', service.Youdao),

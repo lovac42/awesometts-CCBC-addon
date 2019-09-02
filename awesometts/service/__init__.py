@@ -54,6 +54,7 @@ from .spanishdict import SpanishDict
 from .textaloud import TextAloud
 from .voicetext import VoiceText
 from .watsontts import WatsonTTS
+from .webster import Webster
 from .wiktionary import Wiktionary
 from .yandex import Yandex
 from .youdao import Youdao
@@ -93,6 +94,7 @@ __all__ = [
     'TextAloud',
     'VoiceText',
     'WatsonTTS',
+    'Webster',
     'Wiktionary',
     'Yandex',
     'Youdao',

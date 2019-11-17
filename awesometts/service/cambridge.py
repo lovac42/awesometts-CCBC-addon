@@ -38,11 +38,11 @@ class CambridgeLister(HTMLParser):
         self.sounds = []
 
     def handle_starttag(self, tag, attrs):
-        class_name = 'circle circle-btn sound audio_play_button'
-        if tag == "span" and ('class', class_name) in attrs:
+        class_name = 'audio/mpeg'
+        if tag == "source" and ('type', class_name) in attrs:
             source_links = [
                 value for attr, value in attrs
-                if attr == 'data-src-mp3'
+                if attr == 'src'
             ]
             self.sounds.extend(source_links)
 
@@ -63,7 +63,12 @@ class Cambridge(Service):
         Returns a short, static description.
         """
 
-        return "Cambridge Dictionary (British and American English)"
+        return """
+Cambridge Dictionary (British and American English)
+
+Note: Only the first audio link is returned,
+regardless of verb, adj or whatever.
+"""
 
     def options(self):
         """
@@ -106,7 +111,7 @@ class Cambridge(Service):
         Downloads from Cambridge Dictionary directly to an MP3.
         """
 
-        dict_url = 'https://dictionary.cambridge.org/de/worterbuch/englisch/%s' % (
+        dict_url = 'https://dictionary.cambridge.org/dictionary/english/%s' % (
             quote(text.encode('utf-8'))
         )
         html_payload = self.net_stream(dict_url)

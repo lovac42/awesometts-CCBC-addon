@@ -108,7 +108,11 @@ class Bing(Service):
         """
         Returns a short, static description.
         """
-        return """Bing Translator (%d voices)""" % len(VOICES)
+        return """Bing Translator (%d voices)
+
+Note: On 404 Error, stop using this voice service
+and file bug report.
+""" % len(VOICES)
 
     def options(self):
         """
@@ -201,6 +205,10 @@ Set cookies, parse IG value from html, get token from url using IG value.
                 html = str(res.read())
                 res.close()
 
+                # from aqt.utils import showText
+                # showText(html) # I'm on windows...
+                # print(html)
+
                 extract=re.search(r'\,IG\:\"([A-Z\d]+)\"\,EventID',html)
                 if extract:
                     self._ig=extract.groups(1)[0]
@@ -212,7 +220,7 @@ Set cookies, parse IG value from html, get token from url using IG value.
         # TODO: Not sure what IID=translator.xxx.x is, but it's in the html string.
         # data-iid="translator.5026">
         r=requests.post(
-            'http://www.bing.com/tfetspktok?isVertical=1&&IG=%s&IID=translator.5026.3'%(self._ig),
+            'http://www.bing.com/tfetspktok?isVertical=1&IG=%s&IID=translator.5026.3'%(self._ig),
             headers={
                 'Content-type': 'application/x-www-form-urlencoded',
                 'Host': 'www.bing.com',

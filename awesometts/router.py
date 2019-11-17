@@ -393,9 +393,17 @@ class Router(object):
             svc_id, service, options = self._validate_service(svc_id, options)
             if not text:
                 raise ValueError("No speakable text is present")
-            limit = 5000 if service['name'] == "Google Cloud Text-to-Speech" else 2000
+            limit = 5000 if service['name'] in (
+                "Microsoft Speech API COM",
+                "Microsoft Speech API JScript",
+                # "OS X Speech Synthesis",
+                # "Festival",
+                "Google Cloud Text-to-Speech",
+                ) else 2000
+
             if len(text) > limit:
                 raise ValueError("Text to speak is too long")
+
             text = service['instance'].modify(text)
             if not text:
                 raise ValueError("Text not usable by " + service['class'].NAME)

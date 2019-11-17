@@ -25,8 +25,8 @@ Added Oxford Learner's Dictionary
 Added Google Cloud TTS service by Nickolay (kelciour)  
 Added Cambridge Dictionary by m-rtin  
 Added Forvo service by Dador  
-Added TextAloud (Polly) service
-Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/1878363231)
+Added TextAloud (Polly) service  
+Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/1878363231)  
 Added Azure by lucwastiaux: I can't confirm this because I don't have an API key to test it.
 
 
@@ -35,14 +35,14 @@ Added Bing Translator
 
 
 ### Needs to fix:
-abair
+abair  
 baidu  
 duden  
 fluency.nl  
 wikitionary  
-yandex
+yandex  
 
-WatsonTTS: demo service ended
+WatsonTTS: demo service ended  
 
 
 ## Hooks:

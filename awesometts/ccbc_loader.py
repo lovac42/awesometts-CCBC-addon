@@ -508,11 +508,15 @@ def speak_hooks():
         if clean:
             text=strip(text)
 
-        preset=config[type].get(name)
-        if not preset:
-            type=config['read_text_type'] or type
-            name=config['read_text_preset']
+        try:
             preset=config[type].get(name)
+            if not preset:
+                type=config['read_text_type'] or type
+                name=config['read_text_preset']
+                preset=config[type].get(name)
+        except AttributeError:
+            aqt.utils.showInfo("Please set default preset first!")
+            return
 
         window=aqt.mw.reviewer.web.window()
         if not preset or type=="presets":

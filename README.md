@@ -27,7 +27,7 @@ Added Cambridge Dictionary by m-rtin
 Added Forvo service by Dador  
 Added TextAloud (Polly) service
 Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/1878363231)
-Added Azure (lucwastiaux): I can't confirm this because I don't have an API key to test it.
+Added Azure by lucwastiaux: I can't confirm this because I don't have an API key to test it.
 
 
 Added Bing Translator  

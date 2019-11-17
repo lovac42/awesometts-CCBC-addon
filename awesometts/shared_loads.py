@@ -200,7 +200,8 @@ player = Player(
 router = Router(
     services=Bundle(
         mappings=[
-            ('abair', service.Abair),
+            # ('abair', service.Abair),
+            ('azure', service.Azure),
             # ('baidu', service.Baidu),
             ('bing', service.Bing),
             ('cambridge', service.Cambridge),

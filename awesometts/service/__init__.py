@@ -25,6 +25,7 @@ Service classes for AwesomeTTS
 from .common import Trait
 
 from .abair import Abair
+from .azure import Azure
 from .baidu import Baidu
 from .bing import Bing
 from .cambridge import Cambridge
@@ -65,6 +66,7 @@ __all__ = [
 
     # services
     'Abair',
+    'Azure',
     'Baidu',
     'Bing',
     'Cambridge',

@@ -27,9 +27,8 @@ Added Google Cloud TTS service by Nickolay (kelciour)
 Added Cambridge Dictionary by m-rtin  
 Added Forvo service by Dador  
 Added TextAloud (Polly) service
-
-
 Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/1878363231)
+Added Azure (lucwastiaux): I can't confirm this because I don't have an API key to test it.
 
 
 Added Bing Translator  
@@ -37,6 +36,7 @@ Added Bing Translator
 
 
 ### Needs to fix:
+abair
 baidu  
 duden  
 fluency.nl  

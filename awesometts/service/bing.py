@@ -110,8 +110,10 @@ class Bing(Service):
         """
         return """Bing Translator (%d voices)
 
-Note: On 404 Error, stop using this voice service
-and file bug report.
+Note: Please be kind to online services and repect
+the wait time limit.
+
+Note2: Sometimes it works... Need to fix.
 """ % len(VOICES)
 
     def options(self):
@@ -130,11 +132,16 @@ and file bug report.
             )
         ]
 
+
+    def extras(self):
+        return [dict(key='key', label="Bearer Key", required=False)]
+
+
     def run(self, text, options, path):
 
         if not self._token:
             # token expires every 10 minutes
-            self._token=self.issueToken()
+            self._token=options['key'] if options['key'] else self.issueToken()
 
         lang="en-US"
         gender="Female"
@@ -153,7 +160,7 @@ and file bug report.
             'Charset': 'utf-8',
             'Content-type': 'application/ssml+xml',
             'Origin': 'http://www.bing.com',
-            'Referer': 'http://www.bing.com/translator',
+            'Referer': 'http://www.bing.com/',
             'x-microsoft-outputformat': 'audio-16khz-32kbitrate-mono-mp3',
             'Cache-control': 'no-cache',
             'Authorization': 'Bearer ' + self._token
@@ -219,13 +226,17 @@ Set cookies, parse IG value from html, get token from url using IG value.
 
         # TODO: Not sure what IID=translator.xxx.x is, but it's in the html string.
         # data-iid="translator.5026">
+
+        # TODO: Fix this...
+        # It's been on and off sometimes with &&IG= or at times with &IG=
+
         r=requests.post(
             'http://www.bing.com/tfetspktok?isVertical=1&IG=%s&IID=translator.5026.3'%(self._ig),
             headers={
                 'Content-type': 'application/x-www-form-urlencoded',
                 'Host': 'www.bing.com',
                 'origin': 'http://www.bing.com',
-                'Referer': 'http://www.bing.com/translator',
+                'Referer': 'http://www.bing.com/',
                 'Cookie': self._cookies,
             }
         )

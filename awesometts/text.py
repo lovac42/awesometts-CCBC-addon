@@ -27,7 +27,7 @@ from io import StringIO
 from bs4 import BeautifulSoup
 import anki
 
-__all__ = ['RE_CLOZE_BRACED', 'RE_CLOZE_RENDERED', 'RE_ELLIPSES',
+__all__ = ['RE_CLOZE_NONHINTED', 'RE_CLOZE_BRACED', 'RE_CLOZE_RENDERED', 'RE_ELLIPSES',
            'RE_ELLIPSES_LEADING', 'RE_ELLIPSES_TRAILING', 'RE_FILENAMES',
            'RE_HINT_LINK', 'RE_LINEBREAK_HTML', 'RE_NEWLINEISH', 'RE_SOUNDS',
            'RE_WHITESPACE', 'STRIP_HTML', 'Sanitizer']
@@ -39,6 +39,7 @@ except:
     clozeReg=r"(?si)\{\{(c)%s::(.*?)(::(.*?))?\}\}"
 
 RE_CLOZE_BRACED = re.compile(clozeReg % r'\d+')
+RE_CLOZE_NONHINTED = re.compile(r"\<span class\=\"cloze\"\>\[\.\.\.\]\<\/span\>")
 RE_CLOZE_RENDERED = re.compile(
     # see anki.template.template.clozeText; n.b. the presence of the brackets
     # in the pattern means that this will only match and replace on the
@@ -143,7 +144,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         """Ellipsizes given chars from the text."""
 
         return ''.join(
-            ('[...]' if char in chars else char)
+            ('...' if char in chars else char)
             for char in text
         )
 
@@ -159,7 +160,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         """
 
         return RE_CLOZE_BRACED.sub(
-            '[...]' if mode == 'ellipsize'
+            '...' if mode == 'ellipsize'
             else '' if mode == 'remove'
             else self._rule_clozes_braced.wrapper if mode == 'wrap'
             else self._rule_clozes_braced.deleter if mode == 'deleted'
@@ -169,19 +170,19 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         )
 
     _rule_clozes_braced.wrapper = lambda match: (
-        '... %s ...' % match.group(3).strip('.') if (match.group(3) and
-                                                     match.group(3).strip('.'))
-        else '[...]'
+        '... %s ...' % match.group(4).strip('.') if (match.group(4) and
+                                                     match.group(4).strip('.'))
+        else '...'
     )
 
     _rule_clozes_braced.deleter = lambda match: (
-        match.group(1) if match.group(1)
-        else '[...]'
+        match.group(2) if match.group(2)
+        else '...'
     )
 
     _rule_clozes_braced.ankier = lambda match: (
-        match.group(3) if match.group(3)
-        else '[...]'
+        match.group(4) if match.group(4)
+        else '...'
     )
 
     def _rule_clozes_rendered(self, text, mode):
@@ -190,8 +191,12 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         return an appropriate replacement.
         """
 
+        cloze_type = BeautifulSoup(text, "html.parser")('span', attrs={'class': 'cloze'})
+        if cloze_type:
+            text=RE_CLOZE_NONHINTED.sub(" [What] ", text)
+
         return RE_CLOZE_RENDERED.sub(
-            '[...]' if mode == 'ellipsize'
+            '...' if mode == 'ellipsize'
             else '' if mode == 'remove'
             else self._rule_clozes_rendered.wrapper if mode == 'wrap'
             else self._rule_clozes_rendered.ankier,  # mode == 'anki'
@@ -215,7 +220,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
 
         revealed_tags = BeautifulSoup(text, 'html.parser')('span', attrs={'class': 'cloze'})
 
-        return ' [...] '.join(
+        return ' ... '.join(
             ''.join(
                 str(content)
                 for content in tag.contents
@@ -238,8 +243,8 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
             text,
         )
 
-    _rule_counter.wrapper = lambda match: (' [...] ' + str(len(match.group(0))) +
-                                           ' [...] ')
+    _rule_counter.wrapper = lambda match: (' ... ' + str(len(match.group(0))) +
+                                           ' ... ')
 
     _rule_counter.spacer = lambda match: (' ' + str(len(match.group(0))) + ' ')
 
@@ -269,7 +274,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         Additionally, drop any leading or trailing ellipses entirely.
         """
 
-        text = RE_ELLIPSES.sub(' [...] ', text)
+        text = RE_ELLIPSES.sub(' ... ', text)
         text = RE_ELLIPSES_LEADING.sub(' ', text)
         text = RE_ELLIPSES_TRAILING.sub(' ', text)
         return text
@@ -314,7 +319,7 @@ class Sanitizer(object):  # call only, pylint:disable=too-few-public-methods
         (e.g. paragraph tags, div containers) with an ellipsis.
         """
 
-        return RE_NEWLINEISH.sub(' [...] ', text)
+        return RE_NEWLINEISH.sub(' ... ', text)
 
     def _rule_sounds_ours(self, text):
         """

@@ -15,7 +15,9 @@ enables both on-demand playback and recording functionality.
 
 
 ### Changes for cloze:
-Cloze patterns are now converted to ```[...]``` instead of ```...```. This is to prevent conflicts with texts with actual ellipses.
+Cloze patterns during review are now spoken as ```[What]``` instead of ```...``` (blank). This is to prevent conflicts with text that includes actual ellipses. You can search and replace this if you prefer a different text to be spoken.  
+<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/cloze_regex.png?raw=true" />  
+
 
 ### Changes from current official v1.12.0:
 Fixed Naver issue (used eescueta's version)  

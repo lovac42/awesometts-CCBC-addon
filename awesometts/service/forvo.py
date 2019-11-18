@@ -46,7 +46,11 @@ class Forvo(Service):
     def desc(self):
         """Returns a short, static description."""
 
-        return "Forvo Pronunciation (%d voices)" % len(VOICES)
+        return """Forvo Pronunciation (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
 
     def options(self):
         """Provides access to voice only."""

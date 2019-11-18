@@ -71,7 +71,11 @@ class WatsonTTS(Service):
         """
         Returns a short, static description.
         """
-        return "Watson Text-to-Speech (%d voices)." % (
+        return """Watson Text-to-Speech (%d voices).
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % (
             len(set(map(lambda x: x[0][:5], VOICES))))
 
 

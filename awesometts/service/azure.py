@@ -149,7 +149,11 @@ class Azure(Service):
     def desc(self):
         """Returns name with a voice count."""
 
-        return "Azure API (%d voices)" % len(VOICES)
+        return """Azure API (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
 
     def extras(self):
         """The Azure API requires an API key."""

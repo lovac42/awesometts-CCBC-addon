@@ -89,7 +89,11 @@ class ISpeech(Service):
     def desc(self):
         """Returns name with a voice count."""
 
-        return "iSpeech API (%d voices)" % len(VOICES)
+        return """iSpeech API (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
 
     def extras(self):
         """The iSpeech API requires an API key."""

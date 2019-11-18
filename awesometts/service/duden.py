@@ -60,7 +60,11 @@ class Duden(Service):
         Returns a short, static description.
         """
 
-        return "Duden (German only, single words and short phrases only)"
+        return """Duden (German only, single words and short phrases only)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+"""
 
     def options(self):
         """

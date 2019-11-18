@@ -54,7 +54,11 @@ class Abair(Service):
     def desc(self):
         """Returns a short, static description."""
 
-        return "abair.ie's Irish language synthesiser"
+        return """abair.ie's Irish language synthesiser
+
+Note: Please be kind to online services and repect
+the wait time limit.
+"""
 
     def options(self):
         """Provides access to voice and speed."""

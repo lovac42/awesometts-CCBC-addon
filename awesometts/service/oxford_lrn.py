@@ -73,8 +73,13 @@ class OxfordLrn(Service):
         Returns a short, static description.
         """
 
-        return "Oxford Learners Dictionary (British and American English); " \
-            "dictionary words only, with (optional) fuzzy matching"
+        return """Oxford Learners Dictionary (British and American English);
+dictionary words only, with (optional) fuzzy matching
+
+Note: Please be kind to online services and repect
+the wait time limit.
+"""
+
 
     def options(self):
         """

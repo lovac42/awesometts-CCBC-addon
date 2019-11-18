@@ -51,7 +51,11 @@ class Baidu(Service):
     def desc(self):
         """Returns a short, static description."""
 
-        return "Baidu Translate text2audio web API (%d voices)" % len(VOICES)
+        return """Baidu Translate text2audio web API (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
 
     def options(self):
         """Provides access to voice only."""

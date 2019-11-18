@@ -91,7 +91,12 @@ class TextAloud(Service):
 
     def desc(self):
         """Returns name with a voice count."""
-        return "TextAloud NextUp Polly (%d voices)" % len(VOICES)
+        return """TextAloud NextUp Polly (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
+
 
     def options(self):
         """Provides access to voice only."""

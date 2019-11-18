@@ -59,8 +59,13 @@ class Yandex(Service):
         Returns a short, static description.
         """
 
-        return "Yandex.Translate text-to-speech web API " \
-            "(%d voices)" % len(self._VOICE_CODES)
+        return """Yandex.Translate text-to-speech web API
+            (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(self._VOICE_CODES)
+
 
     def options(self):
         """

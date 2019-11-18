@@ -46,7 +46,11 @@ class Howjsay(Service):
         Returns a short, static description.
         """
 
-        return "Howjsay (English only, single words and short phrases only)"
+        return """Howjsay (English only, single words and short phrases only)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+"""
 
     def options(self):
         """

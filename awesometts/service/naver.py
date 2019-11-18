@@ -99,7 +99,12 @@ class Naver(Service):
     def desc(self):
         """Returns a static description."""
 
-        return "NAVER Translate (%d voices)" % len(VOICE_CODES)
+        return """NAVER Translate (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICE_CODES)
+
 
     def options(self):
         """Returns an option to select the voice."""

@@ -57,7 +57,12 @@ class VoiceText(Service):
     def desc(self):
         """Returns a short, static description."""
 
-        return "VoiceText Web API for Japanese (%d voices)" % len(VOICES)
+        return """VoiceText Web API for Japanese (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
+
 
     def options(self):
         """

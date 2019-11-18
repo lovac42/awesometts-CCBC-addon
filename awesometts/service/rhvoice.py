@@ -147,7 +147,11 @@ class RHVoice(Service):
     def desc(self):
         """Return short description with voice count."""
 
-        return "RHVoice synthesizer (%d voices), %s" % (
+        return """RHVoice synthesizer (%d voices), %s
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % (
             len(self._voice_list),
             "service started by AwesomeTTS" if self._backgrounded
             else "provided by host system"

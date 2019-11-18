@@ -67,8 +67,12 @@ class ImTranslator(Service):
         Returns a short, static description.
         """
 
-        return "ImTranslator text-to-speech web portal (%d voices)" % \
-               len(self._VOICES)
+        return """ImTranslator text-to-speech web portal (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(self._VOICES)
+
 
     def options(self):
         """

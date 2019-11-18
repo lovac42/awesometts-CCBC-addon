@@ -81,7 +81,11 @@ class Wiktionary(Service):
         Returns a short, static description.
         """
 
-        return "Wiktionary single word translations"
+        return """Wiktionary single word translations
+
+Note: Please be kind to online services and repect
+the wait time limit.
+"""
 
     def options(self):
         """

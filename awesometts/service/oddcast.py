@@ -224,7 +224,11 @@ class Oddcast(Service):
     def desc(self):
         """Returns name with a voice count."""
 
-        return "Oddcast Demo (%d voices)" % len(VOICES)
+        return """Oddcast Demo (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
 
     def options(self):
         """Provides access to voice only."""

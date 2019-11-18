@@ -72,8 +72,13 @@ class Collins(Service):
     def desc(self):
         """Returns a short, static description."""
 
-        return "Collins Dictionary (%d languages); single words and " \
-            "two-word phrases only with fuzzy matching" % len(MAPPINGS)
+        return """Collins Dictionary (%d languages); single words and
+two-word phrases only with fuzzy matching
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(MAPPINGS)
+
 
     def options(self):
         """Provides access to voice only."""

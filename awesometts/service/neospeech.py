@@ -128,8 +128,12 @@ class NeoSpeech(Service):
 
     def desc(self):
         """Returns name with a voice count."""
-        return "NeoSpeech Demo (%d voices)" % (
-            len(set(map(lambda x: x[0][:5], VOICES))))
+        return """NeoSpeech Demo (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % (len(set(map(lambda x: x[0][:5], VOICES))))
+
 
     def options(self):
         """Provides access to voice only."""

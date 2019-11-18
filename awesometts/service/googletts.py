@@ -253,13 +253,17 @@ class GoogleTTS(Service):
         Returns a short, static description.
         """
 
-        return "Google Cloud Text-to-Speech (%d voices)." % (
-            len(set(map(lambda x: self._languageCode(x[0]), self._voice_list))))
+        return """Google Cloud Text-to-Speech (%d voices).
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % (len(set(map(lambda x: self._languageCode(x[0]), self._voice_list))))
+
 
     def extras(self):
         """The Google Cloud Text-to-Speech requires an API key."""
 
-        return [dict(key='key', label="API Key", required=True)]
+        return [dict(key='key', label="API Key", required=False)]
 
     def options(self):
         """

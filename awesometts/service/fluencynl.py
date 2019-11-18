@@ -89,7 +89,11 @@ class FluencyNl(Service):
     def desc(self):
         """Returns service name with a voice count."""
 
-        return "Fluency.nl Demo for Dutch (%d voices)" % len(VOICES)
+        return """Fluency.nl Demo for Dutch (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % len(VOICES)
 
     def options(self):
         """Provides access to voice and speed."""

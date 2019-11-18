@@ -66,7 +66,10 @@ class Cambridge(Service):
         return """
 Cambridge Dictionary (British and American English)
 
-Note: Only the first audio link is returned,
+Note: Please be kind to online services and repect
+the wait time limit.
+
+Note2: Only the first audio link is returned,
 regardless of verb, adj or whatever.
 """
 

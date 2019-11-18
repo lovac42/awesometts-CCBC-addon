@@ -42,7 +42,12 @@ class SpanishDict(Service):
         Returns a short, static description.
         """
 
-        return "SpanishDict.com (English and Spanish)"
+        return """SpanishDict.com (English and Spanish)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+"""
+
 
     def options(self):
         """

@@ -76,7 +76,11 @@ class Ekho(Service):
         Returns a simple version using `ekho --version`.
         """
 
-        return "ekho %s (%d voices)" % (
+        return """ekho %s (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % (
             self.cli_output('ekho', '--version').pop(0),
             len(self._voice_list),
         )

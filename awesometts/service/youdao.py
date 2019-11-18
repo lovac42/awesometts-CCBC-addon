@@ -45,7 +45,11 @@ class Youdao(Service):
     def desc(self):
         """Returns a static description."""
 
-        return "Youdao (American and British English)"
+        return """Youdao (American and British English)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+"""
 
     def options(self):
         """Returns an option to select the voice."""

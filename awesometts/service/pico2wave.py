@@ -87,7 +87,11 @@ class Pico2Wave(Service):
         reported.
         """
 
-        return "%s (%d voices)" % (self._binary, len(self._voice_list))
+        return """%s (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % (self._binary, len(self._voice_list))
 
     def options(self):
         """

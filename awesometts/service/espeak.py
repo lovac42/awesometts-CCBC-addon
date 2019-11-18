@@ -148,7 +148,11 @@ class ESpeak(Service):
         location from `espeak --version`.
         """
 
-        return "%s (%d voices)" % (
+        return """%s (%d voices)
+
+Note: Please be kind to online services and repect
+the wait time limit.
+""" % (
             self.cli_output(self._binary, '--version').pop(0),
             len(self._lookup['voices']),
         )

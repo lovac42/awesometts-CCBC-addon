@@ -32,10 +32,6 @@ Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/
 Added Azure by lucwastiaux: I can't confirm this because I don't have an API key to test it.
 
 
-Added Bing Translator  
-<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bing.png?raw=true" />  
-
-
 ### Needs to fix:
 abair  
 baidu  
@@ -44,7 +40,12 @@ fluency.nl
 wikitionary  
 yandex  
 
-WatsonTTS: demo service ended  
+WatsonTTS: demo service has ended?  
+
+
+Added Bing Translator, without a key, the connection maybe unreliable.  
+<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bing.png?raw=true" />  
+
 
 
 ## Hooks:

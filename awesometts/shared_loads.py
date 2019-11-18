@@ -36,12 +36,8 @@ from .config import Config
 from .player import Player
 from .router import Router
 from .text import Sanitizer
+from .const import WEB, VERSION
 
-
-VERSION = '1.15.1'
-
-
-WEB = 'https://ankiatts.appspot.com'
 
 
 def get_platform_info():

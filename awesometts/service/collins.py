@@ -33,14 +33,14 @@ RE_ANY_SPANISH = re.compile(BASE_PATTERN % r'es_')
 
 MAPPINGS = [
     ('en', "English", 'english', [re.compile(BASE_PATTERN % r'\d+')]),
-    ('fr', "French", 'french-english', [re.compile(BASE_PATTERN % r'fr_')]),
-    ('de', "German", 'german-english', [re.compile(BASE_PATTERN % r'de_')]),
-    ('es-419', "Spanish, prefer Americas", 'spanish-english',
-     [re.compile(BASE_PATTERN % r'es_419_'), RE_ANY_SPANISH]),
-    ('es-es', "Spanish, prefer European", 'spanish-english',
-     [re.compile(BASE_PATTERN % r'es_es_'), RE_ANY_SPANISH]),
-    ('it', "Italian", 'italian-english', [re.compile(BASE_PATTERN % r'it_')]),
-    ('zh', "Chinese", 'chinese-english', [re.compile(BASE_PATTERN % r'zh_')]),
+    # ('fr', "French", 'french-english', [re.compile(BASE_PATTERN % r'fr_')]),
+    # ('de', "German", 'german-english', [re.compile(BASE_PATTERN % r'de_')]),
+    # ('es-419', "Spanish, prefer Americas", 'spanish-english',
+     # [re.compile(BASE_PATTERN % r'es_419_'), RE_ANY_SPANISH]),
+    # ('es-es', "Spanish, prefer European", 'spanish-english',
+     # [re.compile(BASE_PATTERN % r'es_es_'), RE_ANY_SPANISH]),
+    # ('it', "Italian", 'italian-english', [re.compile(BASE_PATTERN % r'it_')]),
+    # ('zh', "Chinese", 'chinese-english', [re.compile(BASE_PATTERN % r'zh_')]),
 ]
 
 LANG_TO_DICTCODE = {lang: dictcode for lang, _, dictcode, _ in MAPPINGS}
@@ -72,8 +72,11 @@ class Collins(Service):
     def desc(self):
         """Returns a short, static description."""
 
-        return """Collins Dictionary (%d languages); single words and
-two-word phrases only with fuzzy matching
+        return """Collins Dictionary (%d languages);
+single words and two-word phrases only
+with fuzzy matching
+
+DUE TO SITE CHANGES, ONLY ENGLISH WORKS FOR NOW.
 
 Note: Please be kind to online services and repect
 the wait time limit.

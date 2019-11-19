@@ -11,6 +11,7 @@ Bing Translate
 
 import re
 import json
+import time
 import base64
 import requests
 from urllib.parse import quote
@@ -113,7 +114,8 @@ class Bing(Service):
 Note: Please be kind to online services and repect
 the wait time limit.
 
-Note2: Sometimes it works... Need to fix.
+Note2: Takes several tries on initial load to setup cookies.
+Need to fix this.
 """ % len(VOICES)
 
     def options(self):
@@ -133,15 +135,21 @@ Note2: Sometimes it works... Need to fix.
         ]
 
 
-    def extras(self):
-        return [dict(key='key', label="Bearer Key", required=False)]
+    # def extras(self):
+        # return [dict(key='key', label="Bearer Key", required=False)]
 
 
     def run(self, text, options, path):
 
+        # if options['key']:
+            # self._token=options['key']
         if not self._token:
             # token expires every 10 minutes
-            self._token=options['key'] if options['key'] else self.issueToken()
+            self._token=self.issueToken()
+
+        if not self._token:
+            raise AttributeError("No token form Bing Translator")
+
 
         lang="en-US"
         gender="Female"
@@ -177,6 +185,7 @@ Note2: Sometimes it works... Need to fix.
         with open(path, 'wb') as response_output:
             response_output.write(audio_content)
 
+
     def issueToken(self):
         """
 Set cookies, parse IG value from html, get token from url using IG value.
@@ -191,7 +200,7 @@ Set cookies, parse IG value from html, get token from url using IG value.
                         url='http://www.bing.com/translator',
                         headers={'User-Agent': 'Mozilla/5.0'}
                     ),
-                    timeout=15,
+                    timeout=20,
                 )
 
                 if not res:
@@ -221,32 +230,38 @@ Set cookies, parse IG value from html, get token from url using IG value.
                     self._ig=extract.groups(1)[0]
                     # print(self._ig)
 
-        if not self._ig:
-            raise AttributeError("No IG form Bing Translator")
 
-        # TODO: Not sure what IID=translator.xxx.x is, but it's in the html string.
-        # data-iid="translator.5026">
 
-        # TODO: Fix this...
-        # It's been on and off sometimes with &&IG= or at times with &IG=
+            if not self._ig:
+                raise AttributeError("No IG form Bing Translator")
 
-        r=requests.post(
-            'http://www.bing.com/tfetspktok?isVertical=1&IG=%s&IID=translator.5026.3'%(self._ig),
-            headers={
-                'Content-type': 'application/x-www-form-urlencoded',
-                'Host': 'www.bing.com',
-                'origin': 'http://www.bing.com',
-                'Referer': 'http://www.bing.com/',
-                'Cookie': self._cookies,
-            }
-        )
-        r.raise_for_status()
-        # print(r.json()['token'])
-        return r.json()['token']
+
+            # TODO: Not sure what IID=translator.xxx.x is, but it's in the html string.
+            # data-iid="translator.5026">
+
+            # TODO: Fix this, throws 404 errors half the time
+            for n in range(5): 
+                r=requests.post(
+                    'http://www.bing.com/tfetspktok?isVertical=1&IG=%s&IID=translator.5026.3'%(self._ig),
+                    headers={
+                        'Content-type': 'application/x-www-form-urlencoded',
+                        'Host': 'www.bing.com',
+                        'origin': 'http://www.bing.com',
+                        'Referer': 'http://www.bing.com/',
+                        'Cookie': self._cookies,
+                    },
+                    timeout=20,
+                )
+
+                if r.status_code != 404:
+                    r.raise_for_status()
+                    # print(r.json()['token'])
+                    return r.json()['token']
+                time.sleep(5)
 
 
     def setCookies(self, headers):
         self._cookies=';'.join(cookie.split(';')[0]
                     for cookie
                     in headers['Set-Cookie'].split(','))
-        # print("Bing cookies are %s", self._cookies)
+        # print("Bing cookies are ", self._cookies)

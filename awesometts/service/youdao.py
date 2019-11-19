@@ -25,9 +25,10 @@ __all__ = ['Youdao']
 
 
 VOICE_CODES = [
-    ('en-GB', ("English, British", 1)),
-    ('en-US', ("English, American", 2)),
-    ('en', ("English, alternative", 3)),
+    ('en-GB', ("English, British", 1,"en")),
+    ('en-US', ("English, American", 2,"en")),
+    ('en', ("English, alternative", 3,"en")),
+    ('jp', ("Japanese, alternative", 4,"jp")),
 ]
 
 VOICE_LOOKUP = dict(VOICE_CODES)
@@ -45,7 +46,7 @@ class Youdao(Service):
     def desc(self):
         """Returns a static description."""
 
-        return """Youdao (American and British English)
+        return """Youdao (American and British Eng, and ... Jap)
 
 Note: Please be kind to online services and repect
 the wait time limit.
@@ -76,8 +77,10 @@ the wait time limit.
             dict(
                 key='voice',
                 label="Voice",
-                values=[(key, description)
-                        for key, (description, _) in VOICE_CODES],
+                values=[
+                    (key, description)
+                    for key, (description, _,_) in VOICE_CODES
+                ],
                 transform=transform_voice,
                 default='en-US',
             ),
@@ -92,6 +95,7 @@ the wait time limit.
                 ('http://dict.youdao.com/dictvoice', dict(
                     audio=subtext,
                     type=VOICE_LOOKUP[options['voice']][1],
+                    le=VOICE_LOOKUP[options['voice']][2]
                 ))
                 for subtext in self.util_split(text, 1000)
             ],

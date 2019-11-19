@@ -41,7 +41,7 @@ class Webster(Service):
 
     def desc(self):
         """Returns name with a voice count."""
-        return NAME + """
+        return """Merriam-Webster (English only)
 
 Note: Please be kind to online services and repect
 the wait time limit.

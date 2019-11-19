@@ -5,6 +5,16 @@ Awesomo is a wrapper that launches AwesomeTTS without the need for Anki. This al
 
 Supermemo users may find this useful as there isn't a need to download 150mb of useless files just to use AwesomeTTS.
 
+#### Running Awesom-o from source:
+Awesom-o uses the same toolkit as Anki 2.0 and the same dependencies (Qt4, QtWebkit). This is because Webkit has a small footprint resulting in a compiled size of around 30MB on Windows, whereas WebEngine results in over 160MB.
+
+To run from source, just type:
+```
+Python3 runawesomo.py
+```
+
+Note however, that the older dependencies will become harder to find and install and most likely must be compiled from source. As my intention was to run this on windows for personal use, independent of Anki, this is not much of an issue for me.
+
 
 ## AwesomeTTS (Library)
 AwesomeTTS makes it easy for language-learners and other students to add

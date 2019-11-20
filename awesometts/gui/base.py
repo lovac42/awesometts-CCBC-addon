@@ -120,7 +120,13 @@ class Dialog(QtWidgets.QDialog):
         title = Label(self._title)
         title.setFont(self._FONT_TITLE)
 
-        version = Label("AwesomeTTS\nv" + self._addon.version)
+        version = Label(
+            "AwesomeTTS, Yet Another\nv" + self._addon.version
+        )
+        version.setAlignment(
+            QtCore.Qt.AlignRight |
+            QtCore.Qt.AlignVCenter
+        )
         version.setFont(self._FONT_INFO)
 
         layout = QtWidgets.QHBoxLayout()

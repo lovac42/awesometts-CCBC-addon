@@ -476,6 +476,8 @@ class Router(object):
                         return text
                     if lower == 'voice':
                         return options['voice'].lower()
+                    if lower == 'time':
+                        return str(int(time()*1000))
 
                     try:
                         return note[key]  # exact field match
@@ -499,6 +501,9 @@ class Router(object):
             else:
                 filename = filename[0:90]  # accommodate NTFS path limits
             filename = 'ATTS ' + filename + '.mp3'
+            # I wanted to change fn to ATTS_, but this
+            # will cause backwards compatibility issues
+            # for text.py:RE_FILENAMES
 
             from shutil import copyfile
             new_path = os.path.join(self._temp_dir, filename)

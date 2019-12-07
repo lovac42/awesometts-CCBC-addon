@@ -399,6 +399,7 @@ class Configurator(Dialog):
         vertical = QtWidgets.QVBoxLayout()
         vertical.addLayout(dropdown_line)
         vertical.addLayout(human_line)
+        vertical.addWidget(Note("Options: {{text}} {{service}} {{voice}} {{time}}"))
         vertical.addWidget(Note("Changes are not retroactive to old files."))
 
         group = QtWidgets.QGroupBox("Filenames of MP3s Stored in Your Collection")

@@ -201,7 +201,10 @@ class Templater(ServiceDialog):
         tag and then remembers the options.
         """
 
-        from cgi import escape
+        try:
+            from html import escape #py3.8
+        except ImportError:
+            from cgi import escape #below py3.7
 
         now = self._get_all()
         try:

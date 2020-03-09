@@ -22,6 +22,7 @@ File generation dialogs
 """
 
 from re import compile as re
+from anki.hooks import addHook, remHook
 try:
     from PyQt4 import QtCore, QtGui as QtWidgets
 except:
@@ -842,6 +843,8 @@ class _Progress(Dialog):
         Builds the interface with a status label and progress bar.
         """
 
+        addHook("BOSS_KEY", self.onBossKey)
+
         self.setMinimumWidth(500)
 
         status = Note("Please wait...")
@@ -891,6 +894,7 @@ class _Progress(Dialog):
         On cancel, disable the button and call our registered callback.
         """
 
+        remHook("BOSS_KEY", self.onBossKey)
         self.findChild(QtWidgets.QDialogButtonBox, 'buttons').setDisabled(True)
         self._on_cancel()
 
@@ -903,3 +907,11 @@ class _Progress(Dialog):
         self.findChild(QtWidgets.QProgressBar, 'bar').setValue(value)
         if detail:
             self.findChild(Note, 'detail').setText(detail)
+
+    # Boss Key #################################################################
+
+    def onBossKey(self, boo):
+        if boo:
+            self.hide()
+        else:
+            self.show()

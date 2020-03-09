@@ -234,13 +234,13 @@ class BrowserGenerator(ServiceDialog):
         append = now['last_mass_append']
         behavior = now['last_mass_behavior']
 
-        eligible_notes = [
-            note
+        eligible_note_ids = [
+            note.id
             for note in self._notes
             if source in note and dest in note
         ]
 
-        if not eligible_notes:
+        if not eligible_note_ids:
             self._alerts(
                 f"Of the {len(self._notes)} notes selected in the browser, "
                 f"none have both '{source}' and '{dest}' fields."
@@ -261,7 +261,7 @@ class BrowserGenerator(ServiceDialog):
             'all': now,
             'aborted': False,
             'progress': _Progress(
-                maximum=len(eligible_notes),
+                maximum=len(eligible_note_ids),
                 on_cancel=self._accept_abort,
                 title="Generating MP3s",
                 addon=self._addon,
@@ -279,11 +279,11 @@ class BrowserGenerator(ServiceDialog):
                 'append': append,
                 'behavior': behavior,
             },
-            'queue': eligible_notes,
+            'queue': eligible_note_ids,
             'counts': {
                 'total': len(self._notes),
-                'elig': len(eligible_notes),
-                'skip': len(self._notes) - len(eligible_notes),
+                'elig': len(eligible_note_ids),
+                'skip': len(self._notes) - len(eligible_note_ids),
                 'done': 0,  # all notes processed
                 'okay': 0,  # calls which resulted in a successful MP3
                 'fail': 0,  # calls which resulted in an exception
@@ -340,7 +340,8 @@ class BrowserGenerator(ServiceDialog):
             timer.start()
             return
 
-        note = proc['queue'].pop(0)
+        note_id = proc['queue'].pop(0)
+        note = self._browser.mw.col.getNote(note_id)
         phrase = note[proc['fields']['source']]
         phrase = self._addon.strip.from_note(phrase)
         self._accept_update(phrase)

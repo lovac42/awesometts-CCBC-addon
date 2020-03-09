@@ -38,6 +38,8 @@ from .player import Player
 from .router import Router
 from .text import Sanitizer
 
+from .lib.com.lovac42.anki.gui import toolbar
+
 
 __all__ = ['browser_menus', 'cards_button', 'config_menu', 'editor_button',
            'reviewer_hooks', 'sound_tag_delays', 'update_checker',
@@ -61,13 +63,15 @@ def browser_menus():
     disables and enables it upon selection of items.
     """
 
-    from PyQt5 import QtWidgets
+    from PyQt5 import QtWidgets, QtGui
 
     def on_setup_menus(browser):
         """Create an AwesomeTTS menu and add browser actions to it."""
 
-        menu = QtWidgets.QMenu("Awesome&TTS", browser.form.menubar)
-        browser.form.menubar.addMenu(menu)
+        ICON = QtGui.QIcon(f'{paths.ICONS}/speaker.png')
+        menu = toolbar.getMenu(browser, "&Tools")
+        subMenu = toolbar.getSubMenu(menu, "Awesome&TTS")
+        subMenu.setIcon(ICON)
 
         gui.Action(
             target=Bundle(
@@ -81,7 +85,7 @@ def browser_menus():
             ),
             text="&Add Audio to Selected...",
             sequence=sequences['browser_generator'],
-            parent=menu,
+            parent=subMenu,
         )
         gui.Action(
             target=Bundle(
@@ -94,7 +98,7 @@ def browser_menus():
             ),
             text="&Remove Audio from Selected...",
             sequence=sequences['browser_stripper'],
-            parent=menu,
+            parent=subMenu,
         )
 
     def update_title_wrapper(browser):

@@ -55,6 +55,7 @@ duden
 fluency.nl  
 wikitionary  
 yandex  
+ImTranslator
 
 
 ## Hooks:

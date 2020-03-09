@@ -212,7 +212,7 @@ router = Router(
             ('google', service.Google),
             ('googletts', service.GoogleTTS),
             ('howjsay', service.Howjsay),
-            ('imtranslator', service.ImTranslator),
+            # ('imtranslator', service.ImTranslator),
             ('ispeech', service.ISpeech),
             ('naver', service.Naver),
             ('neospeech', service.NeoSpeech),

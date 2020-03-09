@@ -496,9 +496,10 @@ class Service(object, metaclass=abc.ABCMeta):
         ).headers
 
     def parse_mime_type(self, raw_mime):
-        raw_mime = raw_mime.replace('/x-', '/')
-        if 'charset' in raw_mime:
-            raw_mime = raw_mime.split(';')[0]
+        if raw_mime:
+            raw_mime = raw_mime.replace('/x-', '/')
+            if 'charset' in raw_mime:
+                raw_mime = raw_mime.split(';')[0]
         return raw_mime
 
     def net_stream(self, targets, require=None, method='GET',

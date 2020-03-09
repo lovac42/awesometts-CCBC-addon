@@ -41,6 +41,12 @@ Added TextAloud (Polly) service
 Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/1878363231)  
 Added Azure by lucwastiaux: I can't confirm this because I don't have an API key to test it.
 
+Added WatsonTTS  
+
+Added Bing Translator  
+<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bing.png?raw=true" />  
+Note: The connection maybe unreliable for initial setup.
+
 
 ### Needs to fix:
 abair  
@@ -49,13 +55,6 @@ duden
 fluency.nl  
 wikitionary  
 yandex  
-
-WatsonTTS: demo service has ended?  
-
-
-Added Bing Translator, without a key, the connection maybe unreliable.  
-<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bing.png?raw=true" />  
-
 
 
 ## Hooks:

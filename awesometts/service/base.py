@@ -2,6 +2,8 @@
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
+# Copyright (C) 2019-Present  Nickolay
+# Copyright (C) 2019-Present  Lovac42
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +30,7 @@ import os
 import shutil
 import sys
 import subprocess
+import requests
 
 __all__ = ['Service']
 
@@ -483,23 +486,21 @@ class Service(object, metaclass=abc.ABCMeta):
 
         self._logger.debug("GET %s for headers", url)
         self._netops += 1
-        from urllib.request import urlopen, Request
         if headers:
             from anki.sync import AnkiRequestsClient
             client = AnkiRequestsClient()
             response = client.get(url, headers=headers)
             return response.headers
 
-        return urlopen(
-            Request(url=url, headers={'User-Agent': DEFAULT_UA}),
+        return requests.request(
+            method='GET', url=url, headers={'User-Agent': DEFAULT_UA},
             timeout=DEFAULT_TIMEOUT,
         ).headers
 
     def parse_mime_type(self, raw_mime):
-        if raw_mime:
-            raw_mime = raw_mime.replace('/x-', '/')
-            if 'charset' in raw_mime:
-                raw_mime = raw_mime.split(';')[0]
+        raw_mime = raw_mime.replace('/x-', '/')
+        if 'charset' in raw_mime:
+            raw_mime = raw_mime.split(';')[0]
         return raw_mime
 
     def net_stream(self, targets, require=None, method='GET',
@@ -531,7 +532,6 @@ class Service(object, metaclass=abc.ABCMeta):
         """
 
         assert method in ['GET', 'POST'], "method must be GET or POST"
-        from urllib.request import urlopen, Request
         from urllib.parse import quote
 
         targets = targets if isinstance(targets, list) else [targets]
@@ -574,12 +574,11 @@ class Service(object, metaclass=abc.ABCMeta):
                 headers.update(custom_headers)
 
             self._netops += 1
-            response = urlopen(
-                Request(
-                    url=('?'.join([url, params]) if params and method == 'GET'
-                         else url),
-                    headers=headers,
-                ),
+            response = requests.request(
+                method=method,
+                url=('?'.join([url, params]) if params and method == 'GET'
+                     else url),
+                headers=headers,
                 data=params.encode() if params and method == 'POST' else None,
                 timeout=DEFAULT_TIMEOUT,
             )
@@ -587,35 +586,40 @@ class Service(object, metaclass=abc.ABCMeta):
             if not response:
                 raise IOError("No response for %s" % desc)
 
-            if response.getcode() != 200:
+            if response.status_code != 200:
                 value_error = ValueError(
                     "Got %d status for %s" %
-                    (response.getcode(), desc)
+                    (response.status_code, desc)
                 )
                 try:
-                    value_error.payload = response.read()
+                    value_error.payload = response.content
                     response.close()
                 except Exception:
                     pass
                 raise value_error
 
-            got_mime = response.getheader('Content-Type')
-            simplified_mime = self.parse_mime_type(got_mime)
+            try:
+                got_mime = response.headers['Content-Type']
+            except:
+                got_mime = None
 
-            if 'mime' in require and require['mime'] != simplified_mime:
+            if got_mime:
+                simplified_mime = self.parse_mime_type(got_mime)
 
-                value_error = ValueError(
-                    f"Request got {got_mime} Content-Type for {desc};"
-                    f" wanted {require['mime']}"
-                )
-                value_error.got_mime = got_mime
-                value_error.wanted_mime = require['mime']
-                raise value_error
+                if 'mime' in require and require['mime'] != simplified_mime:
+
+                    value_error = ValueError(
+                        f"Request got {got_mime} Content-Type for {desc};"
+                        f" wanted {require['mime']}"
+                    )
+                    value_error.got_mime = got_mime
+                    value_error.wanted_mime = require['mime']
+                    raise value_error
 
             if not allow_redirects and response.geturl() != url:
                 raise ValueError("Request has been redirected")
 
-            payload = response.read()
+            payload = response.content
             response.close()
 
             if 'size' in require and len(payload) < require['size']:

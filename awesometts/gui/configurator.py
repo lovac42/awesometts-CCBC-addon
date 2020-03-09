@@ -64,7 +64,7 @@ class Configurator(Dialog):
         'spec_template_count_wrap', 'spec_template_strip', 'strip_note_braces',
         'strip_note_brackets', 'strip_note_parens', 'strip_template_braces',
         'strip_template_brackets', 'strip_template_parens', 'sub_note_cloze',
-        'sub_template_cloze', 'sul_note', 'sul_template', 'throttle_sleep',
+        'sub_template_cloze', 'sul_note', 'sul_template', 'background_batch_proc', 'throttle_sleep',
         'throttle_threshold', 'tts_key_a', 'tts_key_q', 'updates_enabled',
     ]
 
@@ -363,6 +363,7 @@ class Configurator(Dialog):
         vert = QtWidgets.QVBoxLayout()
         vert.addWidget(self._ui_tabs_mp3gen_filenames())
         vert.addWidget(self._ui_tabs_mp3gen_lame())
+        vert.addWidget(self._ui_tabs_mp3gen_background())
         vert.addWidget(self._ui_tabs_mp3gen_throttle())
         vert.addStretch()
 
@@ -424,6 +425,20 @@ class Configurator(Dialog):
 
         group = QtWidgets.QGroupBox("LAME Transcoder")
         group.setLayout(vert)
+        return group
+
+    def _ui_tabs_mp3gen_background(self):
+        hor = QtWidgets.QHBoxLayout()
+        bg = Checkbox("""Run batch priocessor in background?
+Don't do anything stupid like editing the note while adding audio...""")
+        bg.setObjectName('background_batch_proc')
+        hor.addWidget(bg)
+        hor.addStretch()
+        layout = QtWidgets.QVBoxLayout()
+        layout.addLayout(hor)
+
+        group = QtWidgets.QGroupBox("Background Batch Processing")
+        group.setLayout(layout)
         return group
 
     def _ui_tabs_mp3gen_throttle(self):

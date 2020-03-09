@@ -167,6 +167,7 @@ config = Config(
         ('templater_field', 'text', 'Front', str, str),
         ('templater_hide', 'text', 'normal', str, str),
         ('templater_target', 'text', 'front', str, str),
+        ('background_batch_proc', 'integer', False, to.lax_bool, int),
         ('throttle_sleep', 'integer', 20, int, int),
         ('throttle_threshold', 'integer', 5, int, int),
         ('TTS_KEY_A', 'integer', Qt.Key_F4, to.nullable_key, to.nullable_int),

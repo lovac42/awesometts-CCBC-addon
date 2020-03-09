@@ -264,7 +264,7 @@ class BrowserGenerator(ServiceDialog):
                 on_cancel=self._accept_abort,
                 title="Generating MP3s",
                 addon=self._addon,
-                parent=self,
+                parent=self._browser,
             ),
             'service': {
                 'id': svc_id,
@@ -296,6 +296,10 @@ class BrowserGenerator(ServiceDialog):
         }
 
         self._browser.mw.checkpoint("AwesomeTTS Batch Update")
+        if self._addon.config['background_batch_proc']:
+            self._process['progress'].setModal(False)
+            self._browser.hide()
+        self.close()
         self._process['progress'].show()
         self._browser.model.beginReset()
 
@@ -495,6 +499,7 @@ class BrowserGenerator(ServiceDialog):
         """
 
         self._browser.model.endReset()
+        self._browser.show()
 
         proc = self._process
         proc['progress'].accept()

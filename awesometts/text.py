@@ -33,10 +33,7 @@ __all__ = ['RE_CLOZE_NONHINTED', 'RE_CLOZE_BRACED', 'RE_CLOZE_RENDERED', 'RE_ELL
            'RE_WHITESPACE', 'STRIP_HTML', 'Sanitizer']
 
 
-try: #rm anki dependency for stand-alone apps
-    clozeReg=anki.template.template.clozeReg
-except:
-    clozeReg=r"(?si)\{\{(c)%s::(.*?)(::(.*?))?\}\}"
+clozeReg=r"(?si)\{\{(c)%s::(.*?)(::(.*?))?\}\}"
 
 RE_CLOZE_BRACED = re.compile(clozeReg % r'\d+')
 RE_CLOZE_NONHINTED = re.compile(r"\<span class\=\"cloze\"\>\[\.\.\.\]\<\/span\>")

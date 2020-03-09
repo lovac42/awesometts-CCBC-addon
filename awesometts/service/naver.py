@@ -109,6 +109,12 @@ the wait time limit.
     def options(self):
         """Returns an option to select the voice."""
 
+        def transform_speed(value):
+            """Return the speed value closest to one of the user's."""
+            value = float(value)
+            return min([10, 6, 3, 0, -3, -6, -10],
+                       key=lambda i: abs(i - value))
+
         return [
             dict(
                 key='voice',
@@ -117,6 +123,15 @@ the wait time limit.
                         for key, (description, _, _) in VOICE_CODES],
                 transform=lambda str: self.normalize(str)[0:2],
                 default='ja',
+            ),
+
+            dict(
+                key='speed',
+                label="Speed",
+                # values from -4 to +4, but only 4,0,-4 are used.
+                values=[(-3, "fast"), (0, "normal"), (3, "slow")],
+                transform=transform_speed,
+                default=0,
             ),
         ]
 
@@ -149,7 +164,8 @@ the wait time limit.
             def process_subtext(output_mp3, subtext):
                 """Request file id and download the MP3."""
                 prefix = b'\xaeU\xae\xa1C\x9b,Uzd\xf8\xef'
-                speed = str(config[1][1]) if len(config) > 1 else '0'
+                # speed = str(config[1][1]) if len(config) > 1 else '0'
+                speed = str(options['speed'])
 
                 json = 'pitch":0,"speaker":"' + config[0][1] + '","speed": "' + speed + '","text":"' + subtext + '"}'
                 data = base64.b64encode(prefix + bytes(json, 'utf-8'))

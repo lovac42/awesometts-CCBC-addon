@@ -22,7 +22,10 @@ except:
     pass
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from PyQt4 import QtGui as QtWidgets
 from PyQt4.QtWebKit import QWebPage, QWebView, QWebSettings
 from PyQt4.QtNetwork import QLocalServer, QLocalSocket
 # from anki.lang import _
 
+qtmajor = (QT_VERSION & 0xff0000) >> 16
+qtminor = (QT_VERSION & 0x00ff00) >> 8

@@ -23,11 +23,7 @@ Helpful type conversions
 
 import json
 import re
-
-try:
-    from PyQt4.QtCore import Qt
-except:
-    from PyQt5.QtCore import Qt
+from aqt.qt import *
 
 
 __all__ = ['compact_json', 'deserialized_dict', 'lax_bool',

@@ -23,10 +23,7 @@ File generation dialogs
 
 from re import compile as re
 from anki.hooks import addHook, remHook
-try:
-    from PyQt4 import QtCore, QtGui as QtWidgets
-except:
-    from PyQt5 import QtCore, QtWidgets
+from aqt.qt import *
 
 from .base import Dialog, ServiceDialog
 from .common import Checkbox, Label, Note
@@ -104,16 +101,16 @@ class BrowserGenerator(ServiceDialog):
         source_label = Label("Source Field:")
         source_label.setFont(self._FONT_LABEL)
 
-        source_dropdown = QtWidgets.QComboBox()
+        source_dropdown = QComboBox()
         source_dropdown.setObjectName('source')
 
         dest_label = Label("Destination Field:")
         dest_label.setFont(self._FONT_LABEL)
 
-        dest_dropdown = QtWidgets.QComboBox()
+        dest_dropdown = QComboBox()
         dest_dropdown.setObjectName('dest')
 
-        layout = QtWidgets.QGridLayout()
+        layout = QGridLayout()
         layout.addWidget(source_label, 0, 0)
         layout.addWidget(source_dropdown, 0, 1)
         layout.addWidget(dest_label, 1, 0)
@@ -126,13 +123,13 @@ class BrowserGenerator(ServiceDialog):
         Return the append/overwrite radio buttons and behavior checkbox.
         """
 
-        append = QtWidgets.QRadioButton(
+        append = QRadioButton(
             "&Append [sound:xxx] Tag onto Destination Field"
         )
         append.setObjectName('append')
         append.toggled.connect(self._on_handling_toggled)
 
-        overwrite = QtWidgets.QRadioButton(
+        overwrite = QRadioButton(
             "Over&write the Destination Field w/ Media Filename"
         )
         overwrite.setObjectName('overwrite')
@@ -143,13 +140,13 @@ class BrowserGenerator(ServiceDialog):
             lambda status: self._on_behavior_changed(),
         )
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addWidget(append)
         layout.addWidget(overwrite)
         layout.addSpacing(self._SPACING)
         layout.addWidget(behavior)
 
-        widget = QtWidgets.QWidget()
+        widget = QWidget()
         widget.setLayout(layout)
 
         return widget
@@ -160,7 +157,7 @@ class BrowserGenerator(ServiceDialog):
         """
 
         buttons = super(BrowserGenerator, self)._ui_buttons()
-        buttons.findChild(QtWidgets.QAbstractButton, 'okay').setText("&Generate")
+        buttons.findChild(QAbstractButton, 'okay').setText("&Generate")
 
         return buttons
 
@@ -194,7 +191,7 @@ class BrowserGenerator(ServiceDialog):
 
         config = self._addon.config
 
-        source = self.findChild(QtWidgets.QComboBox, 'source')
+        source = self.findChild(QComboBox, 'source')
         source.clear()
         for field in fields:
             source.addItem(field, field)
@@ -202,7 +199,7 @@ class BrowserGenerator(ServiceDialog):
             max(source.findData(config['last_mass_source']), 0)
         )
 
-        dest = self.findChild(QtWidgets.QComboBox, 'dest')
+        dest = self.findChild(QComboBox, 'dest')
         dest.clear()
         for field in fields:
             dest.addItem(field, field)
@@ -211,7 +208,7 @@ class BrowserGenerator(ServiceDialog):
         )
 
         self.findChild(
-            QtWidgets.QRadioButton,
+            QRadioButton,
             'append' if config['last_mass_append'] else 'overwrite',
         ).setChecked(True)
 
@@ -331,7 +328,7 @@ class BrowserGenerator(ServiceDialog):
            max(throttling['calls'].values()) >= throttling['threshold']:
             # at least one service needs a break
 
-            timer = QtCore.QTimer()
+            timer = QTimer()
             throttling['timer'] = timer
             throttling['countdown'] = throttling['sleep']
 
@@ -389,7 +386,7 @@ class BrowserGenerator(ServiceDialog):
             # a few reasons: keep the UI responsive, avoid a "maximum
             # recursion depth exceeded" exception if we hit a string of cached
             # files, and allow time to respond to a "cancel".
-            then=lambda: QtCore.QTimer.singleShot(0, self._accept_next),
+            then=lambda: QTimer.singleShot(0, self._accept_next),
         )
 
         svc_id = proc['service']['id']
@@ -585,7 +582,7 @@ class BrowserGenerator(ServiceDialog):
 
         # this alert is done by way of a singleShot() callback to avoid random
         # crashes on Mac OS X, which happen <5% of the time if called directly
-        QtCore.QTimer.singleShot(
+        QTimer.singleShot(
             0,
             lambda: self._alerts("".join(messages), self._browser),
         )
@@ -615,9 +612,9 @@ class BrowserGenerator(ServiceDialog):
         """
 
         return (
-            self.findChild(QtWidgets.QComboBox, 'source').currentText(),
-            self.findChild(QtWidgets.QComboBox, 'dest').currentText(),
-            self.findChild(QtWidgets.QRadioButton, 'append').isChecked(),
+            self.findChild(QComboBox, 'source').currentText(),
+            self.findChild(QComboBox, 'dest').currentText(),
+            self.findChild(QRadioButton, 'append').isChecked(),
             self.findChild(Checkbox, 'behavior').isChecked(),
         )
 
@@ -627,7 +624,7 @@ class BrowserGenerator(ServiceDialog):
         or overwrite behavior.
         """
 
-        append = self.findChild(QtWidgets.QRadioButton, 'append')
+        append = self.findChild(QRadioButton, 'append')
         behavior = self.findChild(Checkbox, 'behavior')
         behavior.setText(
             "Remove Existing [sound:xxx] Tag(s)" if append.isChecked()
@@ -643,7 +640,7 @@ class BrowserGenerator(ServiceDialog):
         """
 
         if self.isVisible():
-            append = self.findChild(QtWidgets.QRadioButton, 'append')
+            append = self.findChild(QRadioButton, 'append')
             behavior = self.findChild(Checkbox, 'behavior')
 
             if not (append.isChecked() or behavior.isChecked()):
@@ -692,22 +689,22 @@ class EditorGenerator(ServiceDialog):
         header = Label("Preview and Record")
         header.setFont(self._FONT_HEADER)
 
-        text = QtWidgets.QTextEdit()
+        text = QTextEdit()
         text.setAcceptRichText(False)
         text.setObjectName('text')
         text.setTabChangesFocus(True)
         text.keyPressEvent = lambda key_event: \
             self.accept() if (
-                key_event.modifiers() & QtCore.Qt.ControlModifier and
-                key_event.key() in [QtCore.Qt.Key_Return, QtCore.Qt.Key_Enter]
+                key_event.modifiers() & Qt.ControlModifier and
+                key_event.key() in [Qt.Key_Return, Qt.Key_Enter]
             ) \
-            else QtWidgets.QTextEdit.keyPressEvent(text, key_event)
+            else QTextEdit.keyPressEvent(text, key_event)
 
-        button = QtWidgets.QPushButton("&Preview")
+        button = QPushButton("&Preview")
         button.setObjectName('preview')
         button.clicked.connect(self._on_preview)
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addWidget(header)
         layout.addWidget(Note("This will be inserted as a [sound] tag and "
                               "synchronized with your collection."))
@@ -723,7 +720,7 @@ class EditorGenerator(ServiceDialog):
         """
 
         buttons = super(EditorGenerator, self)._ui_buttons()
-        buttons.findChild(QtWidgets.QAbstractButton, 'okay').setText("&Record")
+        buttons.findChild(QAbstractButton, 'okay').setText("&Record")
 
         return buttons
 
@@ -736,14 +733,14 @@ class EditorGenerator(ServiceDialog):
 
         super(EditorGenerator, self).show(*args, **kwargs)
 
-        text = self.findChild(QtWidgets.QTextEdit, 'text')
+        text = self.findChild(QTextEdit, 'text')
         text.setFocus()
 
         editor = self._editor
         web = editor.web
         from_note = self._addon.strip.from_note
         from_unknown = self._addon.strip.from_unknown
-        app = QtWidgets.QApplication
+        app = QApplication
 
         def try_clipboard(subtype):
             """Fetch from given system clipboard."""
@@ -849,15 +846,15 @@ class _Progress(Dialog):
         self.setMinimumWidth(500)
 
         status = Note("Please wait...")
-        status.setAlignment(QtCore.Qt.AlignCenter)
+        status.setAlignment(Qt.AlignCenter)
         status.setObjectName('status')
 
-        progress_bar = QtWidgets.QProgressBar()
+        progress_bar = QProgressBar()
         progress_bar.setMaximum(self._maximum)
         progress_bar.setObjectName('bar')
 
         detail = Note("")
-        detail.setAlignment(QtCore.Qt.AlignCenter)
+        detail.setAlignment(Qt.AlignCenter)
         detail.setFixedHeight(100)
         detail.setFont(self._FONT_INFO)
         detail.setObjectName('detail')
@@ -880,11 +877,11 @@ class _Progress(Dialog):
         Overrides the default behavior to only have a cancel button.
         """
 
-        buttons = QtWidgets.QDialogButtonBox()
+        buttons = QDialogButtonBox()
         buttons.setObjectName('buttons')
         buttons.rejected.connect(self.reject)
-        buttons.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel)
-        buttons.button(QtWidgets.QDialogButtonBox.Cancel).setAutoDefault(False)
+        buttons.setStandardButtons(QDialogButtonBox.Cancel)
+        buttons.button(QDialogButtonBox.Cancel).setAutoDefault(False)
 
         return buttons
 
@@ -896,7 +893,7 @@ class _Progress(Dialog):
         """
 
         remHook("BOSS_KEY", self.onBossKey)
-        self.findChild(QtWidgets.QDialogButtonBox, 'buttons').setDisabled(True)
+        self.findChild(QDialogButtonBox, 'buttons').setDisabled(True)
         self._on_cancel()
 
     def update(self, label, value, detail=None):
@@ -905,7 +902,7 @@ class _Progress(Dialog):
         """
 
         self.findChild(Note, 'status').setText(label)
-        self.findChild(QtWidgets.QProgressBar, 'bar').setValue(value)
+        self.findChild(QProgressBar, 'bar').setValue(value)
         if detail:
             self.findChild(Note, 'detail').setText(detail)
 

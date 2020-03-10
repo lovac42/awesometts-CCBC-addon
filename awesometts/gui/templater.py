@@ -21,12 +21,7 @@
 Template generation dialog
 """
 
-try:
-    from PyQt4 import QtGui as QtWidgets
-except:
-    from PyQt5 import QtWidgets
-
-
+from aqt.qt import *
 
 from .base import ServiceDialog
 from .common import Checkbox, Label, Note
@@ -97,7 +92,7 @@ class Templater(ServiceDialog):
         """
 
         widgets = {}
-        layout = QtWidgets.QGridLayout()
+        layout = QGridLayout()
 
         for row, label, name, options in [
                 (0, "Field:", 'field', [
@@ -156,7 +151,7 @@ class Templater(ServiceDialog):
         Returns a dropdown with the given list of options.
         """
 
-        dropdown = QtWidgets.QComboBox()
+        dropdown = QComboBox()
         dropdown.setObjectName(name)
         for value, label in options:
             dropdown.addItem(label, value)
@@ -169,7 +164,7 @@ class Templater(ServiceDialog):
         """
 
         buttons = super(Templater, self)._ui_buttons()
-        buttons.findChild(QtWidgets.QAbstractButton, 'okay').setText("&Insert")
+        buttons.findChild(QAbstractButton, 'okay').setText("&Insert")
 
         return buttons
 
@@ -184,7 +179,7 @@ class Templater(ServiceDialog):
         super(Templater, self).show(*args, **kwargs)
 
         for name in ['hide', 'target', 'field']:
-            dropdown = self.findChild(QtWidgets.QComboBox, name)
+            dropdown = self.findChild(QComboBox, name)
             dropdown.setCurrentIndex(max(
                 dropdown.findData(self._addon.config['templater_' + name]), 0
             ))
@@ -212,7 +207,7 @@ class Templater(ServiceDialog):
         except AttributeError:
             tform = self._card_layout.tform #2.1
         target = getattr(tform, now['templater_target'])
-        presets = self.findChild(QtWidgets.QComboBox, 'presets_dropdown')
+        presets = self.findChild(QComboBox, 'presets_dropdown')
 
         last_service = now['last_service']
         attrs = ([('group', last_service[6:])]
@@ -256,7 +251,7 @@ class Templater(ServiceDialog):
         combos = {
             name: widget.itemData(widget.currentIndex())
             for name in ['field', 'hide', 'target']
-            for widget in [self.findChild(QtWidgets.QComboBox, name)]
+            for widget in [self.findChild(QComboBox, name)]
         }
 
         return dict(

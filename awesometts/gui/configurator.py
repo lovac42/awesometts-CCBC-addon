@@ -23,11 +23,7 @@ from locale import format as locale
 import os
 import os.path
 from sys import platform
-
-try:
-    from PyQt4 import QtCore, QtGui, QtGui as QtWidgets
-except:
-    from PyQt5 import QtCore, QtWidgets, QtGui
+from aqt.qt import *
 
 from ..paths import ICONS
 from .base import Dialog
@@ -68,8 +64,8 @@ class Configurator(Dialog):
         'throttle_threshold', 'tts_key_a', 'tts_key_q', 'updates_enabled', 'cache_location'
     ]
 
-    _PROPERTY_WIDGETS = (Checkbox, QtWidgets.QComboBox, QtWidgets.QLineEdit,
-                         QtWidgets.QPushButton, QtWidgets.QSpinBox, QtWidgets.QListView)
+    _PROPERTY_WIDGETS = (Checkbox, QComboBox, QLineEdit,
+                         QPushButton, QSpinBox, QListView)
 
     __slots__ = ['_alerts', '_ask', '_preset_editor', '_group_editor',
                  '_sul_compiler']
@@ -98,7 +94,7 @@ class Configurator(Dialog):
         """Returns tab widget w/ Playback, Text, MP3s, Advanced."""
 
         use_icons = not platform.startswith('darwin')
-        tabs = QtWidgets.QTabWidget()
+        tabs = QTabWidget()
 
         for content, icon, label in [
                 (self._ui_tabs_playback, 'player-time', "Playback"),
@@ -108,7 +104,7 @@ class Configurator(Dialog):
                 (self._ui_tabs_advanced, 'configure', "Advanced"),
         ]:
             if use_icons:
-                tabs.addTab(content(), QtGui.QIcon(f'{ICONS}/{icon}.png'),
+                tabs.addTab(content(), QIcon(f'{ICONS}/{icon}.png'),
                             label)
             else:  # active tabs do not display correctly on Mac OS X w/ icons
                 tabs.addTab(content(), label)
@@ -120,7 +116,7 @@ class Configurator(Dialog):
     def _ui_tabs_playback(self):
         """Returns the "Playback" tab."""
 
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(self._ui_tabs_playback_group(
             'automatic_questions', 'tts_key_q',
             'delay_questions_', "Questions / Fronts of Cards",
@@ -134,7 +130,7 @@ class Configurator(Dialog):
                              'tags. See "Help" for more information.'))
         vert.addStretch()
 
-        tab = QtWidgets.QWidget()
+        tab = QWidget()
         tab.setLayout(vert)
         return tab
 
@@ -145,7 +141,7 @@ class Configurator(Dialog):
         of Cards" input groups.
         """
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         automatic = Checkbox("Automatically play on-the-fly <tts> tags", automatic_key)
         auto_tag = Checkbox("Auto Tag", automatic_key + '_auto_tag')
         auto_tag.setToolTip("Auto wrap <tts> tag to card and use default voice if no tag is found.")
@@ -156,21 +152,21 @@ class Configurator(Dialog):
         hor.addWidget(errors)
         hor.addStretch()
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addLayout(hor)
 
         wait_widgets = {}
         for subkey, desc in [('onthefly', "on-the-fly <tts> tags"),
                              ('stored_ours', "AwesomeTTS [sound] tags"),
                              ('stored_theirs', "other [sound] tags")]:
-            spinner = QtWidgets.QSpinBox()
+            spinner = QSpinBox()
             spinner.setObjectName(delay_key_prefix + subkey)
             spinner.setRange(0, 30)
             spinner.setSingleStep(1)
             spinner.setSuffix(" seconds")
             wait_widgets[subkey] = spinner
 
-            hor = QtWidgets.QHBoxLayout()
+            hor = QHBoxLayout()
             hor.addWidget(Label("Wait"))
             hor.addWidget(spinner)
             hor.addWidget(Label("before automatically playing " + desc))
@@ -185,7 +181,7 @@ class Configurator(Dialog):
 
 
         manual_key='manual'+automatic_key[9:]
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(Label("To manually play <tts> tags, strike"))
         hor.addWidget(self._factory_shortcut(shortcut_key))
         man_tag = Checkbox("Auto Tag", manual_key + '_auto_tag')
@@ -196,14 +192,14 @@ class Configurator(Dialog):
         hor.addWidget(man_errors)
         layout.addLayout(hor)
 
-        group = QtWidgets.QGroupBox(label)
+        group = QGroupBox(label)
         group.setLayout(layout)
         return group
 
     def _ui_tabs_text(self):
         """Returns the "Text" tab."""
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.setContentsMargins(10, 0, 10, 0)
         layout.addWidget(self._ui_tabs_text_mode(
             '_template_',
@@ -226,31 +222,31 @@ class Configurator(Dialog):
              ('remove', "remove entirely")],
         ), 50)
 
-        tab = QtWidgets.QWidget()
+        tab = QWidget()
         tab.setLayout(layout)
         return tab
 
     def _ui_tabs_text_mode(self, infix, label, *args, **kwargs):
         """Returns group box for the given text manipulation context."""
 
-        subtabs = QtWidgets.QTabWidget()
-        subtabs.setTabPosition(QtWidgets.QTabWidget.West)
+        subtabs = QTabWidget()
+        subtabs.setTabPosition(QTabWidget.West)
 
         for sublabel, sublayout in [
                 ("Simple", self._ui_tabs_text_mode_simple(infix, *args,
                                                           **kwargs)),
                 ("Advanced", self._ui_tabs_text_mode_adv(infix)),
         ]:
-            subwidget = QtWidgets.QWidget()
+            subwidget = QWidget()
             subwidget.setLayout(sublayout)
             subtabs.addTab(subwidget, sublabel)
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         # TODO
         # layout.setCanvasMargin(0)
         layout.addWidget(subtabs)
 
-        group = QtWidgets.QGroupBox(label)
+        group = QGroupBox(label)
         group.setFlat(True)
         group.setLayout(layout)
 
@@ -267,22 +263,22 @@ class Configurator(Dialog):
         available for manipulating text from the given context.
         """
 
-        select = QtWidgets.QComboBox()
+        select = QComboBox()
         for option_value, option_text in cloze_options:
             select.addItem(option_text, option_value)
         select.setObjectName(infix.join(['sub', 'cloze']))
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(Label(cloze_description))
         hor.addWidget(select)
         hor.addStretch()
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.setContentsMargins(10, 0, 10, 0)
         layout.addLayout(hor)
 
         if template_options:
-            hor = QtWidgets.QHBoxLayout()
+            hor = QHBoxLayout()
             hor.addWidget(Checkbox("For cloze answers, read revealed text "
                                    "only", 'otf_only_revealed_cloze'))
             hor.addWidget(Checkbox("Ignore {{hint}} fields",
@@ -294,7 +290,7 @@ class Configurator(Dialog):
             infix.join(['ellip', 'newlines'])
         ))
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(Label("Strip off text within:"))
         for option_subkey, option_label in [('parens', "parentheses"),
                                             ('brackets', "brackets"),
@@ -317,12 +313,12 @@ class Configurator(Dialog):
                                        wrap=False):
         """Returns a layout for specific character handling."""
 
-        line_edit = QtWidgets.QLineEdit()
+        line_edit = QLineEdit()
         line_edit.setObjectName(infix.join(['spec', suffix]))
         line_edit.setValidator(self._ui_tabs_text_mode_simple_spec.ucsv)
         line_edit.setFixedWidth(50)
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(Label(labels[0]))
         hor.addWidget(line_edit)
         hor.addWidget(Label(labels[1]))
@@ -332,7 +328,7 @@ class Configurator(Dialog):
         hor.addStretch()
         return hor
 
-    class _UniqueCharacterStringValidator(QtGui.QValidator):
+    class _UniqueCharacterStringValidator(QValidator):
         """QValidator returning unique, sorted characters."""
 
         def fixup(self, original):
@@ -344,7 +340,7 @@ class Configurator(Dialog):
             """Fixes original text and resets cursor to end of line."""
 
             filtered = self.fixup(original)
-            return QtGui.QValidator.Acceptable, filtered, len(filtered)
+            return QValidator.Acceptable, filtered, len(filtered)
 
     _ui_tabs_text_mode_simple_spec.ucsv = _UniqueCharacterStringValidator()
 
@@ -360,36 +356,36 @@ class Configurator(Dialog):
     def _ui_tabs_mp3gen(self):
         """Returns the "MP3s" tab."""
 
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(self._ui_tabs_mp3gen_filenames())
         vert.addWidget(self._ui_tabs_mp3gen_lame())
         vert.addWidget(self._ui_tabs_mp3gen_background())
         vert.addWidget(self._ui_tabs_mp3gen_throttle())
         vert.addStretch()
 
-        tab = QtWidgets.QWidget()
+        tab = QWidget()
         tab.setLayout(vert)
         return tab
 
     def _ui_tabs_mp3gen_filenames(self):
         """Returns the "Filenames of MP3s" group."""
 
-        dropdown = QtWidgets.QComboBox()
+        dropdown = QComboBox()
         dropdown.setObjectName('filenames')
         dropdown.addItem("hashed (safe and portable)", 'hash')
         dropdown.addItem("human-readable (may not work everywhere)", 'human')
 
-        dropdown_line = QtWidgets.QHBoxLayout()
+        dropdown_line = QHBoxLayout()
         dropdown_line.addWidget(Label("Filenames should be "))
         dropdown_line.addWidget(dropdown)
         dropdown_line.addStretch()
 
-        human = QtWidgets.QLineEdit()
+        human = QLineEdit()
         human.setObjectName('filenames_human')
         human.setPlaceholderText("e.g. {{service}} {{voice}} - {{text}}")
         human.setEnabled(False)
 
-        human_line = QtWidgets.QHBoxLayout()
+        human_line = QHBoxLayout()
         human_line.addWidget(Label("Format human-readable filenames as "))
         human_line.addWidget(human)
         human_line.addWidget(Label(".mp3"))
@@ -397,13 +393,13 @@ class Configurator(Dialog):
         dropdown.currentIndexChanged. \
             connect(lambda index: human.setEnabled(index > 0))
 
-        vertical = QtWidgets.QVBoxLayout()
+        vertical = QVBoxLayout()
         vertical.addLayout(dropdown_line)
         vertical.addLayout(human_line)
         vertical.addWidget(Note("Options: {{text}} {{service}} {{voice}} {{time}}"))
         vertical.addWidget(Note("Changes are not retroactive to old files."))
 
-        group = QtWidgets.QGroupBox("Filenames of MP3s Stored in Your Collection")
+        group = QGroupBox("Filenames of MP3s Stored in Your Collection")
         group.setLayout(vertical)
 
         return group
@@ -411,26 +407,26 @@ class Configurator(Dialog):
     def _ui_tabs_mp3gen_lame(self):
         """Returns the "LAME Transcoder" input group."""
 
-        flags = QtWidgets.QLineEdit()
+        flags = QLineEdit()
         flags.setObjectName('lame_flags')
         flags.setPlaceholderText("e.g. '-q 5' for medium quality")
 
         rtr = self._addon.router
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(Note("Specify flags passed to lame when making MP3s."))
         vert.addWidget(flags)
         vert.addWidget(Note("Affects %s. Changes are not retroactive to old "
                             "files." %
                             ', '.join(rtr.by_trait(rtr.Trait.TRANSCODING))))
 
-        group = QtWidgets.QGroupBox("LAME Transcoder")
+        group = QGroupBox("LAME Transcoder")
         group.setLayout(vert)
         return group
 
     def _ui_tabs_mp3gen_background(self):
         bg = Checkbox("Run batch processor in background? (Not idiot proof enough)")
         bg.setObjectName('background_batch_proc')
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addWidget(bg)
         layout.addWidget(Note(
             "You may study deck-A while processing deck-B. "
@@ -438,26 +434,26 @@ class Configurator(Dialog):
             "while adding audio to the same note in the background."
         ))
 
-        group = QtWidgets.QGroupBox("Background Batch Processing")
+        group = QGroupBox("Background Batch Processing")
         group.setLayout(layout)
         return group
 
     def _ui_tabs_mp3gen_throttle(self):
         """Returns the "Download Throttling" input group."""
 
-        threshold = QtWidgets.QSpinBox()
+        threshold = QSpinBox()
         threshold.setObjectName('throttle_threshold')
         threshold.setRange(1, 30)
         threshold.setSingleStep(1)
         threshold.setSuffix(" operations")
 
-        sleep = QtWidgets.QSpinBox()
+        sleep = QSpinBox()
         sleep.setObjectName('throttle_sleep')
         sleep.setRange(10, 600)
         sleep.setSingleStep(10)
         sleep.setSuffix(" seconds")
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(Label("After "))
         hor.addWidget(threshold)
         hor.addWidget(Label(" sleep for "))
@@ -465,7 +461,7 @@ class Configurator(Dialog):
         hor.addStretch()
 
         rtr = self._addon.router
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(Note("Tweak how often AwesomeTTS takes a break when "
                             "mass downloading files from online services."))
         vert.addLayout(hor)
@@ -473,14 +469,14 @@ class Configurator(Dialog):
                             # ', '.join(rtr.by_trait(rtr.Trait.INTERNET))))
         vert.addWidget(Note("Warning: Please be kind to online services and repect the wait time limit."))
 
-        group = QtWidgets.QGroupBox("Download Throttling during Batch Processing")
+        group = QGroupBox("Download Throttling during Batch Processing")
         group.setLayout(vert)
         return group
 
     def _ui_tabs_windows(self):
         """Returns the "Window" tab."""
 
-        grid = QtWidgets.QGridLayout()
+        grid = QGridLayout()
         for i, (desc, sub) in enumerate([
                 ("open configuration in main window", 'configurator'),
                 ("insert <tts> tag in template editor", 'templater'),
@@ -493,10 +489,10 @@ class Configurator(Dialog):
             grid.addWidget(self._factory_shortcut('launch_' + sub), i, 1)
         grid.setColumnStretch(1, 1)
 
-        group = QtWidgets.QGroupBox("Window Shortcuts")
+        group = QGroupBox("Window Shortcuts")
         group.setLayout(grid)
 
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(group)
         vert.addWidget(Note("* Requires restart"))
         vert.addWidget(Note(
@@ -504,8 +500,8 @@ class Configurator(Dialog):
             "you use math equations and LaTeX with Anki using the %(native)s "
             "E/M/T keystrokes, you may want to reassign or unbind the "
             "shortcut for generating in the note editor." %
-            dict(native=key_combo_desc(QtCore.Qt.ControlModifier |
-                                       QtCore.Qt.Key_T))
+            dict(native=key_combo_desc(Qt.ControlModifier |
+                                       Qt.Key_T))
         ))
         vert.addWidget(Note("Editor and browser shortcuts will take effect "
                             "the next time you open those windows."))
@@ -516,43 +512,43 @@ class Configurator(Dialog):
                             "experiment to find what works best."))
         vert.addStretch()
 
-        tab = QtWidgets.QWidget()
+        tab = QWidget()
         tab.setLayout(vert)
         return tab
 
     def _ui_tabs_advanced(self):
         """Returns the "Advanced" tab."""
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addWidget(self._ui_tabs_advanced_presets())
         layout.addWidget(self._ui_tabs_advanced_cache())
         layout.addWidget(self._ui_tabs_advanced_copy())
         layout.addStretch()
 
-        tab = QtWidgets.QWidget()
+        tab = QWidget()
         tab.setLayout(layout)
         return tab
 
     def _ui_tabs_advanced_presets(self):
         """Returns the "Presets" input group."""
 
-        presets_button = QtWidgets.QPushButton("Manage Presets...")
+        presets_button = QPushButton("Manage Presets...")
         presets_button.clicked.connect(self._on_presets)
 
-        groups_button = QtWidgets.QPushButton("Manage Groups...")
+        groups_button = QPushButton("Manage Groups...")
         groups_button.clicked.connect(self._on_groups)
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(presets_button)
         hor.addWidget(groups_button)
         hor.addStretch()
 
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(Note("Setup services for easy access, menu playback, "
                             "randomization, or fallbacks."))
         vert.addLayout(hor)
 
-        group = QtWidgets.QGroupBox("Service Presets and Groups")
+        group = QGroupBox("Service Presets and Groups")
         group.setLayout(vert)
         return group
 
@@ -560,44 +556,44 @@ class Configurator(Dialog):
     def _ui_tabs_advanced_cache(self):
         """Returns the "Caching" input group."""
 
-        days = QtWidgets.QSpinBox()
+        days = QSpinBox()
         days.setObjectName('cache_days')
         days.setRange(0, 9999)
         days.setSuffix(" days")
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(Label("Delete files older than"))
         hor.addWidget(days)
         hor.addWidget(Label("at exit (zero clears everything)"))
         hor.addStretch()
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addWidget(Note("AwesomeTTS caches generated audio files and "
                               "remembers failures during each session to "
                               "speed up repeated playback."))
         layout.addLayout(hor)
 
-        abutton = QtWidgets.QPushButton("Delete Files")
+        abutton = QPushButton("Delete Files")
         abutton.setObjectName('on_cache')
         abutton.clicked.connect(lambda: self._on_cache_clear(abutton))
 
-        fbutton = QtWidgets.QPushButton("Forget Failures")
+        fbutton = QPushButton("Forget Failures")
         fbutton.setObjectName('on_forget')
         fbutton.clicked.connect(lambda: self._on_forget_failures(fbutton))
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(abutton)
         hor.addWidget(fbutton)
         layout.addLayout(hor)
 
-        loc = QtWidgets.QLineEdit()
+        loc = QLineEdit()
         loc.setObjectName('cache_location')
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(Note("Custom cache folder: (Require restart)"))
         vert.addWidget(loc)
         layout.addLayout(vert)
 
-        group = QtWidgets.QGroupBox("Caching")
+        group = QGroupBox("Caching")
         group.setLayout(layout)
         return group
 
@@ -605,19 +601,19 @@ class Configurator(Dialog):
         """Returns the "Presets" input group."""
 
         presets_dropdown, group_dropdown=self.on_update_preset()
-        hor_presets=QtWidgets.QHBoxLayout()
+        hor_presets=QHBoxLayout()
         hor_presets.addWidget(Label("Preset:"))
         hor_presets.addWidget(presets_dropdown)
-        hor_groups=QtWidgets.QHBoxLayout()
+        hor_groups=QHBoxLayout()
         hor_groups.addWidget(Label("Group:"))
         hor_groups.addWidget(group_dropdown)
 
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.addWidget(Note("Select default preset/group to use for reading the selected text."))
         vert.addLayout(hor_presets)
         vert.addLayout(hor_groups)
 
-        group_box = QtWidgets.QGroupBox("Read Selected Text: Presets and Groups")
+        group_box = QGroupBox("Read Selected Text: Presets and Groups")
         group_box.setLayout(vert)
         return group_box
 
@@ -626,7 +622,7 @@ class Configurator(Dialog):
     def _factory_shortcut(self, object_name):
         """Returns a push button capable of being assigned a shortcut."""
 
-        shortcut = QtWidgets.QPushButton()
+        shortcut = QPushButton()
         shortcut.atts_pending = False
         shortcut.setObjectName(object_name)
         shortcut.setCheckable(True)
@@ -652,20 +648,20 @@ class Configurator(Dialog):
             if isinstance(widget, Checkbox):
                 widget.setChecked(value)
                 widget.stateChanged.emit(value)
-            elif isinstance(widget, QtWidgets.QLineEdit):
+            elif isinstance(widget, QLineEdit):
                 widget.setText(value)
-            elif isinstance(widget, QtWidgets.QPushButton):
+            elif isinstance(widget, QPushButton):
                 widget.atts_value = value
                 widget.setText(key_combo_desc(widget.atts_value))
-            elif isinstance(widget, QtWidgets.QComboBox):
+            elif isinstance(widget, QComboBox):
                 widget.setCurrentIndex(max(widget.findData(value), 0))
-            elif isinstance(widget, QtWidgets.QSpinBox):
+            elif isinstance(widget, QSpinBox):
                 widget.setValue(value)
-            elif isinstance(widget, QtWidgets.QListView):
+            elif isinstance(widget, QListView):
                 widget.setModel(value)
 
 
-        widget = self.findChild(QtWidgets.QPushButton, 'on_cache')
+        widget = self.findChild(QPushButton, 'on_cache')
         widget.atts_list = (
             [filename for filename in os.listdir(self._addon.paths.cache)]
             if os.path.isdir(self._addon.paths.cache) else []
@@ -678,7 +674,7 @@ class Configurator(Dialog):
             widget.setEnabled(False)
             widget.setText("Delete Files")
 
-        widget = self.findChild(QtWidgets.QPushButton, 'on_forget')
+        widget = self.findChild(QPushButton, 'on_forget')
         fail_count = self._addon.router.get_failure_count()
         if fail_count:
             widget.setEnabled(True)
@@ -695,15 +691,15 @@ class Configurator(Dialog):
     def accept(self):
         """Saves state on inputs; rough opposite of show()."""
 
-        for list_view in self.findChildren(QtWidgets.QListView):
-            for editor in list_view.findChildren(QtWidgets.QWidget, 'editor'):
+        for list_view in self.findChildren(QListView):
+            for editor in list_view.findChildren(QWidget, 'editor'):
                 list_view.commitData(editor)  # if an editor is open, save it
 
 
         type="presets"
-        preset=self.findChild(QtWidgets.QComboBox,'presets_dropdown').currentText()
+        preset=self.findChild(QComboBox,'presets_dropdown').currentText()
         if not preset:
-            preset=self.findChild(QtWidgets.QComboBox,'group_dropdown').currentText()
+            preset=self.findChild(QComboBox,'group_dropdown').currentText()
             type="groups" if preset else ''
         self._addon.config['read_text_type']=type
         self._addon.config['read_text_preset']=preset
@@ -711,14 +707,14 @@ class Configurator(Dialog):
         self._addon.config.update({
             widget.objectName(): (
                 widget.isChecked() if isinstance(widget, Checkbox)
-                else widget.atts_value if isinstance(widget, QtWidgets.QPushButton)
-                else widget.value() if isinstance(widget, QtWidgets.QSpinBox)
+                else widget.atts_value if isinstance(widget, QPushButton)
+                else widget.value() if isinstance(widget, QSpinBox)
                 else widget.itemData(widget.currentIndex()) if isinstance(
-                    widget, QtWidgets.QComboBox)
+                    widget, QComboBox)
                 else [
                     i for i in widget.model().raw_data
                     if i['compiled'] and 'bad_replace' not in i
-                ] if isinstance(widget, QtWidgets.QListView)
+                ] if isinstance(widget, QListView)
                 else widget.text()
             )
             for widget in self.findChildren(self._PROPERTY_WIDGETS)
@@ -730,7 +726,7 @@ class Configurator(Dialog):
     def help_request(self):
         """Launch browser to the URL for the user's current tab."""
 
-        tabs = self.findChild(QtWidgets.QTabWidget)
+        tabs = self.findChild(QTabWidget)
         self._launch_link('config/' +
                           tabs.tabText(tabs.currentIndex()).lower())
 
@@ -743,13 +739,13 @@ class Configurator(Dialog):
 
         key = key_event.key()
 
-        if key == QtCore.Qt.Key_Escape:
+        if key == Qt.Key_Escape:
             for button in buttons:
                 button.atts_pending = False
                 button.setText(key_combo_desc(button.atts_value))
             return
 
-        if key in [QtCore.Qt.Key_Backspace, QtCore.Qt.Key_Delete]:
+        if key in [Qt.Key_Backspace, Qt.Key_Delete]:
             combo = None
         else:
             combo = key_event_combo(key_event)
@@ -767,7 +763,7 @@ class Configurator(Dialog):
         if not buttons:
             return super(Configurator, self).keyReleaseEvent(key_event)
 
-        elif key_event.key() in [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]:
+        elif key_event.key() in [Qt.Key_Enter, Qt.Key_Return]:
             # need to ignore and eat key release on enter/return so that user
             # can activate the button without immediately deactivating it
             return
@@ -781,7 +777,7 @@ class Configurator(Dialog):
         """Returns all shortcut buttons that are pressed."""
 
         return [button
-                for button in self.findChildren(QtWidgets.QPushButton)
+                for button in self.findChildren(QPushButton)
                 if (button.isChecked() and
                     (button.objectName().startswith('launch_') or
                      button.objectName().startswith('tts_key_')))]
@@ -824,20 +820,20 @@ class Configurator(Dialog):
         type=self._addon.config['read_text_type']
         name=self._addon.config['read_text_preset']
 
-        presets_dropdown=self.findChild(QtWidgets.QComboBox, 'presets_dropdown')
+        presets_dropdown=self.findChild(QComboBox, 'presets_dropdown')
         if not presets_dropdown:
-            presets_dropdown=QtWidgets.QComboBox()
+            presets_dropdown=QComboBox()
             presets_dropdown.setObjectName('presets_dropdown')
-            presets_dropdown.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.Preferred)
+            presets_dropdown.setSizePolicy(QSizePolicy.MinimumExpanding,
+                                           QSizePolicy.Preferred)
             presets_dropdown.activated.connect(self._on_preset_activated)
 
-        group_dropdown=self.findChild(QtWidgets.QComboBox, 'group_dropdown')
+        group_dropdown=self.findChild(QComboBox, 'group_dropdown')
         if not group_dropdown:
-            group_dropdown=QtWidgets.QComboBox()
+            group_dropdown=QComboBox()
             group_dropdown.setObjectName('group_dropdown')
-            group_dropdown.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                         QtWidgets.QSizePolicy.Preferred)
+            group_dropdown.setSizePolicy(QSizePolicy.MinimumExpanding,
+                                         QSizePolicy.Preferred)
             group_dropdown.activated.connect(self._on_group_activated)
 
         i=1
@@ -863,11 +859,11 @@ class Configurator(Dialog):
         return presets_dropdown, group_dropdown
 
     def _on_preset_activated(self):
-        combo_box=self.findChild(QtWidgets.QComboBox,'group_dropdown')
+        combo_box=self.findChild(QComboBox,'group_dropdown')
         combo_box.setCurrentIndex(0)
 
     def _on_group_activated(self):
-        combo_box=self.findChild(QtWidgets.QComboBox,'presets_dropdown')
+        combo_box=self.findChild(QComboBox,'presets_dropdown')
         combo_box.setCurrentIndex(0)
 
 

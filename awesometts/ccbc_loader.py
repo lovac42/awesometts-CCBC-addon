@@ -24,8 +24,7 @@ Add-on package initialization
 from os.path import join
 import sys
 from time import time
-
-from PyQt4.QtGui import QKeySequence, QShortcut
+from aqt.qt import *
 
 import anki
 import aqt
@@ -65,12 +64,10 @@ def browser_menus():
     disables and enables it upon selection of items.
     """
 
-    from PyQt4 import QtGui
-
     def on_setup_menus(browser):
         """Create an AwesomeTTS menu and add browser actions to it."""
 
-        ICON = QtGui.QIcon(f'{paths.ICONS}/speaker.png')
+        ICON = QIcon(f'{paths.ICONS}/speaker.png')
         menu = toolbar.getMenu(browser, "&Tools")
         subMenu = toolbar.getSubMenu(menu, "Awesome&TTS")
         subMenu.setIcon(ICON)
@@ -265,9 +262,6 @@ def reviewer_hooks():
     tags and to also do playback on-demand via shortcut keys and the
     context menu.
     """
-
-    from PyQt4.QtCore import QEvent
-    from PyQt4.QtGui import QMenu
 
     reviewer = gui.Reviewer(addon=addon,
                             alerts=aqt.utils.showWarning,

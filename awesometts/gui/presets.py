@@ -18,10 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Presets management dialog"""
-try:
-    from PyQt4 import QtGui as QtWidgets
-except:
-    from PyQt5 import QtWidgets
+
+from aqt.qt import *
 
 from .base import ServiceDialog
 from .common import Label, Note
@@ -71,7 +69,7 @@ class Presets(ServiceDialog):
 
         buttons = super(Presets, self)._ui_buttons()
         for btn in buttons.buttons():
-            if buttons.buttonRole(btn) == QtWidgets.QDialogButtonBox.RejectRole:
+            if buttons.buttonRole(btn) == QDialogButtonBox.RejectRole:
                 buttons.removeButton(btn)
         return buttons
 

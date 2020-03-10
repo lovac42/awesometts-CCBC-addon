@@ -22,13 +22,7 @@ import aqt
 import sys
 from os.path import join
 from time import time
-
-try:
-    from PyQt4.QtCore import PYQT_VERSION_STR, Qt
-    from PyQt4.QtGui import QKeySequence
-except:
-    from PyQt5.QtCore import PYQT_VERSION_STR, Qt
-    from PyQt5.QtGui import QKeySequence
+from aqt.qt import *
 
 from . import conversion as to, gui, paths, service, utils
 from .bundle import Bundle
@@ -37,7 +31,6 @@ from .player import Player
 from .router import Router
 from .text import Sanitizer
 from .const import WEB, VERSION
-
 
 
 def get_platform_info():

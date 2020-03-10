@@ -19,10 +19,7 @@
 
 """Groups management dialog"""
 
-try:
-    from PyQt4 import QtCore, QtGui, QtGui as QtWidgets
-except:
-    from PyQt5 import QtCore, QtWidgets, QtGui
+from aqt.qt import *
 
 from ..paths import ICONS
 from .base import Dialog
@@ -60,34 +57,34 @@ class Groups(Dialog):
 
         layout = super(Groups, self)._ui()
 
-        groups = QtWidgets.QComboBox()
+        groups = QComboBox()
         groups.setObjectName('groups')
-        groups.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                             QtWidgets.QSizePolicy.Preferred)
+        groups.setSizePolicy(QSizePolicy.MinimumExpanding,
+                             QSizePolicy.Preferred)
         groups.activated.connect(self._on_group_activated)
 
         # TODO: icons do not work with 2.1
-        delete = QtWidgets.QPushButton(QtGui.QIcon(f'{ICONS}/editdelete.png'), "")
+        delete = QPushButton(QIcon(f'{ICONS}/editdelete.png'), "")
         delete.setObjectName('delete')
-        delete.setIconSize(QtCore.QSize(16, 16))
+        delete.setIconSize(QSize(16, 16))
         delete.setFixedSize(18, 18)
         delete.setFlat(True)
         delete.clicked.connect(self._on_group_delete)
 
-        add = QtWidgets.QPushButton(QtGui.QIcon(f'{ICONS}/list-add.png'), "")
+        add = QPushButton(QIcon(f'{ICONS}/list-add.png'), "")
         add.setObjectName('add')
-        add.setIconSize(QtCore.QSize(16, 16))
+        add.setIconSize(QSize(16, 16))
         add.setFixedSize(18, 18)
         add.setFlat(True)
         add.clicked.connect(self._on_group_add)
 
-        hor = QtWidgets.QHBoxLayout()
+        hor = QHBoxLayout()
         hor.addWidget(groups)
         hor.addWidget(delete)
         hor.addWidget(add)
         hor.addStretch()
 
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         vert.setObjectName('child')
 
         layout.addLayout(hor)
@@ -118,8 +115,8 @@ class Groups(Dialog):
         """Show the correct panel for the selected group."""
 
         self._pull_presets()
-        delete = self.findChild(QtWidgets.QPushButton, 'delete')
-        vert = self.findChild(QtWidgets.QLayout, 'child')
+        delete = self.findChild(QPushButton, 'delete')
+        vert = self.findChild(QLayout, 'child')
 
         while vert.count():
             vert.itemAt(0).widget().setParent(None)
@@ -127,25 +124,25 @@ class Groups(Dialog):
         if idx > 0:
             delete.setEnabled(True)
 
-            name = self.findChild(QtWidgets.QComboBox, 'groups').currentText()
+            name = self.findChild(QComboBox, 'groups').currentText()
             self._current_group = name
             group = self._groups[name]
 
-            randomize = QtWidgets.QRadioButton("randomized")
+            randomize = QRadioButton("randomized")
             randomize.setChecked(group['mode'] == 'random')
             randomize.clicked.connect(lambda: group.update({'mode': 'random'}))
 
-            in_order = QtWidgets.QRadioButton("in-order")
+            in_order = QRadioButton("in-order")
             in_order.setChecked(group['mode'] == 'ordered')
             in_order.clicked.connect(lambda: group.update({'mode': 'ordered'}))
 
-            hor = QtWidgets.QHBoxLayout()
+            hor = QHBoxLayout()
             hor.addWidget(Label("Mode:"))
             hor.addWidget(randomize)
             hor.addWidget(in_order)
             hor.addStretch()
 
-            inner = QtWidgets.QVBoxLayout()
+            inner = QVBoxLayout()
             inner.addLayout(hor)
             inner.addLayout(Slate(
                 "Preset",
@@ -157,12 +154,12 @@ class Groups(Dialog):
                 'presets',
             ))
 
-            slate = QtWidgets.QWidget()
+            slate = QWidget()
             slate.setLayout(inner)
 
             vert.addWidget(slate)
 
-            self.findChild(QtWidgets.QListView,
+            self.findChild(QListView,
                            'presets').setModel(group['presets'])
 
         else:
@@ -189,7 +186,7 @@ class Groups(Dialog):
     def _on_group_delete(self):
         """Delete the selected group."""
 
-        del self._groups[self.findChild(QtWidgets.QComboBox,
+        del self._groups[self.findChild(QComboBox,
                                         'groups').currentText()]
         self._on_refresh()
 
@@ -218,7 +215,7 @@ class Groups(Dialog):
     def _on_refresh(self, select=None):
         """Repopulate the group dropdown and initialize panel."""
 
-        groups = self.findChild(QtWidgets.QComboBox, 'groups')
+        groups = self.findChild(QComboBox, 'groups')
         groups.clear()
         groups.addItem("View/Edit Group...")
 
@@ -263,8 +260,8 @@ class Groups(Dialog):
         if not name or name not in self._groups:
             return
 
-        list_view = self.findChild(QtWidgets.QListView, 'presets')
-        for editor in list_view.findChildren(QtWidgets.QWidget, 'editor'):
+        list_view = self.findChild(QListView, 'presets')
+        for editor in list_view.findChildren(QWidget, 'editor'):
             list_view.commitData(editor)  # if an editor is open, save it
 
         self._groups[name]['presets'] = list_view.model().raw_data

@@ -26,15 +26,7 @@ As everything done from the add-on code has to do with AwesomeTTS, these
 all carry a speaker icon (if supported by the desktop environment).
 """
 
-
-try:
-    from PyQt4 import QtCore, QtGui, QtGui as QtWidgets
-    from PyQt4.QtCore import Qt
-    QT5=False
-except:
-    QT5=True
-    from PyQt5 import QtCore, QtWidgets, QtGui
-    from PyQt5.QtCore import Qt
+from aqt.qt import *
 
 from ..paths import ICONS
 
@@ -43,7 +35,9 @@ __all__ = ['ICON', 'key_event_combo', 'key_combo_desc', 'Action', 'Button',
 
 
 ICON_FILE = f'{ICONS}/speaker.png'
-ICON = QtGui.QIcon(ICON_FILE)
+ICON = QIcon(ICON_FILE)
+
+QT5 = qtmajor == 5
 
 
 def key_event_combo(event):
@@ -99,7 +93,7 @@ def key_combo_desc(combo):
     human-readable description.
     """
 
-    return QtGui.QKeySequence(combo).toString(QtGui.QKeySequence.NativeText) \
+    return QKeySequence(combo).toString(QKeySequence.NativeText) \
         if combo else "unassigned"
 
 
@@ -178,12 +172,12 @@ class _HTMLConnector(_Connector):
         owner._links[self.link_id] = self._show
 
 
-class Action(QtWidgets.QAction, _QtConnector):
+class Action(QAction, _QtConnector):
     """
     Provides a menu action to show a dialog when triggered.
     """
 
-    NO_SEQUENCE = QtGui.QKeySequence()
+    NO_SEQUENCE = QKeySequence()
 
     __slots__ = [
         '_sequence',  # the key sequence that activates this action
@@ -218,13 +212,13 @@ class Action(QtWidgets.QAction, _QtConnector):
         if QT5:
             super().__init__(ICON, text, parent, signal_name='triggered', target=target)
         else:
-            QtWidgets.QAction.__init__(self, ICON, text, parent)
+            QAction.__init__(self, ICON, text, parent)
             _QtConnector.__init__(self, target=target, signal_name='triggered')
 
         self.setShortcut(sequence)
         self._sequence = sequence
 
-        if isinstance(parent, QtWidgets.QMenu):
+        if isinstance(parent, QMenu):
             parent.addAction(self)
 
 
@@ -237,7 +231,7 @@ class AbstractButton:
         return tooltip
 
 
-class Button(QtWidgets.QPushButton, _QtConnector, AbstractButton):
+class Button(QPushButton, _QtConnector, AbstractButton):
     """
     Provides a button to show a dialog when clicked.
     """
@@ -252,11 +246,11 @@ class Button(QtWidgets.QPushButton, _QtConnector, AbstractButton):
         if QT5:
             super().__init__(ICON, text, signal_name='clicked', target=target)
         else:
-            QtWidgets.QPushButton.__init__(self, ICON, text)
+            QPushButton.__init__(self, ICON, text)
             _QtConnector.__init__(self, target=target, signal_name='clicked')
 
         if text:
-            self.setIconSize(QtCore.QSize(15, 15))
+            self.setIconSize(QSize(15, 15))
 
         else:
             self.setFixedWidth(20)
@@ -296,7 +290,7 @@ class HTMLButton(AbstractButton, _HTMLConnector):
         self.buttons.append(self.html)
 
 
-class Checkbox(QtWidgets.QCheckBox):
+class Checkbox(QCheckBox):
     """Provides a checkbox with a better constructor."""
 
     def __init__(self, text=None, object_name=None, parent=None):
@@ -304,7 +298,7 @@ class Checkbox(QtWidgets.QCheckBox):
         self.setObjectName(object_name)
 
 
-class Filter(QtCore.QObject):
+class Filter(QObject):
     """
     Once instantiated, serves as an installEventFilter-compatible object
     instance that supports filtering events with a condition.
@@ -333,20 +327,20 @@ class Filter(QtCore.QObject):
         return bool(self._when(event) and self._relay(event))
 
 
-class HTML(QtWidgets.QLabel):
+class HTML(QLabel):
     """Label with HTML enabled."""
 
     def __init__(self, *args, **kwargs):
         super(HTML, self).__init__(*args, **kwargs)
-        self.setTextFormat(QtCore.Qt.RichText)
+        self.setTextFormat(Qt.RichText)
 
 
-class Label(QtWidgets.QLabel):
+class Label(QLabel):
     """Label with HTML disabled."""
 
     def __init__(self, *args, **kwargs):
         super(Label, self).__init__(*args, **kwargs)
-        self.setTextFormat(QtCore.Qt.PlainText)
+        self.setTextFormat(Qt.PlainText)
 
 
 class Note(Label):
@@ -357,7 +351,7 @@ class Note(Label):
         self.setWordWrap(True)
 
 
-class Slate(QtWidgets.QHBoxLayout):  # pylint:disable=too-few-public-methods
+class Slate(QHBoxLayout):  # pylint:disable=too-few-public-methods
     """Horizontal panel for dealing with lists of things."""
 
     def __init__(self, thing, ListViewClass, list_view_args, list_name,
@@ -369,8 +363,8 @@ class Slate(QtWidgets.QHBoxLayout):  # pylint:disable=too-few-public-methods
                               ("Move Selected Up", 'arrow-up'),
                               ("Move Selected Down", 'arrow-down'),
                               ("Remove Selected", 'editdelete')]:
-            btn = QtWidgets.QPushButton(QtGui.QIcon(f'{ICONS}/{icon}.png'), "")
-            btn.setIconSize(QtCore.QSize(16, 16))
+            btn = QPushButton(QIcon(f'{ICONS}/{icon}.png'), "")
+            btn.setIconSize(QSize(16, 16))
             btn.setFlat(True)
             btn.setToolTip(tooltip)
             buttons.append(btn)
@@ -378,10 +372,10 @@ class Slate(QtWidgets.QHBoxLayout):  # pylint:disable=too-few-public-methods
         list_view_args.append(buttons)
         list_view = ListViewClass(*list_view_args)
         list_view.setObjectName(list_name)
-        list_view.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                QtWidgets.QSizePolicy.Ignored)
+        list_view.setSizePolicy(QSizePolicy.MinimumExpanding,
+                                QSizePolicy.Ignored)
 
-        vert = QtWidgets.QVBoxLayout()
+        vert = QVBoxLayout()
         for btn in buttons:
             vert.addWidget(btn)
         vert.insertStretch(len(buttons) - 1)

@@ -26,13 +26,8 @@ alert windows. It also may have more visual components in the future.
 """
 
 import re
-
+from aqt.qt import *
 from bs4 import BeautifulSoup
-
-try:
-    from PyQt4.QtCore import Qt
-except:
-    from PyQt5.QtCore import Qt
 
 from .common import key_event_combo
 from ..utils import getDefaultPreset

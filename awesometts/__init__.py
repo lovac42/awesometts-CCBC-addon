@@ -53,11 +53,7 @@ def onProfileLoaded():
     runHook('YetAnotherAwesomeTTS.configLoaded')
 
 def launch_addon():
-    CCBC = version.endswith("ccbc")
-    if CCBC:
-        from . import ccbc_loader as awesometts
-    else:
-        from . import anki21_loader as awesometts
+    from . import main as awesometts
 
     from anki.hooks import addHook
     addHook("profileLoaded", onProfileLoaded)

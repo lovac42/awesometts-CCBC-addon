@@ -13,7 +13,7 @@ from PyQt4.QtWebKit import QWebView
 from awesometts.paths import ICONS
 from awesometts.gui.common import Label
 from awesometts.gui.generator import EditorGenerator
-from awesometts.shared_loads import addon
+from awesometts.loader import addon
 
 
 ICON_FILE = ICONS+"/awesomo.png"

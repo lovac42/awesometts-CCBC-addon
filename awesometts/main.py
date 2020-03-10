@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# This file has been modified by lovac42 for CCBC, and is not the same as the original.
 
 # AwesomeTTS text-to-speech add-on for Anki
 # Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
@@ -28,7 +29,7 @@ from aqt.qt import *
 import anki
 import aqt
 
-from .shared_loads import *
+from .loader import *
 from . import conversion as to, gui, paths, service
 from .bundle import Bundle
 from .config import Config
@@ -37,13 +38,12 @@ from .router import Router
 from .text import Sanitizer
 
 from .lib.com.lovac42.anki.gui import toolbar
+from .lib.com.lovac42.anki.version import ANKI21
 
 
 __all__ = ['browser_menus', 'cards_button', 'config_menu', 'editor_button',
            'reviewer_hooks', 'sound_tag_delays', 'update_checker',
            'window_shortcuts']
-
-
 
 
 # GUI interaction with Anki
@@ -53,6 +53,9 @@ __all__ = ['browser_menus', 'cards_button', 'config_menu', 'editor_button',
 # These are all called manually from the __init__.py loader so that if there
 # is some sort of breakage with a specific component, it could be possibly
 # disabled easily by users who are not utilizing that functionality.
+
+strip = Sanitizer([('newline_ellipsize', 'ellip_template_newlines')] +
+                STRIP_TEMPLATE_POSTHTML, config=config, logger=logger)
 
 
 def browser_menus():
@@ -195,6 +198,10 @@ def config_menu():
     Adds a menu item to the Tools menu in Anki's main window for
     launching the configuration dialog.
     """
+    try:
+        menu=aqt.mw.form.menuAddon
+    except:
+        menu=aqt.mw.form.menuTools
 
     gui.Action(
         target=Bundle(
@@ -207,64 +214,111 @@ def config_menu():
         ),
         text="Awesome&TTS...",
         sequence=sequences['configurator'],
-        parent=aqt.mw.form.menuTools,
+        parent=menu,
     )
 
 
-def editor_button():
-    """
-    Enable the generation of a single audio clip through the editor,
-    which is present in the "Add" and browser windows.
-    """
 
-    anki.hooks.addHook(
-        'setupEditorButtons',
-        lambda buttons, editor: gui.HTMLButton(
-            buttons, editor,
-            link_id='awesometts_btn',
-            tooltip="Record and insert an audio clip here w/ AwesomeTTS",
-            sequence=sequences['editor_generator'],
-            target=Bundle(
-                constructor=gui.EditorGenerator,
-                args=(),
-                kwargs=dict(editor=editor,
-                            addon=addon,
-                            alerts=aqt.utils.showWarning,
-                            ask=aqt.utils.getText,
-                            parent=editor.parentWindow),
-            )
-        ).buttons
-    )
+if not ANKI21: #awesomo or ccbc
+    import aqt.editor
 
-    anki.hooks.addHook(
-        'setupEditorShortcuts',
-        lambda shortcuts, editor: shortcuts.append(
-            (
-                sequences['editor_generator'].toString(),
-                editor._links['awesometts_btn']
+    def editor_button():
+        """
+        Enable the generation of a single audio clip through the editor,
+        which is present in the "Add" and browser windows.
+        """
+
+        anki.hooks.addHook(
+            'setupEditorButtons',
+            lambda editor: editor.iconsBox.addWidget(
+                gui.Button(
+                    tooltip="Record and insert an audio clip here w/ AwesomeTTS",
+                    sequence=sequences['editor_generator'],
+                    target=Bundle(
+                        constructor=gui.EditorGenerator,
+                        args=(),
+                        kwargs=dict(editor=editor,
+                                    addon=addon,
+                                    alerts=aqt.utils.showWarning,
+                                    ask=aqt.utils.getText,
+                                    parent=editor.parentWindow),
+                    ),
+                    style=editor.plastiqueStyle,
+                ),
+            ),
+        )
+
+        aqt.editor.Editor.enableButtons = anki.hooks.wrap(
+            aqt.editor.Editor.enableButtons,
+            lambda editor, val=True: (
+                editor.widget.findChild(gui.Button).setEnabled(val),
+
+                # Temporarily disable any AwesomeTTS menu shortcuts in the Browser
+                # window so that if a shortcut combination has been re-used
+                # between the editor button and those, the "local" shortcut works.
+                # Has no effect on "Add" window (the child list will be empty).
+                [action.muzzle(val) for action
+                 in editor.parentWindow.findChildren(gui.Action)],
+            ),
+            'before',
+        )
+
+
+else:
+    def editor_button():
+        """
+        Enable the generation of a single audio clip through the editor,
+        which is present in the "Add" and browser windows.
+        """
+
+        anki.hooks.addHook(
+            'setupEditorButtons',
+            lambda buttons, editor: gui.HTMLButton(
+                buttons, editor,
+                link_id='awesometts_btn',
+                tooltip="Record and insert an audio clip here w/ AwesomeTTS",
+                sequence=sequences['editor_generator'],
+                target=Bundle(
+                    constructor=gui.EditorGenerator,
+                    args=(),
+                    kwargs=dict(editor=editor,
+                                addon=addon,
+                                alerts=aqt.utils.showWarning,
+                                ask=aqt.utils.getText,
+                                parent=editor.parentWindow),
+                )
+            ).buttons
+        )
+
+        anki.hooks.addHook(
+            'setupEditorShortcuts',
+            lambda shortcuts, editor: shortcuts.append(
+                (
+                    sequences['editor_generator'].toString(),
+                    editor._links['awesometts_btn']
+                )
             )
         )
-    )
 
-    # TODO: Editor buttons are now in the WebView, not sure how (and if)
-    # we should implement muzzling. Please see:
-    # https://github.com/dae/anki/commit/a001553f66efe75e660eb0702cd29a9d62503fc4
-    """
-    aqt.editor.Editor.enableButtons = anki.hooks.wrap(
-        aqt.editor.Editor.enableButtons,
-        lambda editor, val=True: (
-            editor.widget.findChild(gui.Button).setEnabled(val),
+        # TODO: Editor buttons are now in the WebView, not sure how (and if)
+        # we should implement muzzling. Please see:
+        # https://github.com/dae/anki/commit/a001553f66efe75e660eb0702cd29a9d62503fc4
+        """
+        aqt.editor.Editor.enableButtons = anki.hooks.wrap(
+            aqt.editor.Editor.enableButtons,
+            lambda editor, val=True: (
+                editor.widget.findChild(gui.Button).setEnabled(val),
 
-            # Temporarily disable any AwesomeTTS menu shortcuts in the Browser
-            # window so that if a shortcut combination has been re-used
-            # between the editor button and those, the "local" shortcut works.
-            # Has no effect on "Add" window (the child list will be empty).
-            [action.muzzle(val) for action
-             in editor.parentWindow.findChildren(gui.Action)],
-        ),
-        'before',
-    )
-    """
+                # Temporarily disable any AwesomeTTS menu shortcuts in the Browser
+                # window so that if a shortcut combination has been re-used
+                # between the editor button and those, the "local" shortcut works.
+                # Has no effect on "Add" window (the child list will be empty).
+                [action.muzzle(val) for action
+                 in editor.parentWindow.findChildren(gui.Action)],
+            ),
+            'before',
+        )
+        """
 
 
 def reviewer_hooks():
@@ -312,8 +366,8 @@ def reviewer_hooks():
 
     # context menu playback
 
-    strip = Sanitizer([('newline_ellipsize', 'ellip_template_newlines')] +
-                      STRIP_TEMPLATE_POSTHTML, config=config, logger=logger)
+    # strip = Sanitizer([('newline_ellipsize', 'ellip_template_newlines')] +
+                      # STRIP_TEMPLATE_POSTHTML, config=config, logger=logger)
 
     def on_context_menu(web_view, menu):
         """Populate context menu, given the context/configuration."""
@@ -492,6 +546,29 @@ def window_shortcuts():
 
     def on_sequence_change(new_config):
         """Update sequences on configuration changes."""
+        if not ANKI21: #awesomo or ccbc
+            _on_seq_chg_20(new_config)
+        else:
+            _on_seq_chg_21(new_config)
+
+
+    def _on_seq_chg_20(new_config):
+        """Update sequences on configuration changes."""
+
+        for key, sequence in sequences.items():
+            try:
+                sequence.swap(new_config['launch_' + key] or 0)
+            except AttributeError:  # support for PyQt 4.7 and below
+                sequences[key] = QKeySequence(new_config['launch_' + key] or 0)
+
+        try:
+            aqt.mw.form.menuAddon.findChild(gui.Action). \
+                setShortcut(sequences['configurator'])
+        except AttributeError:  # we do not have a config menu
+            pass
+
+
+    def _on_seq_chg_21(new_config):
         for key, sequence in sequences.items():
             new_sequence = QKeySequence(new_config['launch_' + key] or None)
             sequence.swap(new_sequence)

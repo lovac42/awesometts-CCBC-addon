@@ -35,7 +35,9 @@ class GoogleTTS(Service):
     Provides a Service-compliant implementation for Google Cloud Text-to-Speech.
     """
 
-    __slots__ = []
+    __slots__ = [
+        '_direct_download',
+    ]
 
     NAME = "Google Cloud Text-to-Speech"
 
@@ -240,6 +242,10 @@ class GoogleTTS(Service):
         ("vi-VN-Wavenet-D", "Vietnamese (vi-VN-Wavenet-D)"),
     ]
 
+    def __init__(self, *args, **kwargs):
+        self._direct_download = True
+        super(GoogleTTS, self).__init__(*args, **kwargs)
+
     def _languageCode(self, name):
         """
         Returns a language code (en-US) from its name (en-US-Wavenet-A).
@@ -323,3 +329,5 @@ class GoogleTTS(Service):
 
         with open(path, 'wb') as response_output:
             response_output.write(audio_content)
+
+        return options['key']

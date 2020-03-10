@@ -92,6 +92,7 @@ class Bing(Service):
         '_cookies',
         '_token',
         '_ig',
+        '_direct_download',
     ]
 
     NAME = "Bing Translator"
@@ -103,6 +104,7 @@ class Bing(Service):
         self._cookies = None
         self._token = None
         self._ig = None
+        self._direct_download = True
         super(Bing, self).__init__(*args, **kwargs)
 
     def desc(self):

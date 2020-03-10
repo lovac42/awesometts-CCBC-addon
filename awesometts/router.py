@@ -573,7 +573,17 @@ class Router(object):
                     callbacks['then']()
 
             def task():
-                service['instance'].run(text, options, path)
+                key = service['instance'].run(text, options, path)
+
+                #TODO: Fix bing and gooTTS
+                # This is a cheap hack to get around services calling requests
+                # instead of net_stream() which bypasses the throttling.
+                # As a result, this causes the user to get banned.
+                try:
+                    if not key and service['instance']._direct_download:
+                        callbacks['miss'](svc_id, 1) #increments count
+                except: pass
+
 
             if async_variable:
                 def do_spawn():

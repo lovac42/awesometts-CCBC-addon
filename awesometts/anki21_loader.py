@@ -131,7 +131,7 @@ def cache_control():
 
         from os import listdir, unlink
 
-        cache = paths.CACHE
+        cache = config['cache_location'] or paths.CACHE
 
         try:
             filenames = listdir(cache)

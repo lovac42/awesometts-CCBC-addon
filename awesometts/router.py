@@ -28,6 +28,7 @@ from http.client import IncompleteRead
 from socket import error as SocketError
 from time import time
 from urllib.error import URLError
+from pathlib import Path
 
 try:
     from PyQt4 import QtCore, QtGui, QtGui as QtWidgets
@@ -129,6 +130,8 @@ class Router(object):
         self._pool = _Pool(logger)
         self._services = services
         self._temp_dir = temp_dir
+
+        Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
     def by_trait(self, trait):
         """
@@ -459,8 +462,7 @@ class Router(object):
             if not want_human:
                 return path
 
-            if not os.path.isdir(self._temp_dir):
-                os.mkdir(self._temp_dir)
+            Path(self._temp_dir).mkdir(parents=True, exist_ok=True)
 
             def substitute(match):
                 """Perform variable substitution on filename."""

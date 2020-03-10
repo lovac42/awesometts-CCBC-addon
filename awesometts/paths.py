@@ -24,6 +24,7 @@ Path and directory initialization
 import os
 import sys
 import tempfile
+from pathlib import Path
 
 __all__ = [
     'ADDON',
@@ -47,8 +48,7 @@ ADDON_IS_LINKED = os.path.islink(ADDON)
 BLANK = os.path.join(ADDON, 'blank.mp3')
 
 CACHE = os.path.join(ADDON, '.cache')
-if not os.path.isdir(CACHE):
-    os.mkdir(CACHE)
+Path(CACHE).mkdir(parents=True, exist_ok=True)
 
 ICONS = os.path.join(ADDON, 'gui/icons')
 

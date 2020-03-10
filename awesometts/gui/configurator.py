@@ -65,7 +65,7 @@ class Configurator(Dialog):
         'strip_note_brackets', 'strip_note_parens', 'strip_template_braces',
         'strip_template_brackets', 'strip_template_parens', 'sub_note_cloze',
         'sub_template_cloze', 'sul_note', 'sul_template', 'background_batch_proc', 'throttle_sleep',
-        'throttle_threshold', 'tts_key_a', 'tts_key_q', 'updates_enabled',
+        'throttle_threshold', 'tts_key_a', 'tts_key_q', 'updates_enabled', 'cache_location'
     ]
 
     _PROPERTY_WIDGETS = (Checkbox, QtWidgets.QComboBox, QtWidgets.QLineEdit,
@@ -588,6 +588,13 @@ Don't do anything stupid like editing the note while adding audio...""")
         hor.addWidget(abutton)
         hor.addWidget(fbutton)
         layout.addLayout(hor)
+
+        loc = QtWidgets.QLineEdit()
+        loc.setObjectName('cache_location')
+        vert = QtWidgets.QVBoxLayout()
+        vert.addWidget(Note("Custom cache folder: (Require restart)"))
+        vert.addWidget(loc)
+        layout.addLayout(vert)
 
         group = QtWidgets.QGroupBox("Caching")
         group.setLayout(layout)

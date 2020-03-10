@@ -428,14 +428,15 @@ class Configurator(Dialog):
         return group
 
     def _ui_tabs_mp3gen_background(self):
-        hor = QtWidgets.QHBoxLayout()
-        bg = Checkbox("""Run batch priocessor in background?
-Don't do anything stupid like editing the note while adding audio...""")
+        bg = Checkbox("Run batch processor in background? (Not idiot proof enough)")
         bg.setObjectName('background_batch_proc')
-        hor.addWidget(bg)
-        hor.addStretch()
         layout = QtWidgets.QVBoxLayout()
-        layout.addLayout(hor)
+        layout.addWidget(bg)
+        layout.addWidget(Note(
+            "You may study deck-A while processing deck-B. "
+            "But don't do anything stupid like edit the note "
+            "while adding audio to the same note in the background."
+        ))
 
         group = QtWidgets.QGroupBox("Background Batch Processing")
         group.setLayout(layout)

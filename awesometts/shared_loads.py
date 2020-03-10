@@ -32,6 +32,8 @@ from .router import Router
 from .text import Sanitizer
 from .const import WEB, VERSION
 
+from .lib.com.lovac42.anki.backend import sound as lib_sound
+
 
 def get_platform_info():
     """Exception-tolerant platform information for use with AGENT."""
@@ -389,7 +391,7 @@ addon = Bundle(
         sounds=Bundle(
             # using Anki's method (used if we need to reproduce how Anki does
             # something, e.g. when Reviewer emulates {{FrontSide}})
-            anki=anki.sound.stripSounds,
+            anki=lib_sound.stripSounds,
 
             # using AwesomeTTS's methods (which have access to precompiled re
             # objects, usable for everything else, e.g. when BrowserGenerator

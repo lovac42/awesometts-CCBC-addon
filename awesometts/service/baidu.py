@@ -20,6 +20,7 @@
 Service implementation for Baidu Translate's text-to-speech API
 """
 
+import time
 from .base import Service
 from .common import Trait
 
@@ -83,3 +84,5 @@ the wait time limit.
             ],
             require=dict(mime='audio/mp3', size=512),
         )
+
+        time.sleep(1)

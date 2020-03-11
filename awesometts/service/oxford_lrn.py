@@ -21,6 +21,7 @@ Service implementation for Oxford Learners Dictionary
 """
 
 import re
+import time
 from html.parser import HTMLParser
 from urllib.parse import quote
 
@@ -190,3 +191,5 @@ the wait time limit.
                 else
                 "The Oxford Dictionary has no recorded audio for your input."
             )
+
+        time.sleep(1)

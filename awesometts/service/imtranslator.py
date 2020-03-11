@@ -21,6 +21,7 @@ Service implementation for ImTranslator's text-to-speech portal
 """
 
 import re
+import time
 from socket import error as SocketError  # non-caching error class
 
 from .base import Service
@@ -227,3 +228,5 @@ the wait time limit.
 
         finally:
             self.path_unlink(output_wavs, output_mp3s)
+
+        time.sleep(1)

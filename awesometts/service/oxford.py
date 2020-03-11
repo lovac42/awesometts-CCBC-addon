@@ -10,6 +10,7 @@ Service implementation for Oxford Dictionary
 """
 
 import re
+import time
 from html.parser import HTMLParser
 
 from .base import Service
@@ -171,3 +172,5 @@ the wait time limit.
                 else
                 "The Oxford Dictionary has no recorded audio for your input."
             )
+
+        time.sleep(1)

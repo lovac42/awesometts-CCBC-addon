@@ -11,6 +11,7 @@ Service implementation for Merriam-Webster API
 """
 
 import re
+import time
 import base64
 import requests
 import string
@@ -115,3 +116,6 @@ the wait time limit.
 
         for url in sounds:
             self.net_download(path,url)
+
+        time.sleep(1)
+        return options['key']

@@ -17,7 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """NAVER Translate"""
+
 import base64
+import time
 
 from .base import Service
 from .common import Trait
@@ -203,3 +205,5 @@ the wait time limit.
 
                 finally:
                     self.path_unlink(output_mp3s)
+
+        time.sleep(1)

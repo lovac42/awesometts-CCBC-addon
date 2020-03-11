@@ -10,6 +10,7 @@ Service implementation for TextAloud's text-to-speech
 """
 
 import json
+import time
 from .base import Service
 from .common import Trait
 
@@ -146,3 +147,5 @@ the wait time limit.
                     },
                     # require=dict(mime='audio/mpeg', size=1024),
         )
+
+        time.sleep(1)

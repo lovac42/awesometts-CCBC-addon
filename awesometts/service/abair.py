@@ -20,6 +20,7 @@
 Service implementation for abair.ie's Irish language synthesiser
 """
 
+import time
 from re import compile as re_compile
 
 from .base import Service
@@ -117,3 +118,5 @@ the wait time limit.
             AUDIO_URL % match.group(1),
             require=REQUIRE_MP3,
         )
+
+        time.sleep(1)

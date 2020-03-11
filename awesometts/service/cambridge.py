@@ -21,6 +21,7 @@ Service implementation for Cambridge Dictionary
 """
 
 import re
+import time
 from html.parser import HTMLParser
 from urllib.parse import quote
 
@@ -141,3 +142,5 @@ regardless of verb, adj or whatever.
                 require=dict(mime='audio/mpeg', size=1024),
             )
             parser.reset()
+
+        time.sleep(1)

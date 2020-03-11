@@ -21,6 +21,7 @@ Service implementation for Forvo Pronunciation API
 """
 
 import json
+import time
 from .base import Service
 from .common import Trait
 
@@ -97,3 +98,5 @@ the wait time limit.
             audio_url,
             require=dict(mime='audio/mpeg', size=512),
         )
+
+        time.sleep(1.5)

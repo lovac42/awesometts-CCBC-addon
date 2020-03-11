@@ -20,6 +20,7 @@
 Service implementation for SpanishDict's text-to-speech API
 """
 
+import time
 from .base import Service
 from .common import Trait
 
@@ -94,3 +95,5 @@ the wait time limit.
             add_padding=True,
             require=dict(mime='audio/mpeg', size=1024),
         )
+
+        time.sleep(1)

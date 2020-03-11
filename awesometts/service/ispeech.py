@@ -20,6 +20,7 @@
 Service implementation for the iSpeech API
 """
 
+import time
 from .base import Service
 
 __all__ = ['ISpeech']
@@ -163,3 +164,6 @@ the wait time limit.
             raise error
 
         self.net_reset()  # no throttle; FIXME should be controlled by trait
+
+        time.sleep(1)
+        return options['key']

@@ -20,6 +20,7 @@
 Service implementation for Fluency.nl text-to-speech demo
 """
 
+import time
 from urllib.parse import quote
 
 from .base import Service
@@ -167,3 +168,5 @@ the wait time limit.
             require=dict(mime='audio/mpeg', size=256),
             add_padding=True,
         )
+
+        time.sleep(1)

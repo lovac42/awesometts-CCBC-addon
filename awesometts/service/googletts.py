@@ -21,6 +21,7 @@
 Service implementation for Google Cloud Text-to-Speech API
 """
 
+import time
 import base64
 import requests
 
@@ -330,4 +331,5 @@ class GoogleTTS(Service):
         with open(path, 'wb') as response_output:
             response_output.write(audio_content)
 
+        time.sleep(1)
         return options['key']

@@ -20,6 +20,7 @@
 
 from anki.utils import isWin as WIN32, isMac as MACOSX
 
+import time
 from .base import Service
 from .common import Trait
 
@@ -216,3 +217,5 @@ the wait time limit.
 
         finally:
             self.path_unlink(svc_paths, caf_paths, wav_paths, mp3_paths)
+
+        time.sleep(1)

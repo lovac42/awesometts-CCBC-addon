@@ -10,6 +10,7 @@ Service implementation for NeoSpeech's text-to-speech demo engine
 """
 
 import json
+import time
 from threading import Lock
 
 from .base import Service
@@ -201,3 +202,5 @@ the wait time limit.
                     self.util_merge(intermediate_mp3s, path)
                 finally:
                     self.path_unlink(intermediate_mp3s)
+
+            time.sleep(1)

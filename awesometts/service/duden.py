@@ -20,6 +20,7 @@
 Service implementation for Duden
 """
 
+import time
 from bs4 import BeautifulSoup
 from html.parser import HTMLParser
 from re import compile as re
@@ -246,3 +247,5 @@ the wait time limit.
                                        mp3_url, guide, guide_normalized)
 
         raise IOError("Duden does not have recorded audio for this word.")
+
+        time.sleep(1)

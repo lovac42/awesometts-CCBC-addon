@@ -20,6 +20,7 @@
 Service implementation for Oddcast text-to-speech demo
 """
 
+import time
 from .base import Service
 from .common import Trait
 
@@ -292,3 +293,5 @@ the wait time limit.
             require=dict(mime='audio/mpeg', size=256),
             add_padding=True,
         )
+
+        time.sleep(1)

@@ -20,6 +20,7 @@
 Service implementation for Google Translate's text-to-speech API
 """
 
+import time
 from threading import Lock
 
 from .base import Service
@@ -243,3 +244,5 @@ the wait time limit.
                 "switch to a different service offering " +
                 self._VOICE_CODES[options['voice']].split(',').pop(0) + "."
             ) if getattr(io_error, 'code', None) == 503 else io_error
+
+        time.sleep(1.5) #notorious for banning

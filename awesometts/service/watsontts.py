@@ -9,6 +9,7 @@
 Service implementation for Watson Text-to-Speech API
 """
 
+import time
 import base64
 import requests
 
@@ -119,3 +120,5 @@ the wait time limit.
         )
         with open(path, 'wb') as response_output:
             response_output.write(payload)
+
+        time.sleep(1)

@@ -21,6 +21,7 @@ Service implementation for the Collins Dictionary
 """
 
 import re
+import time
 
 from .base import Service
 from .common import Trait
@@ -148,3 +149,5 @@ the wait time limit.
         else:
             raise IOError("Cannot find any recorded audio in Collins "
                           "dictionary for this input.")
+
+        time.sleep(1)

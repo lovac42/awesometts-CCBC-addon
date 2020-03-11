@@ -20,6 +20,7 @@
 Service implementation for Howjsay
 """
 
+import time
 from .base import Service
 from .common import Trait
 
@@ -114,3 +115,5 @@ the wait time limit.
                 )
             else:
                 raise
+
+        time.sleep(1)

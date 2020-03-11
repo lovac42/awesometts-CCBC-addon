@@ -21,6 +21,7 @@
 File generation dialogs
 """
 
+import random
 from re import compile as re
 from anki.hooks import addHook, remHook
 from aqt.qt import *
@@ -340,7 +341,8 @@ class BrowserGenerator(ServiceDialog):
 
             timer = QTimer()
             throttling['timer'] = timer
-            throttling['countdown'] = throttling['sleep']
+            sleep = throttling['sleep']
+            throttling['countdown'] = random.randint(sleep, sleep+10)
 
             timer.timeout.connect(self._accept_throttled)
             timer.setInterval(1000)

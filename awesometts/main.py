@@ -80,7 +80,8 @@ def browser_menus():
                             addon=addon,
                             alerts=aqt.utils.showWarning,
                             ask=aqt.utils.getText,
-                            parent=browser),
+                            parent=None if config['background_batch_proc'] else browser,
+                ),
             ),
             text="&Add Audio to Selected...",
             sequence=sequences['browser_generator'],
@@ -365,9 +366,6 @@ def reviewer_hooks():
     aqt.mw.installEventFilter(reviewer_filter)
 
     # context menu playback
-
-    # strip = Sanitizer([('newline_ellipsize', 'ellip_template_newlines')] +
-                      # STRIP_TEMPLATE_POSTHTML, config=config, logger=logger)
 
     def on_context_menu(web_view, menu):
         """Populate context menu, given the context/configuration."""

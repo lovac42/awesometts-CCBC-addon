@@ -47,6 +47,7 @@ class BrowserGenerator(ServiceDialog):
         '_browser',  # reference to the current Anki browser window
         '_notes',    # list of Note objects selected when window opened
         '_process',  # state during processing; see accept() method below
+        '_parent',   # parent window
     ]
 
     def __init__(self, browser, *args, **kwargs):
@@ -54,9 +55,13 @@ class BrowserGenerator(ServiceDialog):
         Sets our title.
         """
 
+        self.mw = browser.mw
         self._browser = browser
         self._notes = None  # set in show()
         self._process = None  # set in accept()
+        self._parent = kwargs['parent']
+
+        self._background_task = False
 
         super(BrowserGenerator, self).__init__(
             title="Add TTS Audio to Selected Notes",
@@ -174,7 +179,7 @@ class BrowserGenerator(ServiceDialog):
         """
 
         self._notes = [
-            self._browser.mw.col.getNote(note_id)
+            self.mw.col.getNote(note_id)
             for note_id in self._browser.selectedNotes()
         ]
 
@@ -236,8 +241,9 @@ class BrowserGenerator(ServiceDialog):
             for note in self._notes
             if source in note and dest in note
         ]
+        eligible_note_tots = len(eligible_note_ids)
 
-        if not eligible_note_ids:
+        if not eligible_note_tots:
             self._alerts(
                 f"Of the {len(self._notes)} notes selected in the browser, "
                 f"none have both '{source}' and '{dest}' fields."
@@ -258,11 +264,11 @@ class BrowserGenerator(ServiceDialog):
             'all': now,
             'aborted': False,
             'progress': _Progress(
-                maximum=len(eligible_note_ids),
+                maximum=eligible_note_tots,
                 on_cancel=self._accept_abort,
                 title="Generating MP3s",
                 addon=self._addon,
-                parent=self._browser,
+                parent=self._parent,
             ),
             'service': {
                 'id': svc_id,
@@ -279,8 +285,8 @@ class BrowserGenerator(ServiceDialog):
             'queue': eligible_note_ids,
             'counts': {
                 'total': len(self._notes),
-                'elig': len(eligible_note_ids),
-                'skip': len(self._notes) - len(eligible_note_ids),
+                'elig': eligible_note_tots,
+                'skip': len(self._notes) - eligible_note_tots,
                 'done': 0,  # all notes processed
                 'okay': 0,  # calls which resulted in a successful MP3
                 'fail': 0,  # calls which resulted in an exception
@@ -293,13 +299,17 @@ class BrowserGenerator(ServiceDialog):
             },
         }
 
-        self._browser.mw.checkpoint("AwesomeTTS Batch Update")
-        if self._addon.config['background_batch_proc']:
-            self._process['progress'].setModal(False)
-            self._browser.hide()
+        self._background_task = eligible_note_tots>=5 and self._addon.config['background_batch_proc']
+
+        self.mw.checkpoint("AwesomeTTS Batch Update")
         self.close()
-        self._process['progress'].show()
-        self._browser.model.beginReset()
+        if self._background_task:
+            self._process['progress'].setModal(False)
+            self._process['progress'].show()
+            self._browser.close()
+        else:
+            self._process['progress'].show()
+            self._browser.model.beginReset()
 
         self._accept_next()
 
@@ -338,7 +348,7 @@ class BrowserGenerator(ServiceDialog):
             return
 
         note_id = proc['queue'].pop(0)
-        note = self._browser.mw.col.getNote(note_id)
+        note = self.mw.col.getNote(note_id)
         phrase = note[proc['fields']['source']]
         phrase = self._addon.strip.from_note(phrase)
         self._accept_update(phrase)
@@ -351,7 +361,7 @@ class BrowserGenerator(ServiceDialog):
         def okay(path):
             """Count the success and update the note."""
 
-            filename = self._browser.mw.col.media.addFile(path)
+            filename = self.mw.col.media.addFile(path)
             dest = proc['fields']['dest']
             note[dest] = self._accept_next_output(note[dest], filename)
             proc['counts']['okay'] += 1
@@ -497,8 +507,8 @@ class BrowserGenerator(ServiceDialog):
         Display statistics and close out the dialog.
         """
 
-        self._browser.model.endReset()
-        self._browser.show()
+        if not self._background_task:
+            self._browser.model.endReset()
 
         proc = self._process
         proc['progress'].accept()
@@ -584,7 +594,7 @@ class BrowserGenerator(ServiceDialog):
         # crashes on Mac OS X, which happen <5% of the time if called directly
         QTimer.singleShot(
             0,
-            lambda: self._alerts("".join(messages), self._browser),
+            lambda: self._alerts("".join(messages), self._parent),
         )
 
     def _get_all(self):

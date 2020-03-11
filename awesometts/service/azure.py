@@ -27,7 +27,10 @@ https://azure.microsoft.com/en-us/services/cognitive-services/text-to-speech/
 import time
 import requests
 from xml.etree import ElementTree
+
 from .base import Service
+from .common import Trait
+
 
 __all__ = ['Azure']
 
@@ -131,20 +134,18 @@ class Azure(Service):
     """
 
     __slots__ = [
-        'access_token'
+        'access_token',
+        '_direct_download',
     ]
 
     NAME = "Microsoft Azure"
 
-    # Although Azure is an Internet service, we do not mark it with
-    # Trait.INTERNET, as it is a paid-for-by-the-user API, and we do not want
-    # to rate-limit it or trigger error caching behavior
-    TRAITS = []
+    TRAITS = [Trait.INTERNET]
 
-    #def __init__(self, temp_dir, lame_flags, normalize, logger, ecosystem):
-    #    super(Azure, self).__init__(temp_dir, lame_flags, normalize, logger, ecosystem)
-    #    self.access_token = None
-
+    def __init__(self, *args, **kwargs):
+       self._direct_download = True
+       super(Azure, self).__init__(*args, **kwargs)
+       self.access_token = None
 
     def desc(self):
         """Returns name with a voice count."""
@@ -220,8 +221,7 @@ the wait time limit.
         xml_body.set('{http://www.w3.org/XML/1998/namespace}lang', language)
         voice = ElementTree.SubElement(xml_body, 'voice')
         voice.set('{http://www.w3.org/XML/1998/namespace}lang', language)
-        voice.set(
-            'name', voice_name)
+        voice.set('name', voice_name)
 
         voice.text = text
         body = ElementTree.tostring(xml_body)
@@ -235,4 +235,4 @@ the wait time limit.
             raise ValueError(error_message)
 
         time.sleep(1)
-
+        return options['key']

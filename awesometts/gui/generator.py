@@ -31,6 +31,8 @@ from .common import Checkbox, Label, Note
 
 __all__ = ['BrowserGenerator', 'EditorGenerator']
 
+FAILED_TAG = "addons::AwesomeTTS::failed"
+
 
 class BrowserGenerator(ServiceDialog):
     """
@@ -256,6 +258,7 @@ class BrowserGenerator(ServiceDialog):
             return
 
         self._disable_inputs()
+        self.mw.col.tags.bulkRem(eligible_note_ids, FAILED_TAG)
 
         svc_id = now['last_service']
         options = (None if svc_id.startswith('group:') else
@@ -363,16 +366,18 @@ class BrowserGenerator(ServiceDialog):
         def okay(path):
             """Count the success and update the note."""
 
-            filename = self.mw.col.media.addFile(path)
-            dest = proc['fields']['dest']
-            note[dest] = self._accept_next_output(note[dest], filename)
             proc['counts']['okay'] += 1
+            dest = proc['fields']['dest']
+            filename = self.mw.col.media.addFile(path)
+            note[dest] = self._accept_next_output(note[dest], filename)
             note.flush()
 
         def fail(exception):
             """Count the failure and the unique message."""
 
             proc['counts']['fail'] += 1
+            note.addTag(FAILED_TAG)
+            note.flush()
 
             message = exception.message if hasattr(exception, 'message') else str(exception)
             if isinstance(message, str):

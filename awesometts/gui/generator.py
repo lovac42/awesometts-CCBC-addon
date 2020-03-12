@@ -309,12 +309,10 @@ class BrowserGenerator(ServiceDialog):
         self.close()
         if self._background_task:
             self._process['progress'].setModal(False)
-            self._process['progress'].show()
-            self._browser.close()
+            QTimer.singleShot(5, self._browser.close)
         else:
-            self._process['progress'].show()
             self._browser.model.beginReset()
-
+        self._process['progress'].show()
         self._accept_next()
 
     def _accept_abort(self):

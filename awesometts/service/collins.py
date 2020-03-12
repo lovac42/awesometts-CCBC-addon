@@ -150,4 +150,4 @@ the wait time limit.
             raise IOError("Cannot find any recorded audio in Collins "
                           "dictionary for this input.")
 
-        time.sleep(1)
+        time.sleep(0.2)

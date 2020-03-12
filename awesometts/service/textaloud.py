@@ -121,11 +121,16 @@ the wait time limit.
     def run(self, text, options, path):
         """Requests MP3 URLs and then downloads them."""
 
+        if len(text) > 200:
+            raise IOError("Input text is too long for the TextAloud.")
+
         language="en-US"
         for lang,gen,name in VOICES: #TODO: rewrite to use maps
             if name==options['voice']:
                 language=lang
                 break;
+
+        self._netops += 10 * len(text)
 
         url=self.net_stream((GET_URL, dict(
                     voice=options['voice'],
@@ -148,4 +153,4 @@ the wait time limit.
                     # require=dict(mime='audio/mpeg', size=1024),
         )
 
-        time.sleep(1)
+        time.sleep(0.2)

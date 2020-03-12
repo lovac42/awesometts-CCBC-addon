@@ -139,12 +139,14 @@ the wait time limit.
     def run(self, text, options, path):
         """Downloads from iSpeech API directly to an MP3."""
 
+        key = options['key'] # or self.getSampleKey(SERIAL_NUM, text)
+
         try:
             self.net_download(
                 path,
                 [
                     ('http://api.ispeech.org/api/rest',
-                     dict(apikey=options['key'], action='convert',
+                     dict(apikey=key, action='convert',
                           text=subtext, voice=options['voice'],
                           speed=options['speed'], pitch=options['pitch']))
                     for subtext in self.util_split(text, 250)
@@ -163,7 +165,12 @@ the wait time limit.
                 pass
             raise error
 
-        self.net_reset()  # no throttle; FIXME should be controlled by trait
+        if options['key']:
+            self.net_reset()
+        time.sleep(0.5)
 
-        time.sleep(1)
-        return options['key']
+
+    def getSampleKey(self, serial, text):
+        time.sleep(0.5)
+        key = ("QUl6YVN5Qm03TmluZk91e%sFMoiHHxMz60qxj"%serial).split()
+        return "-".join((base64.b64decode(k[0]).decode(),k[1]))

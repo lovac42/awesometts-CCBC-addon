@@ -206,4 +206,4 @@ the wait time limit.
                 finally:
                     self.path_unlink(output_mp3s)
 
-        time.sleep(1)
+        time.sleep(0.2)

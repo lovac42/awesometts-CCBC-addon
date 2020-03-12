@@ -218,4 +218,4 @@ the wait time limit.
         finally:
             self.path_unlink(svc_paths, caf_paths, wav_paths, mp3_paths)
 
-        time.sleep(1)
+        time.sleep(0.2)

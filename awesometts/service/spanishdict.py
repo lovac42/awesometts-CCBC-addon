@@ -96,4 +96,4 @@ the wait time limit.
             require=dict(mime='audio/mpeg', size=1024),
         )
 
-        time.sleep(1)
+        time.sleep(0.2)

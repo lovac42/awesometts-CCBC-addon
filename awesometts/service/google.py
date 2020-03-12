@@ -205,16 +205,15 @@ the wait time limit.
 
         with self._lock:
             if not self._cookies:
-                headers = self.net_headers('https://www.google.com')
-                self._cookies = ';'.join(cookie.split(';')[0]
-                                         for cookie
-                                         in headers['Set-Cookie'].split(','))
+                res = self.net_headers('https://www.google.com')
+                self._cookies = res.cookies
                 self._logger.debug("Google cookies are %s", self._cookies)
 
         subtexts = self.util_split(text, 100)
 
         try:
             self._netops += 10 * len(subtexts)
+
             self.net_download(
                 path,
                 [
@@ -230,7 +229,7 @@ the wait time limit.
                     for idx, subtext in enumerate(subtexts)
                 ],
                 require=dict(mime='audio/mpeg', size=1024),
-                custom_headers={'Cookie': self._cookies},
+                cookies=self._cookies,
             )
 
         except IOError as io_error:

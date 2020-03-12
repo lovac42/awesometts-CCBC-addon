@@ -104,6 +104,11 @@ the wait time limit.
         decode the base64-encoded string into an audio file.
         """
 
+        if len(text) > 250:
+            raise IOError("Input text is too long for the WatsonTTS.")
+
+        self._netops += 10 * len(text)
+
         payload = self.net_stream(
             (DEMO_URL, dict(
                 text=text, 
@@ -118,7 +123,8 @@ the wait time limit.
                 'Host':HOST
             }
         )
+
         with open(path, 'wb') as response_output:
             response_output.write(payload)
 
-        time.sleep(1)
+        time.sleep(0.2)

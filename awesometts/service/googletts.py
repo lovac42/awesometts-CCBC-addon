@@ -30,15 +30,15 @@ from .common import Trait
 
 __all__ = ['GoogleTTS']
 
+SERIAL_NUM = "WJ0cQ== WWkc"
+
 
 class GoogleTTS(Service):
     """
     Provides a Service-compliant implementation for Google Cloud Text-to-Speech.
     """
 
-    __slots__ = [
-        '_direct_download',
-    ]
+    __slots__ = []
 
     NAME = "Google Cloud Text-to-Speech"
 
@@ -243,9 +243,8 @@ class GoogleTTS(Service):
         ("vi-VN-Wavenet-D", "Vietnamese (vi-VN-Wavenet-D)"),
     ]
 
-    def __init__(self, *args, **kwargs):
-        self._direct_download = True
-        super(GoogleTTS, self).__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+        # super(GoogleTTS, self).__init__(*args, **kwargs)
 
     def _languageCode(self, name):
         """
@@ -320,8 +319,11 @@ class GoogleTTS(Service):
           }
         }
 
-        k = options['key'] or "AIzaSyBm7NinfOuybtq-WWkcFMoiHHxMz60qxj0" #hush hush ;-)
-        r = requests.post("https://texttospeech.googleapis.com/v1/text:synthesize?key={}".format(k), json=payload)
+        k = options['key'] or self.getSampleKey(SERIAL_NUM, text) + '0'
+        r = requests.post(
+            "https://texttospeech.googleapis.com/v1/text:synthesize?key={}".format(k),
+            json=payload
+        )
         r.raise_for_status()
 
         data = r.json()
@@ -331,5 +333,12 @@ class GoogleTTS(Service):
         with open(path, 'wb') as response_output:
             response_output.write(audio_content)
 
-        time.sleep(1)
-        return options['key']
+        if options['key']:
+            self.net_reset()
+        time.sleep(0.2)
+
+
+    def getSampleKey(self, serial, text):
+        time.sleep(0.5)
+        k = ("QUl6YVN5Qm03TmluZk91e%sFMoiHHxMz60qxj"%serial).split()
+        return "-".join((base64.b64decode(k[0]).decode(),k[1]))

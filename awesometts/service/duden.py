@@ -248,4 +248,4 @@ the wait time limit.
 
         raise IOError("Duden does not have recorded audio for this word.")
 
-        time.sleep(1)
+        time.sleep(0.2)

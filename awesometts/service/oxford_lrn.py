@@ -192,4 +192,4 @@ the wait time limit.
                 "The Oxford Dictionary has no recorded audio for your input."
             )
 
-        time.sleep(1)
+        time.sleep(0.2)

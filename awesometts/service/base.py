@@ -481,21 +481,16 @@ class Service(object, metaclass=abc.ABCMeta):
         import atexit
         atexit.register(service.terminate)
 
-    def net_headers(self, url, headers=None):
+    def net_headers(self, url):
         """Returns the headers for a URL."""
 
         self._logger.debug("GET %s for headers", url)
         self._netops += 1
-        if headers:
-            from anki.sync import AnkiRequestsClient
-            client = AnkiRequestsClient()
-            response = client.get(url, headers=headers)
-            return response.headers
-
         return requests.request(
             method='GET', url=url, headers={'User-Agent': DEFAULT_UA},
             timeout=DEFAULT_TIMEOUT,
-        ).headers
+        )
+        # Use res.headers
 
     def parse_mime_type(self, raw_mime):
         raw_mime = raw_mime.replace('/x-', '/')
@@ -506,7 +501,7 @@ class Service(object, metaclass=abc.ABCMeta):
     def net_stream(self, targets, require=None, method='GET',
                    awesome_ua=False, add_padding=False,
                    custom_quoter=None, custom_headers=None,
-                   allow_redirects=True):
+                   allow_redirects=True, cookies=None):
         """
         Returns the raw payload string from the specified target(s).
         If multiple targets are specified, their resulting payloads are
@@ -580,6 +575,7 @@ class Service(object, metaclass=abc.ABCMeta):
                      else url),
                 headers=headers,
                 data=params.encode() if params and method == 'POST' else None,
+                cookies=cookies,
                 timeout=DEFAULT_TIMEOUT,
             )
 

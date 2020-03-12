@@ -303,16 +303,16 @@ class BrowserGenerator(ServiceDialog):
             },
         }
 
-        self._background_task = eligible_note_tots>=5 and self._addon.config['background_batch_proc']
+        self._background_task = eligible_note_tots>2 and self._addon.config['background_batch_proc']
 
         self.mw.checkpoint("AwesomeTTS Batch Update")
-        self.close()
         if self._background_task:
             self._process['progress'].setModal(False)
             QTimer.singleShot(5, self._browser.close)
         else:
             self._browser.model.beginReset()
         self._process['progress'].show()
+        self.close()
         self._accept_next()
 
     def _accept_abort(self):

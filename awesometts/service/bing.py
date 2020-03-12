@@ -91,7 +91,6 @@ class Bing(Service):
         '_cookies',
         '_token',
         '_ig',
-        '_direct_download',
     ]
 
     NAME = "Bing Translator"
@@ -103,7 +102,6 @@ class Bing(Service):
         self._cookies = None
         self._token = None
         self._ig = None
-        self._direct_download = True
         super(Bing, self).__init__(*args, **kwargs)
 
     def desc(self):
@@ -150,7 +148,6 @@ Need to fix this.
         if not self._token:
             raise AttributeError("No token form Bing Translator")
 
-
         lang="en-US"
         gender="Female"
         name=options['voice']
@@ -174,6 +171,7 @@ Need to fix this.
             'Authorization': 'Bearer ' + self._token
         }
 
+        self._netops += 1
         r=requests.post(DEMO_URL, data=xml.encode('utf-8'), headers=headers)
         if r.status_code==401:
             # Bearer Token Expired, expires every 10 minutes
@@ -185,7 +183,7 @@ Need to fix this.
         with open(path, 'wb') as response_output:
             response_output.write(audio_content)
 
-        time.sleep(1)
+        time.sleep(0.2)
 
 
     def issueToken(self):
@@ -195,17 +193,7 @@ Need to fix this.
 
         with self._lock:
             if not self._cookies:
-                self._netops += 1
-
-                res = requests.get(
-                    url='http://www.bing.com/translator',
-                    headers={'User-Agent': 'Mozilla/5.0'},
-                    timeout=20,
-                )
-
-                if res.status_code != 200:
-                    res.raise_for_status()
-
+                res=self.net_headers('http://www.bing.com/translator')
                 self._cookies=res.cookies
                 html = res.text
 
@@ -225,6 +213,7 @@ Need to fix this.
 
             # TODO: Fix this, throws 404 errors half the time
             for n in range(5): #retry 5x on 404 errors
+                self._netops += 1
                 r=requests.post(
                     'http://www.bing.com/tfetspktok?isVertical=1&IG=%s&IID=translator.5026.3'%(self._ig),
                     headers={
@@ -241,5 +230,6 @@ Need to fix this.
                     return r.json()['token']
                 if r.status_code != 404:
                     r.raise_for_status()
-                time.sleep(5)
+                time.sleep(2)
+                time.sleep(3)
             r.raise_for_status()

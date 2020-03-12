@@ -119,4 +119,4 @@ the wait time limit.
             require=REQUIRE_MP3,
         )
 
-        time.sleep(1)
+        time.sleep(0.2)

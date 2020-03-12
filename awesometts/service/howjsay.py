@@ -116,4 +116,4 @@ the wait time limit.
             else:
                 raise
 
-        time.sleep(1)
+        time.sleep(0.2)

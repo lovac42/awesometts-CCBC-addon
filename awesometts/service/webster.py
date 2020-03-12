@@ -21,7 +21,7 @@ from .common import Trait
 
 __all__ = ['Webster']
 
-
+SERIAL_NUM = "My00N2I2 a9c"
 
 VOICES = [
     ('default', 'default', 'default')
@@ -69,8 +69,11 @@ the wait time limit.
         ]
 
     def run(self, text, options, path):
-        k = options['key'] or "8dbfb9cd-9e43-47b6-a9c6-80153a63a281" #hush hush ;-)
-                             # ^ I stole this from kelciour. Shhhhh...
+
+        if len(text) > 80:
+            raise IOError("Input text is too long for the Webster.")
+
+        k = options['key'] or self.getSampleKey(SERIAL_NUM, text) + '1'
         url="https://www.dictionaryapi.com/api/v3/references/collegiate/json/{}?key={}"
         r = requests.get(url.format(text,k), timeout=30)
         r.raise_for_status()
@@ -110,12 +113,19 @@ the wait time limit.
                 else:
                     subdirectory = audio[0]
                 url = f"https://media.merriam-webster.com/soundc11/{subdirectory}/{audio}.wav"
-                print(url)
+                # print(url)
                 if url not in sounds:
                     sounds.append(url)
 
         for url in sounds:
             self.net_download(path,url)
 
-        time.sleep(1)
-        return options['key']
+        if options['key']:
+            self.net_reset()
+        time.sleep(0.2)
+
+
+    def getSampleKey(self, serial, text):
+        time.sleep(0.8)
+        k = ("OGRiZmI5Y2QtOWU0%s6-80153a63a28"%serial).split()
+        return "-".join((base64.b64decode(k[0]).decode(),k[1]))

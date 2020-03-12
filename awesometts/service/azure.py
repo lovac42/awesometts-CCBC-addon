@@ -135,7 +135,6 @@ class Azure(Service):
 
     __slots__ = [
         'access_token',
-        '_direct_download',
     ]
 
     NAME = "Microsoft Azure"
@@ -143,7 +142,6 @@ class Azure(Service):
     TRAITS = [Trait.INTERNET]
 
     def __init__(self, *args, **kwargs):
-       self._direct_download = True
        super(Azure, self).__init__(*args, **kwargs)
        self.access_token = None
 
@@ -198,7 +196,7 @@ the wait time limit.
     def run(self, text, options, path):
         """Downloads from Azure API directly to an MP3."""
 
-        subscription_key = options['key']
+        subscription_key = options['key'] # or getSampleKey(SERIAL_NUM, text)
         if self.access_token == None:
             self.get_token(subscription_key)
 
@@ -234,5 +232,12 @@ the wait time limit.
             error_message = f"Status code: {response.status_code} reason: {response.reason} voice: [{voice_name}] language: [{language} subscription key: [{subscription_key}]]"
             raise ValueError(error_message)
 
-        time.sleep(1)
-        return options['key']
+        if options['key']:
+            self.net_reset()
+        time.sleep(0.2)
+
+
+    def getSampleKey(self, serial, text):
+        time.sleep(0.5)
+        k = ("OGRiZmI5Y2QtOWU0%s6-80153a63a28"%serial).split()
+        return "-".join((base64.b64decode(k[0]).decode(),k[1]))

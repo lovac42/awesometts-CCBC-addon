@@ -127,7 +127,12 @@ class Router(object):
         self._services = services
         self._temp_dir = temp_dir
 
-        Path(cache_dir).mkdir(parents=True, exist_ok=True)
+        try:
+            Path(cache_dir).mkdir(parents=True, exist_ok=True)
+        except FileNotFoundError:
+            from .paths import CACHE
+            self._cache_dir = CACHE
+            print("Can't access cache folder, using default .cache instead.")
 
     def by_trait(self, trait):
         """

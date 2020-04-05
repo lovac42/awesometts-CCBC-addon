@@ -77,12 +77,12 @@ the wait time limit.
 
         self.net_download(
             path,
-            [
-                ('http://tts.baidu.com/text2audio',
-                 dict(text=subtext, lan=options['voice'], ie='UTF-8'))
-                for subtext in self.util_split(text, 300)
+            [(
+                'http://tts.baidu.com/text2audio',
+                dict(text=subtext, lan=options['voice'], ie='UTF-8')
+             )for subtext in self.util_split(text, 300)
             ],
-            require=dict(mime='audio/mp3', size=512),
+            # require=dict(mime='audio/mp3', size=512),
         )
 
         time.sleep(0.2)

@@ -33,6 +33,7 @@ Cloze patterns during review are now spoken as ```[What]``` instead of ```...```
 Fixed Naver issue (used eescueta's version)  
 Fixed Neospeech (has demo tag on mp3)  
 Fixed Oxford (Now Lexico.com and only British en-GB is available)  
+Fixed baidu  
 Added Oxford Learner's Dictionary  
 Added Google Cloud TTS service by Nickolay (kelciour)  
 Added Cambridge Dictionary by m-rtin  
@@ -50,7 +51,6 @@ Note: The connection maybe unreliable for initial setup.
 
 ### Needs to fix:
 abair  
-baidu  
 duden  
 fluency.nl  
 wikitionary  

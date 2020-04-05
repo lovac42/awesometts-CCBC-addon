@@ -210,7 +210,7 @@ router = Router(
         mappings=[
             # ('abair', service.Abair),
             ('azure', service.Azure),
-            # ('baidu', service.Baidu),
+            ('baidu', service.Baidu),
             ('bing', service.Bing),
             ('cambridge', service.Cambridge),
             ('collins', service.Collins),

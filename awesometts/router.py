@@ -412,6 +412,7 @@ class Router(object):
             if not text:
                 raise ValueError("Text not usable by " + service['class'].NAME)
             path = self._validate_path(svc_id, text, options)
+            self._config["last_preview_path"] = path
             cache_hit = os.path.exists(path)
 
             self._logger.debug(

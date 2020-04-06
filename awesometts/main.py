@@ -602,11 +602,13 @@ def speak_hooks():
             aqt.utils.showInfo("Please set default preset first!")
             return
 
+        config["last_preview_path"] = ""
         window=aqt.mw.reviewer.web.window()
         if not preset or type=="presets":
             reviewer.selection_handler(text,preset or DEFAULT_PRESET,window)
         else: #groups
             reviewer.selection_handler_group(text,preset,window)
+        return config.get("last_preview_path", None)
 
     anki.hooks.addHook('AwesomeTTS.speak', speak_text)
 

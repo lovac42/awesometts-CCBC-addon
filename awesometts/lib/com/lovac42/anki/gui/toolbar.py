@@ -5,25 +5,19 @@
 
 from aqt import QMenu
 
+
 def getMenu(parent, menuName):
-    menu = None
-    for a in parent.form.menubar.actions():
+    menubar = parent.form.menubar
+    for a in menubar.actions():
         if menuName == a.text():
-            menu = a.menu()
-            break
-    if not menu:
-        menu = parent.form.menubar.addMenu(menuName)
-    return menu
+            return a.menu()
+    return menubar.addMenu(menuName)
 
 
 def getSubMenu(menu, subMenuName):
-    subMenu = None
     for a in menu.actions():
         if subMenuName == a.text():
-            subMenu = a.menu()
-            break
-    if not subMenu:
-        subMenu = QMenu(subMenuName, menu)
-        menu.addMenu(subMenu)
+            return a.menu()
+    subMenu = QMenu(subMenuName, menu)
+    menu.addMenu(subMenu)
     return subMenu
-

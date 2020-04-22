@@ -50,9 +50,12 @@ def onProfileLoaded():
     # Used to trigger monitoring addons that depends on this addon.
     # Ideally check 1 secs after profile loaded to prevent load order issues.
     from anki.hooks import runHook
-    runHook('YetAnotherAwesomeTTS.configLoaded')
+    from .const import ADDON_NAME
+    runHook(ADDON_NAME+'.configLoaded')
+
 
 def launch_addon():
+    from .lib.com.lovac42.anki.others import safety_first
     from . import main as awesometts
 
     from anki.hooks import addHook

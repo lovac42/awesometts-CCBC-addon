@@ -80,6 +80,11 @@ class Configurator(Dialog):
         super(Configurator, self).__init__(title="Configuration",
                                            *args, **kwargs)
 
+        self.setMinimumHeight(400)
+        self.setMinimumWidth(300)
+        # self.resize(400, 300)
+
+
     # UI Construction ########################################################
 
     def _ui(self):

@@ -60,7 +60,7 @@ HOST = 'text-to-speech-demo.ng.bluemix.net'
 
 BASE_URL = 'https://' + HOST
 
-DEMO_URL = BASE_URL + '/api/v1/synthesize'
+DEMO_URL = BASE_URL + '/api/v3/synthesize'
 
 
 class WatsonTTS(Service):

@@ -1,7 +1,7 @@
 @echo off
 set ZIP=C:\PROGRA~1\7-Zip\7z.exe a -tzip -y -r
 set REPO=awesometts
-set VERSION=1.18.2
+set VERSION=1.18.3
 
 
 echo VERSION = '%VERSION%' >> awesometts/const.py

@@ -30,18 +30,19 @@ __all__ = ['Collins']
 
 
 BASE_PATTERN = r'data-src-mp3="(?:https://www.collinsdictionary.com)(/sounds/[\w/]+/%s\w*\.mp3)"'
-RE_ANY_SPANISH = re.compile(BASE_PATTERN % r'es_')
+RE_ANY_SPANISH = re.compile(BASE_PATTERN % r'(?:ES\-|es_)')
 
+# Commented voices are currently not available on the new Collins website.
 MAPPINGS = [
     ('en', "English", 'english', [re.compile(BASE_PATTERN % r'\d+')]),
-    # ('fr', "French", 'french-english', [re.compile(BASE_PATTERN % r'fr_')]),
-    # ('de', "German", 'german-english', [re.compile(BASE_PATTERN % r'de_')]),
-    # ('es-419', "Spanish, prefer Americas", 'spanish-english',
-     # [re.compile(BASE_PATTERN % r'es_419_'), RE_ANY_SPANISH]),
+    ('fr', "French", 'french-english', [re.compile(BASE_PATTERN % r'(?:FR\-|fr_)')]),
+    ('de', "German", 'german-english', [re.compile(BASE_PATTERN % r'(?:DE\-|de_)')]),
+    ('es-419', "Spanish, prefer Americas", 'spanish-english',
+     [re.compile(BASE_PATTERN % r'(?:ES\-419\-|es_419_)'), RE_ANY_SPANISH]),
     # ('es-es', "Spanish, prefer European", 'spanish-english',
-     # [re.compile(BASE_PATTERN % r'es_es_'), RE_ANY_SPANISH]),
-    # ('it', "Italian", 'italian-english', [re.compile(BASE_PATTERN % r'it_')]),
-    # ('zh', "Chinese", 'chinese-english', [re.compile(BASE_PATTERN % r'zh_')]),
+     # [re.compile(BASE_PATTERN % r'(?:ES\-ES\-|es_es_)'), RE_ANY_SPANISH]),
+    ('it', "Italian", 'italian-english', [re.compile(BASE_PATTERN % r'(?:IT\-|it_)')]),
+    ('zh', "Chinese", 'chinese-english', [re.compile(BASE_PATTERN % r'(?:ZH\-CN\-|zh_)')]),
 ]
 
 LANG_TO_DICTCODE = {lang: dictcode for lang, _, dictcode, _ in MAPPINGS}
@@ -138,6 +139,7 @@ the wait time limit.
 
         for regexp in LANG_TO_REGEXPS[voice]:
             self._logger.debug("Collins: trying pattern %s", regexp.pattern)
+            print("Collins: trying pattern %s", regexp.pattern)
 
             match = regexp.search(payload)
             if match:

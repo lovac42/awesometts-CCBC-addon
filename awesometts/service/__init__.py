@@ -57,8 +57,10 @@ from .voicetext import VoiceText
 from .watsontts import WatsonTTS
 from .webster import Webster
 from .wiktionary import Wiktionary
+from .wordreference import WordReference
 from .yandex import Yandex
 from .youdao import Youdao
+
 
 __all__ = [
     # common
@@ -98,6 +100,7 @@ __all__ = [
     'WatsonTTS',
     'Webster',
     'Wiktionary',
+    'WordReference',
     'Yandex',
     'Youdao',
 ]

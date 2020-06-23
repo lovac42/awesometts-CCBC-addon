@@ -242,6 +242,7 @@ router = Router(
             ('watsontts', service.WatsonTTS),
             ('webster', service.Webster),
             # ('wiktionary', service.Wiktionary),
+            ('wordreference', service.WordReference),
             # ('yandex', service.Yandex),
             ('youdao', service.Youdao),
         ],

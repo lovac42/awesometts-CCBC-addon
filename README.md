@@ -29,35 +29,6 @@ Cloze patterns during review are now spoken as ```[What]``` instead of ```...```
 <img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/cloze_regex.png?raw=true" />  
 
 
-### Changes from current official v1.12.0:
-Fixed Naver issue (used eescueta's version)  
-Fixed Neospeech (has demo tag on mp3)  
-Fixed Oxford (Now Lexico.com and only British en-GB is available)  
-Fixed baidu  
-Added Oxford Learner's Dictionary  
-Added Google Cloud TTS service by Nickolay (kelciour)  
-Added Cambridge Dictionary by m-rtin  
-Added Forvo service by Dador  
-Added TextAloud (Polly) service  
-Added Merriam-Webster (I stole it from Nickolay https://ankiweb.net/shared/info/1878363231)  
-Added Azure by lucwastiaux: I can't confirm this because I don't have an API key to test it.
-
-Added WatsonTTS  
-
-Added Bing Translator  
-<img src="https://github.com/lovac42/awesometts-CCBC-addon/blob/unified/screenshots/bing.png?raw=true" />  
-Note: The connection maybe unreliable for initial setup.
-
-
-### Needs to fix:
-abair  
-duden  
-fluency.nl  
-wikitionary  
-yandex  
-ImTranslator
-
-
 ## Hooks:
 
 ```

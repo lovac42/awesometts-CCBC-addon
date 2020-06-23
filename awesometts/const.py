@@ -9,4 +9,4 @@ ADDON_NAME = "YetAnotherAwesomeTTS"
 
 TARGET_STABLE_VERSION = 23
 
-VERSION = '1.18.test'
+VERSION = '1.19.test'

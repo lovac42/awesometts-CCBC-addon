@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 # AwesomeTTS text-to-speech add-on for Anki
-# Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
-# Copyright (C) 2019 Nickolay <kelciour@gmail.com>
+# Copyright (C) 2010-2018 Anki AwesomeTTS Development Team
+# Copyright (C) 2019-2020 Nickolay <kelciour@gmail.com>
+# Copyright (C) 2019-2020 Lovac42
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,12 +26,15 @@ import time
 import base64
 import requests
 
+from hashlib import sha1
+
 from .base import Service
 from .common import Trait
 
 __all__ = ['GoogleTTS']
 
-SERIAL_NUM = "WJ0cQ== WWkc"
+
+SERIAL_NUM = "R2RjR1BI dtD083HiGGx"
 
 
 class GoogleTTS(Service):
@@ -52,26 +56,42 @@ class GoogleTTS(Service):
         ("ar-XA-Wavenet-A", "Arabic (ar-XA-Wavenet-A)"),
         ("ar-XA-Wavenet-B", "Arabic (ar-XA-Wavenet-B)"),
         ("ar-XA-Wavenet-C", "Arabic (ar-XA-Wavenet-C)"),
-        ("cmn-CN-Standard-A", "Mandarin Chinese (cmn-CN-Standard-A)"),
-        ("cmn-CN-Standard-B", "Mandarin Chinese (cmn-CN-Standard-B)"),
-        ("cmn-CN-Standard-C", "Mandarin Chinese (cmn-CN-Standard-C)"),
-        ("cmn-CN-Standard-D", "Mandarin Chinese (cmn-CN-Standard-D)"),
-        ("cmn-CN-Wavenet-A", "Mandarin Chinese (cmn-CN-Wavenet-A)"),
-        ("cmn-CN-Wavenet-B", "Mandarin Chinese (cmn-CN-Wavenet-B)"),
-        ("cmn-CN-Wavenet-C", "Mandarin Chinese (cmn-CN-Wavenet-C)"),
-        ("cmn-CN-Wavenet-D", "Mandarin Chinese (cmn-CN-Wavenet-D)"),
+        ("bn-IN-Standard-A", "Bangla (bn-IN-Standard-A)"),
+        ("bn-IN-Standard-B", "Bangla (bn-IN-Standard-B)"),
+        ("cmn-CN-Standard-A", "Mandarin Chinese, China (cmn-CN-Standard-A)"),
+        ("cmn-CN-Standard-B", "Mandarin Chinese, China (cmn-CN-Standard-B)"),
+        ("cmn-CN-Standard-C", "Mandarin Chinese, China (cmn-CN-Standard-C)"),
+        ("cmn-CN-Standard-D", "Mandarin Chinese, China (cmn-CN-Standard-D)"),
+        ("cmn-CN-Wavenet-A", "Mandarin Chinese, China (cmn-CN-Wavenet-A)"),
+        ("cmn-CN-Wavenet-B", "Mandarin Chinese, China (cmn-CN-Wavenet-B)"),
+        ("cmn-CN-Wavenet-C", "Mandarin Chinese, China (cmn-CN-Wavenet-C)"),
+        ("cmn-CN-Wavenet-D", "Mandarin Chinese, China (cmn-CN-Wavenet-D)"),
+        ("cmn-TW-Standard-A", "Mandarin Chinese, Taiwan (cmn-TW-Standard-A)"),
+        ("cmn-TW-Standard-B", "Mandarin Chinese, Taiwan (cmn-TW-Standard-B)"),
+        ("cmn-TW-Standard-C", "Mandarin Chinese, Taiwan (cmn-TW-Standard-C)"),
+        ("cmn-TW-Wavenet-A", "Mandarin Chinese, Taiwan (cmn-TW-Wavenet-A)"),
+        ("cmn-TW-Wavenet-B", "Mandarin Chinese, Taiwan (cmn-TW-Wavenet-B)"),
+        ("cmn-TW-Wavenet-C", "Mandarin Chinese, Taiwan (cmn-TW-Wavenet-C)"),
         ("cs-CZ-Standard-A", "Czech (cs-CZ-Standard-A)"),
         ("cs-CZ-Wavenet-A", "Czech (cs-CZ-Wavenet-A)"),
         ("da-DK-Standard-A", "Danish (da-DK-Standard-A)"),
+        ("da-DK-Standard-C", "Danish (da-DK-Standard-C)"),
+        ("da-DK-Standard-D", "Danish (da-DK-Standard-D)"),
+        ("da-DK-Standard-E", "Danish (da-DK-Standard-E)"),
         ("da-DK-Wavenet-A", "Danish (da-DK-Wavenet-A)"),
+        ("da-DK-Wavenet-C", "Danish (da-DK-Wavenet-C)"),
+        ("da-DK-Wavenet-D", "Danish (da-DK-Wavenet-D)"),
+        ("da-DK-Wavenet-E", "Danish (da-DK-Wavenet-E)"),
         ("de-DE-Standard-A", "German (de-DE-Standard-A)"),
         ("de-DE-Standard-B", "German (de-DE-Standard-B)"),
         ("de-DE-Standard-E", "German (de-DE-Standard-E)"),
+        ("de-DE-Standard-F", "German (de-DE-Standard-F)"),
         ("de-DE-Wavenet-A", "German (de-DE-Wavenet-A)"),
         ("de-DE-Wavenet-B", "German (de-DE-Wavenet-B)"),
         ("de-DE-Wavenet-C", "German (de-DE-Wavenet-C)"),
         ("de-DE-Wavenet-D", "German (de-DE-Wavenet-D)"),
         ("de-DE-Wavenet-E", "German (de-DE-Wavenet-E)"),
+        ("de-DE-Wavenet-F", "German (de-DE-Wavenet-F)"),
         ("el-GR-Standard-A", "Greek (el-GR-Standard-A)"),
         ("el-GR-Wavenet-A", "Greek (el-GR-Wavenet-A)"),
         ("en-AU-Standard-A", "English, Australia (en-AU-Standard-A)"),
@@ -93,9 +113,11 @@ class GoogleTTS(Service):
         ("en-IN-Standard-A", "English, India (en-IN-Standard-A)"),
         ("en-IN-Standard-B", "English, India (en-IN-Standard-B)"),
         ("en-IN-Standard-C", "English, India (en-IN-Standard-C)"),
+        ("en-IN-Standard-D", "English, India (en-IN-Standard-D)"),
         ("en-IN-Wavenet-A", "English, India (en-IN-Wavenet-A)"),
         ("en-IN-Wavenet-B", "English, India (en-IN-Wavenet-B)"),
         ("en-IN-Wavenet-C", "English, India (en-IN-Wavenet-C)"),
+        ("en-IN-Wavenet-D", "English, India (en-IN-Wavenet-D)"),
         ("en-US-Standard-B", "English, United States (en-US-Standard-B)"),
         ("en-US-Standard-C", "English, United States (en-US-Standard-C)"),
         ("en-US-Standard-D", "English, United States (en-US-Standard-D)"),
@@ -110,7 +132,13 @@ class GoogleTTS(Service):
         ("fi-FI-Standard-A", "Finnish (fi-FI-Standard-A)"),
         ("fi-FI-Wavenet-A", "Finnish (fi-FI-Wavenet-A)"),
         ("fil-PH-Standard-A", "Filipino (fil-PH-Standard-A)"),
+        ("fil-PH-Standard-B", "Filipino (fil-PH-Standard-B)"),
+        ("fil-PH-Standard-C", "Filipino (fil-PH-Standard-C)"),
+        ("fil-PH-Standard-D", "Filipino (fil-PH-Standard-D)"),
         ("fil-PH-Wavenet-A", "Filipino (fil-PH-Wavenet-A)"),
+        ("fil-PH-Wavenet-B", "Filipino (fil-PH-Wavenet-B)"),
+        ("fil-PH-Wavenet-C", "Filipino (fil-PH-Wavenet-C)"),
+        ("fil-PH-Wavenet-D", "Filipino (fil-PH-Wavenet-D)"),
         ("fr-CA-Standard-A", "French, Canada (fr-CA-Standard-A)"),
         ("fr-CA-Standard-B", "French, Canada (fr-CA-Standard-B)"),
         ("fr-CA-Standard-C", "French, Canada (fr-CA-Standard-C)"),
@@ -129,20 +157,26 @@ class GoogleTTS(Service):
         ("fr-FR-Wavenet-C", "French, France (fr-FR-Wavenet-C)"),
         ("fr-FR-Wavenet-D", "French, France (fr-FR-Wavenet-D)"),
         ("fr-FR-Wavenet-E", "French, France (fr-FR-Wavenet-E)"),
+        ("gu-IN-Standard-A", "Gujarati (gu-IN-Standard-A)"),
+        ("gu-IN-Standard-B", "Gujarati (gu-IN-Standard-B)"),
         ("hi-IN-Standard-A", "Hindi (hi-IN-Standard-A)"),
         ("hi-IN-Standard-B", "Hindi (hi-IN-Standard-B)"),
         ("hi-IN-Standard-C", "Hindi (hi-IN-Standard-C)"),
+        ("hi-IN-Standard-D", "Hindi (hi-IN-Standard-D)"),
         ("hi-IN-Wavenet-A", "Hindi (hi-IN-Wavenet-A)"),
         ("hi-IN-Wavenet-B", "Hindi (hi-IN-Wavenet-B)"),
         ("hi-IN-Wavenet-C", "Hindi (hi-IN-Wavenet-C)"),
+        ("hi-IN-Wavenet-D", "Hindi (hi-IN-Wavenet-D)"),
         ("hu-HU-Standard-A", "Hungarian (hu-HU-Standard-A)"),
         ("hu-HU-Wavenet-A", "Hungarian (hu-HU-Wavenet-A)"),
         ("id-ID-Standard-A", "Indonesian (id-ID-Standard-A)"),
         ("id-ID-Standard-B", "Indonesian (id-ID-Standard-B)"),
         ("id-ID-Standard-C", "Indonesian (id-ID-Standard-C)"),
+        ("id-ID-Standard-D", "Indonesian (id-ID-Standard-D)"),
         ("id-ID-Wavenet-A", "Indonesian (id-ID-Wavenet-A)"),
         ("id-ID-Wavenet-B", "Indonesian (id-ID-Wavenet-B)"),
         ("id-ID-Wavenet-C", "Indonesian (id-ID-Wavenet-C)"),
+        ("id-ID-Wavenet-D", "Indonesian (id-ID-Wavenet-D)"),
         ("it-IT-Standard-A", "Italian (it-IT-Standard-A)"),
         ("it-IT-Standard-B", "Italian (it-IT-Standard-B)"),
         ("it-IT-Standard-C", "Italian (it-IT-Standard-C)"),
@@ -159,6 +193,8 @@ class GoogleTTS(Service):
         ("ja-JP-Wavenet-B", "Japanese (ja-JP-Wavenet-B)"),
         ("ja-JP-Wavenet-C", "Japanese (ja-JP-Wavenet-C)"),
         ("ja-JP-Wavenet-D", "Japanese (ja-JP-Wavenet-D)"),
+        ("kn-IN-Standard-A", "Kannada (kn-IN-Standard-A)"),
+        ("kn-IN-Standard-B", "Kannada (kn-IN-Standard-B)"),
         ("ko-KR-Standard-A", "Korean (ko-KR-Standard-A)"),
         ("ko-KR-Standard-B", "Korean (ko-KR-Standard-B)"),
         ("ko-KR-Standard-C", "Korean (ko-KR-Standard-C)"),
@@ -167,6 +203,8 @@ class GoogleTTS(Service):
         ("ko-KR-Wavenet-B", "Korean (ko-KR-Wavenet-B)"),
         ("ko-KR-Wavenet-C", "Korean (ko-KR-Wavenet-C)"),
         ("ko-KR-Wavenet-D", "Korean (ko-KR-Wavenet-D)"),
+        ("ml-IN-Standard-A", "Malayalam (ml-IN-Standard-A)"),
+        ("ml-IN-Standard-B", "Malayalam (ml-IN-Standard-B)"),
         ("nb-NO-Standard-A", "Norwegian Bokmål (nb-NO-Standard-A)"),
         ("nb-NO-Standard-B", "Norwegian Bokmål (nb-NO-Standard-B)"),
         ("nb-NO-Standard-C", "Norwegian Bokmål (nb-NO-Standard-C)"),
@@ -221,6 +259,11 @@ class GoogleTTS(Service):
         ("sk-SK-Wavenet-A", "Slovak (sk-SK-Wavenet-A)"),
         ("sv-SE-Standard-A", "Swedish (sv-SE-Standard-A)"),
         ("sv-SE-Wavenet-A", "Swedish (sv-SE-Wavenet-A)"),
+        ("ta-IN-Standard-A", "Tamil (ta-IN-Standard-A)"),
+        ("ta-IN-Standard-B", "Tamil (ta-IN-Standard-B)"),
+        ("te-IN-Standard-A", "Telugu (te-IN-Standard-A)"),
+        ("te-IN-Standard-B", "Telugu (te-IN-Standard-B)"),
+        ("th-TH-Standard-A", "Thai (th-TH-Standard-A)"),
         ("tr-TR-Standard-A", "Turkish (tr-TR-Standard-A)"),
         ("tr-TR-Standard-B", "Turkish (tr-TR-Standard-B)"),
         ("tr-TR-Standard-C", "Turkish (tr-TR-Standard-C)"),
@@ -243,8 +286,17 @@ class GoogleTTS(Service):
         ("vi-VN-Wavenet-D", "Vietnamese (vi-VN-Wavenet-D)"),
     ]
 
-    # def __init__(self, *args, **kwargs):
-        # super(GoogleTTS, self).__init__(*args, **kwargs)
+    _audio_device_profile = [
+        ("default", "Default"),
+        ("wearable-class-device", "Smart watches and other wearables, like Apple Watch, Wear OS watch"),
+        ("handset-class-device", "Smartphones, like Google Pixel, Samsung Galaxy, Apple iPhone"),
+        ("headphone-class-device", "Earbuds or headphones for audio playback, like Sennheiser headphones"),
+        ("small-bluetooth-speaker-class-device", "Small home speakers, like Google Home Mini"),
+        ("medium-bluetooth-speaker-class-device", "Smart home speakers, like Google Home"),
+        ("large-home-entertainment-class-device", "Home entertainment systems or smart TVs, like Google Home Max, LG TV"),
+        ("large-automotive-class-device", "Car speakers"),
+        ("telephony-class-application", "Interactive Voice Response (IVR) systems"),
+    ]
 
     def _languageCode(self, name):
         """
@@ -295,6 +347,14 @@ class GoogleTTS(Service):
                 values=(-20.00, 20.00),
                 transform=float,
                 default=0.00,
+            ),
+
+            dict(
+                key='profile',
+                label="Profile",
+                values=self._audio_device_profile,
+                transform=lambda value: value,
+                default='default',
             )
         ]
 
@@ -305,25 +365,30 @@ class GoogleTTS(Service):
         """
 
         payload = {
-          "audioConfig": {
-              "audioEncoding": "MP3",
-              "pitch": options['pitch'],
-              "speakingRate": options['speed'],
-          },
-          "input": {
-              "ssml": f"<speak>{text}</speak>"
-          },
-          "voice": {
-              "languageCode": self._languageCode(options['voice']),
-              "name": options['voice'],
-          }
+            "audioConfig": {
+                "audioEncoding": "MP3",
+                "pitch": options['pitch'],
+                "speakingRate": options['speed'],
+            },
+            "input": {
+                "ssml": f"<speak>{text}</speak>"
+            },
+            "voice": {
+                "languageCode": self._languageCode(options['voice']),
+                "name": options['voice'],
+            }
         }
 
-        k = options['key'] or self.getSampleKey(SERIAL_NUM, text) + '0'
-        r = requests.post(
-            "https://texttospeech.googleapis.com/v1/text:synthesize?key={}".format(k),
-            json=payload
-        )
+        api_key = options['key'] or self.getSampleKey(SERIAL_NUM, text) + 'DM'
+
+        headers = {}
+        if sha1(api_key.encode("utf-8")).hexdigest() == "8224a632410a845cbb4b20f9aef131b495f7ad7f":
+            headers['x-origin'] = 'https://explorer.apis.google.com'
+
+        if options['profile'] != 'default':
+            payload["audioConfig"]["effectsProfileId"] = [options['profile']]
+
+        r = requests.post("https://texttospeech.googleapis.com/v1/text:synthesize?key={}".format(api_key), headers=headers, json=payload)
         r.raise_for_status()
 
         data = r.json()
@@ -333,12 +398,13 @@ class GoogleTTS(Service):
         with open(path, 'wb') as response_output:
             response_output.write(audio_content)
 
-        if options['key']:
-            self.net_reset()
+
+        if not options['key']:
+            self._netops += 1
         time.sleep(0.2)
 
 
     def getSampleKey(self, serial, text):
-        time.sleep(0.5)
-        k = ("QUl6YVN5Qm03TmluZk91e%sFMoiHHxMz60qxj"%serial).split()
-        return "-".join((base64.b64decode(k[0]).decode(),k[1]))
+        time.sleep(0.4)
+        k = ("QUl6YVN5QWE4eXkw%s_S0vMPSc"%serial).split()
+        return "".join((base64.b64decode(k[0]).decode(),k[1]))

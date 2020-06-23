@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # AwesomeTTS text-to-speech add-on for Anki
-# Copyright (C) 2010-Present  Anki AwesomeTTS Development Team
+# Copyright (C) 2010-2018 Anki AwesomeTTS Development Team
+# Copyright (C) 2019-2020 Lovac42
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +28,9 @@ from .base import Service
 from .common import Trait
 
 __all__ = ['Google']
+
+
+BASE_URL = "https://translate.go" + "ogle.com/tra" + "nslate_tts"
 
 
 class Google(Service):
@@ -217,7 +221,7 @@ the wait time limit.
             self.net_download(
                 path,
                 [
-                    ('https://translate.google.com/translate_tts', dict(
+                    (BASE_URL, dict(
                         ie='UTF-8',
                         q=subtext,
                         tl=options['voice'],

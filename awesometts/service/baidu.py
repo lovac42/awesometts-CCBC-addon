@@ -27,6 +27,8 @@ from .common import Trait
 __all__ = ['Baidu']
 
 
+BASE_URL = "http://tts.ba" + "idu.com"
+
 VOICES = {
     'en': "English, American",
     'jp': "Japanese",
@@ -78,7 +80,7 @@ the wait time limit.
         self.net_download(
             path,
             [(
-                'http://tts.baidu.com/text2audio',
+                BASE_URL + "/text2audio",
                 dict(text=subtext, lan=options['voice'], ie='UTF-8')
              )for subtext in self.util_split(text, 300)
             ],

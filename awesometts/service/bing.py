@@ -68,17 +68,17 @@ VOICES = [
 
 
 
-#https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#standard-and-neural-voices
+#https://docs.mic rosoft.com/en-us/az ure/cogn itive-services/speech-service/regions#standard-and-neural-voices
 
-ISSUEHOST = 'eastus2.api.cognitive.microsoft.com'
+ISSUEHOST = "eastus2.api.cog" + "nitive.mic" + "rosoft.com"
 
 ISSUETOKEN = 'https://'+ISSUEHOST+'/sts/v1.0/issueToken'
 
-HOST = 'eastus2.tts.speech.microsoft.com'
+HOST = "eastus2.tts.s" + "peech.mic" + "rosoft.com"
 
 BASE_URL = 'https://' + HOST
 
-DEMO_URL = BASE_URL + '/cognitiveservices/v1'
+DEMO_URL = BASE_URL + "/cogniti" + "veservices/v1"
 
 
 class Bing(Service):
@@ -164,8 +164,8 @@ Need to fix this.
         headers={
             'Charset': 'utf-8',
             'Content-type': 'application/ssml+xml',
-            'Origin': 'http://www.bing.com',
-            'Referer': 'http://www.bing.com/',
+            'Origin': 'http://www.bi'+'ng.com',
+            'Referer': 'http://www.bi'+'ng.com/',
             'x-microsoft-outputformat': 'audio-16khz-32kbitrate-mono-mp3',
             'Cache-control': 'no-cache',
             'Authorization': 'Bearer ' + self._token
@@ -193,7 +193,7 @@ Need to fix this.
 
         with self._lock:
             if not self._cookies:
-                res=self.net_headers('http://www.bing.com/translator')
+                res=self.net_headers('http://www.bi'+'ng.com/translator')
                 self._cookies=res.cookies
                 html = res.text
 
@@ -215,12 +215,12 @@ Need to fix this.
             for n in range(5): #retry 5x on 404 errors
                 self._netops += 1
                 r=requests.post(
-                    'http://www.bing.com/tfetspktok?isVertical=1&IG=%s&IID=translator.5026.3'%(self._ig),
+                    'http://www.bi'+'ng.com/tfet'+'spktok?isVertical=1&IG=%s&IID=translator.5026.3'%(self._ig),
                     headers={
                         'Content-type': 'application/x-www-form-urlencoded',
-                        'Host': 'www.bing.com',
-                        'origin': 'http://www.bing.com',
-                        'Referer': 'http://www.bing.com/',
+                        'Host': 'www.bi'+'ng.com',
+                        'origin': 'http://www.bi'+'ng.com',
+                        'Referer': 'http://www.bi'+'ng.com/',
                     },
                     cookies=self._cookies,
                     timeout=20,

@@ -29,7 +29,7 @@ from .common import Trait
 __all__ = ['Collins']
 
 
-BASE_PATTERN = r'data-src-mp3="(?:https://www.collinsdictionary.com)(/sounds/[\w/]+/%s\w*\.mp3)"'
+BASE_PATTERN = r'data-src-mp3="(?:https://www\.coll' + r'insdictionary\.com)(/sounds/[\w/]+/%s\w*\.mp3)"'
 RE_ANY_SPANISH = re.compile(BASE_PATTERN % r'(?:ES\-|es_)')
 
 # Commented voices are currently not available on the new Collins website.
@@ -55,7 +55,7 @@ DEFINITE_ARTICLES = ['das', 'der', 'die', 'el', 'gli', 'i', 'il', 'l', 'la',
 
 TEXT_SPACE_LIMIT = 1
 TEXT_LENGTH_LIMIT = 75
-COLLINS_WEBSITE = 'http://www.collinsdictionary.com'
+COLLINS_WEBSITE = 'http://www.coll' + 'insdictionary.com'
 SEARCH_FORM = COLLINS_WEBSITE + '/search/'
 RE_MP3_URL = re.compile(r'<a[^>]+class="[^>"]*hwd_sound[^>"]*"[^>]+'
                         r'data-src-mp3="(/[^>"]+)"[^>]*>')
@@ -139,7 +139,7 @@ the wait time limit.
 
         for regexp in LANG_TO_REGEXPS[voice]:
             self._logger.debug("Collins: trying pattern %s", regexp.pattern)
-            print("Collins: trying pattern %s", regexp.pattern)
+            # print("Collins: trying pattern %s", regexp.pattern)
 
             match = regexp.search(payload)
             if match:

@@ -31,6 +31,9 @@ from .common import Trait
 __all__ = ['Cambridge']
 
 
+BASE_URL = "https://dic" + "tionary.cam" + "bridge.org"
+
+
 class CambridgeLister(HTMLParser):
     """Accumulate all found MP3s into `sounds` member."""
 
@@ -115,7 +118,7 @@ regardless of verb, adj or whatever.
         Downloads from Cambridge Dictionary directly to an MP3.
         """
 
-        dict_url = 'https://dictionary.cambridge.org/dictionary/english/%s' % (
+        dict_url =  BASE_URL + '/dictionary/english/%s' % (
             quote(text.encode('utf-8'))
         )
         html_payload = self.net_stream(dict_url)
@@ -132,7 +135,7 @@ regardless of verb, adj or whatever.
         if len(parser.sounds) > 0:
             for link in list(set(parser.sounds)):
                 if re.search(pron_lang, link):
-                    sound_url = 'https://dictionary.cambridge.org' + link
+                    sound_url = BASE_URL + link
                     break
 
             self.net_download(

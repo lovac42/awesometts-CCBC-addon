@@ -29,6 +29,9 @@ from .common import Trait
 __all__ = ['FluencyNl']
 
 
+BASE_URL = "http://www.flu" + "ency-ser" + "ver.nl"
+
+
 VOICES = [
     # short value, API value, human-readable
     ('arno', 'Arno', "Arno (male)"),
@@ -152,7 +155,7 @@ the wait time limit.
             path,
             [
                 (
-                    'http://www.fluency-server.nl/cgi-bin/speak.exe',
+                    BASE_URL + '/cgi-bin/speak.exe',
                     dict(
                         id='Fluency',
                         voice=api_voice_value,

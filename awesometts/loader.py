@@ -215,7 +215,7 @@ router = Router(
             ('bing', service.Bing),
             ('cambridge', service.Cambridge),
             ('collins', service.Collins),
-            # ('duden', service.Duden),
+            ('duden', service.Duden),
             ('ekho', service.Ekho),
             ('espeak', service.ESpeak),
             ('festival', service.Festival),

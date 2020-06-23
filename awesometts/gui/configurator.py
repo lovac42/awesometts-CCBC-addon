@@ -472,7 +472,7 @@ class Configurator(Dialog):
         vert.addLayout(hor)
         # vert.addWidget(Note("Affects %s." %
                             # ', '.join(rtr.by_trait(rtr.Trait.INTERNET))))
-        vert.addWidget(Note("Warning: Please be kind to online services and repect the wait time limit."))
+        vert.addWidget(Note("Warning: Please be kind to online services and respect the wait time limit."))
 
         group = QGroupBox("Download Throttling during Batch Processing")
         group.setLayout(vert)
